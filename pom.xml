@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cognifide.aemrules</groupId>
+	<artifactId>aemrules</artifactId>
+    <version>0.5-SNAPSHOT</version>
+
+    <name>AEM Rules for SonarQube</name>
+    <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM development.</description>
+
+    <packaging>sonar-plugin</packaging>
+
+    <inceptionYear>2015</inceptionYear>
+	<organization>
+		<name>Cognifide Limited</name>
+		<url>http://www.cognifide.com</url>
+	</organization>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>michal.chudy</id>
+            <name>Michal Chudy</name>
+            <email>michal.chudy@cognifide.com</email>
+        </developer>
+        <developer>
+            <id>szymon.owczarzak</id>
+            <name>Szymon Owczarzak</name>
+            <email>szymon.owczarzak@cognifide.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/Cognifide/AEM-Rules-for-SonarQube.git</connection>
+        <url>scm:git:https://github.com/Cognifide/AEM-Rules-for-SonarQube.git</url>
+        <developerConnection>scm:git|https://github.com/Cognifide/AEM-Rules-for-SonarQube.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+	<issueManagement>
+		<system>jira</system>
+		<url>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</url>
+	</issueManagement>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar-plugin-api-version>3.7.3</sonar-plugin-api-version>
+		<sonar.version>4.5.4</sonar.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>adobe-releases</id>
+			<url>http://repo.adobe.com/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.codehaus.sonar</groupId>
+			<artifactId>sonar-plugin-api</artifactId>
+			<version>4.5.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.sonar-plugins.java</groupId>
+			<artifactId>java-squid</artifactId>
+			<version>3.2</version>
+			<scope>compile</scope>
+		</dependency>
+
+        <!-- Unit Test dependencies -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.aem</groupId>
+            <artifactId>aem-api</artifactId>
+            <version>6.0.0.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.jcr</groupId>
+            <artifactId>jcr</artifactId>
+            <version>2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.cognifide.slice</groupId>
+            <artifactId>slice-core-api</artifactId>
+            <version>4.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+            <version>1.9.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.servlets.resolver</artifactId>
+            <version>2.3.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.sonar</groupId>
+                <artifactId>sonar-packaging-maven-plugin</artifactId>
+                <version>1.13</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <pluginKey>aemrules</pluginKey>
+                    <pluginClass>com.cognifide.aemrules.AemRulesSonarPlugin</pluginClass>
+                    <pluginName>${project.name}</pluginName>
+                    <pluginDescription>${project.description}</pluginDescription>
+                    <pluginIssueTrackerUrl></pluginIssueTrackerUrl>
+                    <skipDependenciesPackaging>true</skipDependenciesPackaging>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
