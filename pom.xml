@@ -71,13 +71,12 @@
 			<version>4.5.4</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.codehaus.sonar-plugins.java</groupId>
-			<artifactId>java-squid</artifactId>
-			<version>3.2</version>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.sonarsource.java</groupId>
+            <artifactId>sonar-java-plugin</artifactId>
+            <version>3.8</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Unit Test dependencies -->
 
@@ -85,6 +84,18 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.java</groupId>
+            <artifactId>java-checks-testkit</artifactId>
+            <version>3.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.30</version>
             <scope>test</scope>
         </dependency>
         <dependency>
