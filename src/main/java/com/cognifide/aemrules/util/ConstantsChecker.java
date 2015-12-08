@@ -1,17 +1,18 @@
 package com.cognifide.aemrules.util;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConstantsChecker {
 
-	private static final Map<String, String> constants;
+	private static final Map<String, String> CONSTANTS;
 
-	private static final Map<String, String> annotationConstants;
+	private static final Map<String, String> ANNOTATION_CONSTANTS;
 
 	static {
-		constants = new HashMap<String, String>();
-		// generated code starts here
+		Map<String, String> constants = new HashMap<>();
+
 		// interface com.day.cq.commons.jcr.JcrConstants
 		constants.put("jcr:autoCreated", "interface com.day.cq.commons.jcr.JcrConstants.JCR_AUTOCREATED");
 		constants.put("jcr:baseVersion", "interface com.day.cq.commons.jcr.JcrConstants.JCR_BASEVERSION");
@@ -89,6 +90,7 @@ public class ConstantsChecker {
 		constants.put("mix:title", "interface com.day.cq.commons.jcr.JcrConstants.MIX_TITLE");
 		constants.put("mix:created", "interface com.day.cq.commons.jcr.JcrConstants.MIX_CREATED");
 		constants.put("mix:lastModified", "interface com.day.cq.commons.jcr.JcrConstants.MIX_LAST_MODIFIED");
+
 		// interface com.day.cq.dam.api.DamConstants
 		constants.put("renditions", "interface com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER");
 		constants.put("dam:Asset", "interface com.day.cq.dam.api.DamConstants.NT_DAM_ASSET");
@@ -131,6 +133,7 @@ public class ConstantsChecker {
 		constants.put("imageProfile", "interface com.day.cq.dam.api.DamConstants.IMAGE_PROFILE");
 		constants.put("folderThumbnail", "interface com.day.cq.dam.api.DamConstants.THUMBNAIL_NODE");
 		constants.put("downloadUrl", "interface com.day.cq.dam.api.DamConstants.DOWNLOAD_URL");
+
 		// interface com.day.cq.wcm.api.NameConstants
 		constants.put("cq:Page", "interface com.day.cq.wcm.api.NameConstants.NT_PAGE");
 		constants.put("cq:PseudoPage", "interface com.day.cq.wcm.api.NameConstants.NT_PSEUDO_PAGE");
@@ -175,7 +178,6 @@ public class ConstantsChecker {
 		constants.put("propertyName", "interface com.day.cq.wcm.api.NameConstants.PN_DT_NAME");
 		constants.put("accept", "interface com.day.cq.wcm.api.NameConstants.PN_DT_ACCEPT");
 		constants.put("groups", "interface com.day.cq.wcm.api.NameConstants.PN_DT_GROUPS");
-		constants.put("parameters", "interface com.day.cq.wcm.api.NameConstants.NN_DT_PARAMETERS");
 		constants.put("cq:inherit", "interface com.day.cq.wcm.api.NameConstants.PN_INHERIT");
 		constants.put("cq:designPath", "interface com.day.cq.wcm.api.NameConstants.PN_DESIGN_PATH");
 		constants.put("cq:parentPath", "interface com.day.cq.wcm.api.NameConstants.PN_PARENT_PATH");
@@ -202,6 +204,7 @@ public class ConstantsChecker {
 		constants.put("cq:lastPublished", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_PUBLISHED");
 		constants.put("cq:lastPublishedBy", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_PUBLISHED_BY");
 		constants.put("cq:lastReplicationStatus", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATION_STATUS");
+
 		// interface com.day.cq.wcm.webservicesupport.ConfigurationConstants
 		constants.put("cq/cloudserviceconfigs/components/servicepage", "interface com.day.cq.wcm.webservicesupport.ConfigurationConstants.RT_SERVICE");
 		constants.put("cq/cloudserviceconfigs/components/configpage", "interface com.day.cq.wcm.webservicesupport.ConfigurationConstants.RT_CONFIGURATION");
@@ -216,27 +219,18 @@ public class ConstantsChecker {
 		constants.put("user.jcr.session", "class org.apache.sling.jcr.resource.JcrResourceConstants.AUTHENTICATION_INFO_SESSION");
 		constants.put("sling:Folder", "class org.apache.sling.jcr.resource.JcrResourceConstants.NT_SLING_FOLDER");
 		constants.put("sling:OrderedFolder", "class org.apache.sling.jcr.resource.JcrResourceConstants.NT_SLING_ORDERED_FOLDER");
-		// class org.apache.sling.servlets.resolver.internal.ServletResolverConstants
 
-		// generated code ends here
-
-		// Tags
+		// interface com.day.cq.tagging.TagConstants
 		constants.put("cq:Tag", "interface com.day.cq.tagging.TagConstants.NT_TAG");
 		constants.put("cq:Taggable", "interface com.day.cq.tagging.TagConstants.NT_TAGGABLE");
 		constants.put("cq:tags", "interface com.day.cq.tagging.TagConstants.PN_TAGS");
 		constants.put("cq:movedTo", "interface com.day.cq.tagging.TagConstants.PN_MOVED_TO");
 		constants.put("cq:backlinks", "interface com.day.cq.tagging.TagConstants.PN_BACKLINKS");
 
-		annotationConstants = new HashMap<String, String>();
-		annotationConstants.put("sling.servlet.paths", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.SLING_SERVLET_PATHS");
-		annotationConstants.put("sling.servlet.resourceTypes", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.SLING_SERVLET_RESOURCE_TYPES");
-		annotationConstants.put("sling.servlet.prefix", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.SLING_SERVLET_PREFIX");
-		annotationConstants.put("sling.servlet.selectors", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.SLING_SERVLET_SELECTORS");
-		annotationConstants.put("sling.servlet.extensions", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.SLING_SERVLET_EXTENSIONS");
-		annotationConstants.put("sling.servlet.methods", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.SLING_SERVLET_METHODS");
-		annotationConstants.put("sling/servlet/default", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.DEFAULT_SERVLET_NAME");
-		annotationConstants.put("sling/servlet/errorhandler", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.ERROR_HANDLER_PATH");
-		annotationConstants.put("sling.core.servletName", "class org.apache.sling.servlets.resolver.internal.ServletResolverConstants.SLING_SERLVET_NAME");
+		CONSTANTS = Collections.unmodifiableMap(constants);
+
+		Map<String, String> annotationConstants = new HashMap<>();
+
 		// class org.apache.sling.api.SlingConstants
 		annotationConstants.put("org.apache.sling.api.include.servlet", "class org.apache.sling.api.SlingConstants.ATTR_REQUEST_SERVLET");
 		annotationConstants.put("org.apache.sling.api.include.resource", "class org.apache.sling.api.SlingConstants.ATTR_REQUEST_CONTENT");
@@ -270,21 +264,6 @@ public class ConstantsChecker {
 		annotationConstants.put("adaptables", "class org.apache.sling.api.SlingConstants.PROPERTY_ADAPTABLE_CLASSES");
 		annotationConstants.put("adapters", "class org.apache.sling.api.SlingConstants.PROPERTY_ADAPTER_CLASSES");
 		annotationConstants.put("sling.core.current.servletName", "class org.apache.sling.api.SlingConstants.SLING_CURRENT_SERVLET_NAME");
-		// interface org.osgi.service.event.EventConstants
-		annotationConstants.put("event.topics", "interface org.osgi.service.event.EventConstants.EVENT_TOPIC");
-		annotationConstants.put("event.filter", "interface org.osgi.service.event.EventConstants.EVENT_FILTER");
-		annotationConstants.put("bundle.signer", "interface org.osgi.service.event.EventConstants.BUNDLE_SIGNER");
-		annotationConstants.put("bundle.symbolicName", "interface org.osgi.service.event.EventConstants.BUNDLE_SYMBOLICNAME");
-		annotationConstants.put("bundle.id", "interface org.osgi.service.event.EventConstants.BUNDLE_ID");
-		annotationConstants.put("bundle", "interface org.osgi.service.event.EventConstants.BUNDLE");
-		annotationConstants.put("bundle.version", "interface org.osgi.service.event.EventConstants.BUNDLE_VERSION");
-		annotationConstants.put("event", "interface org.osgi.service.event.EventConstants.EVENT");
-		annotationConstants.put("exception", "interface org.osgi.service.event.EventConstants.EXCEPTION");
-		annotationConstants.put("exception.class", "interface org.osgi.service.event.EventConstants.EXCEPTION_CLASS");
-		annotationConstants.put("exception.message", "interface org.osgi.service.event.EventConstants.EXCEPTION_MESSAGE");
-		annotationConstants.put("message", "interface org.osgi.service.event.EventConstants.MESSAGE");
-		annotationConstants.put("service", "interface org.osgi.service.event.EventConstants.SERVICE");
-		annotationConstants.put("service.objectClass", "interface org.osgi.service.event.EventConstants.SERVICE_OBJECTCLASS");
 
 		// class org.apache.sling.api.servlets.HttpConstants
 		annotationConstants.put("OPTIONS", "class org.apache.sling.api.servlets.HttpConstants.METHOD_OPTIONS");
@@ -301,92 +280,6 @@ public class ConstantsChecker {
 		annotationConstants.put("If-Modified-Since", "class org.apache.sling.api.servlets.HttpConstants.HEADER_IF_MODIFIED_SINCE");
 		annotationConstants.put("Last-Modified", "class org.apache.sling.api.servlets.HttpConstants.HEADER_LAST_MODIFIED");
 
-		// interface org.osgi.framework.Constants
-		annotationConstants.put("System Bundle", "interface org.osgi.framework.Constants.SYSTEM_BUNDLE_LOCATION");
-		annotationConstants.put("system.bundle", "interface org.osgi.framework.Constants.SYSTEM_BUNDLE_SYMBOLICNAME");
-		annotationConstants.put("Bundle-Category", "interface org.osgi.framework.Constants.BUNDLE_CATEGORY");
-		annotationConstants.put("Bundle-ClassPath", "interface org.osgi.framework.Constants.BUNDLE_CLASSPATH");
-		annotationConstants.put("Bundle-Copyright", "interface org.osgi.framework.Constants.BUNDLE_COPYRIGHT");
-		annotationConstants.put("Bundle-Description", "interface org.osgi.framework.Constants.BUNDLE_DESCRIPTION");
-		annotationConstants.put("Bundle-Name", "interface org.osgi.framework.Constants.BUNDLE_NAME");
-		annotationConstants.put("Bundle-NativeCode", "interface org.osgi.framework.Constants.BUNDLE_NATIVECODE");
-		annotationConstants.put("Export-Package", "interface org.osgi.framework.Constants.EXPORT_PACKAGE");
-		annotationConstants.put("Export-Service", "interface org.osgi.framework.Constants.EXPORT_SERVICE");
-		annotationConstants.put("Import-Package", "interface org.osgi.framework.Constants.IMPORT_PACKAGE");
-		annotationConstants.put("DynamicImport-Package", "interface org.osgi.framework.Constants.DYNAMICIMPORT_PACKAGE");
-		annotationConstants.put("Import-Service", "interface org.osgi.framework.Constants.IMPORT_SERVICE");
-		annotationConstants.put("Bundle-Vendor", "interface org.osgi.framework.Constants.BUNDLE_VENDOR");
-		annotationConstants.put("Bundle-Version", "interface org.osgi.framework.Constants.BUNDLE_VERSION");
-		annotationConstants.put("Bundle-DocURL", "interface org.osgi.framework.Constants.BUNDLE_DOCURL");
-		annotationConstants.put("Bundle-ContactAddress", "interface org.osgi.framework.Constants.BUNDLE_CONTACTADDRESS");
-		annotationConstants.put("Bundle-Activator", "interface org.osgi.framework.Constants.BUNDLE_ACTIVATOR");
-		annotationConstants.put("Bundle-UpdateLocation", "interface org.osgi.framework.Constants.BUNDLE_UPDATELOCATION");
-		annotationConstants.put("specification-version", "interface org.osgi.framework.Constants.PACKAGE_SPECIFICATION_VERSION");
-		annotationConstants.put("processor", "interface org.osgi.framework.Constants.BUNDLE_NATIVECODE_PROCESSOR");
-		annotationConstants.put("osname", "interface org.osgi.framework.Constants.BUNDLE_NATIVECODE_OSNAME");
-		annotationConstants.put("osversion", "interface org.osgi.framework.Constants.BUNDLE_NATIVECODE_OSVERSION");
-		annotationConstants.put("language", "interface org.osgi.framework.Constants.BUNDLE_NATIVECODE_LANGUAGE");
-		annotationConstants.put("Bundle-RequiredExecutionEnvironment", "interface org.osgi.framework.Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT");
-		annotationConstants.put("Bundle-SymbolicName", "interface org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME");
-		annotationConstants.put("singleton", "interface org.osgi.framework.Constants.SINGLETON_DIRECTIVE");
-		annotationConstants.put("fragment-attachment", "interface org.osgi.framework.Constants.FRAGMENT_ATTACHMENT_DIRECTIVE");
-		annotationConstants.put("always", "interface org.osgi.framework.Constants.FRAGMENT_ATTACHMENT_ALWAYS");
-		annotationConstants.put("resolve-time", "interface org.osgi.framework.Constants.FRAGMENT_ATTACHMENT_RESOLVETIME");
-		annotationConstants.put("never", "interface org.osgi.framework.Constants.FRAGMENT_ATTACHMENT_NEVER");
-		annotationConstants.put("Bundle-Localization", "interface org.osgi.framework.Constants.BUNDLE_LOCALIZATION");
-		annotationConstants.put("OSGI-INF/l10n/bundle", "interface org.osgi.framework.Constants.BUNDLE_LOCALIZATION_DEFAULT_BASENAME");
-		annotationConstants.put("Require-Bundle", "interface org.osgi.framework.Constants.REQUIRE_BUNDLE");
-		annotationConstants.put("bundle-version", "interface org.osgi.framework.Constants.BUNDLE_VERSION_ATTRIBUTE");
-		annotationConstants.put("Fragment-Host", "interface org.osgi.framework.Constants.FRAGMENT_HOST");
-		annotationConstants.put("selection-filter", "interface org.osgi.framework.Constants.SELECTION_FILTER_ATTRIBUTE");
-		annotationConstants.put("Bundle-ManifestVersion", "interface org.osgi.framework.Constants.BUNDLE_MANIFESTVERSION");
-		annotationConstants.put("version", "interface org.osgi.framework.Constants.VERSION_ATTRIBUTE");
-		annotationConstants.put("bundle-symbolic-name", "interface org.osgi.framework.Constants.BUNDLE_SYMBOLICNAME_ATTRIBUTE");
-		annotationConstants.put("resolution", "interface org.osgi.framework.Constants.RESOLUTION_DIRECTIVE");
-		annotationConstants.put("mandatory", "interface org.osgi.framework.Constants.RESOLUTION_MANDATORY");
-		annotationConstants.put("optional", "interface org.osgi.framework.Constants.RESOLUTION_OPTIONAL");
-		annotationConstants.put("uses", "interface org.osgi.framework.Constants.USES_DIRECTIVE");
-		annotationConstants.put("include", "interface org.osgi.framework.Constants.INCLUDE_DIRECTIVE");
-		annotationConstants.put("exclude", "interface org.osgi.framework.Constants.EXCLUDE_DIRECTIVE");
-		annotationConstants.put("mandatory", "interface org.osgi.framework.Constants.MANDATORY_DIRECTIVE");
-		annotationConstants.put("visibility", "interface org.osgi.framework.Constants.VISIBILITY_DIRECTIVE");
-		annotationConstants.put("private", "interface org.osgi.framework.Constants.VISIBILITY_PRIVATE");
-		annotationConstants.put("reexport", "interface org.osgi.framework.Constants.VISIBILITY_REEXPORT");
-		annotationConstants.put("extension", "interface org.osgi.framework.Constants.EXTENSION_DIRECTIVE");
-		annotationConstants.put("framework", "interface org.osgi.framework.Constants.EXTENSION_FRAMEWORK");
-		annotationConstants.put("bootclasspath", "interface org.osgi.framework.Constants.EXTENSION_BOOTCLASSPATH");
-		annotationConstants.put("Bundle-ActivationPolicy", "interface org.osgi.framework.Constants.BUNDLE_ACTIVATIONPOLICY");
-		annotationConstants.put("lazy", "interface org.osgi.framework.Constants.ACTIVATION_LAZY");
-		annotationConstants.put("org.osgi.framework.version", "interface org.osgi.framework.Constants.FRAMEWORK_VERSION");
-		annotationConstants.put("org.osgi.framework.vendor", "interface org.osgi.framework.Constants.FRAMEWORK_VENDOR");
-		annotationConstants.put("org.osgi.framework.language", "interface org.osgi.framework.Constants.FRAMEWORK_LANGUAGE");
-		annotationConstants.put("org.osgi.framework.os.name", "interface org.osgi.framework.Constants.FRAMEWORK_OS_NAME");
-		annotationConstants.put("org.osgi.framework.os.version", "interface org.osgi.framework.Constants.FRAMEWORK_OS_VERSION");
-		annotationConstants.put("org.osgi.framework.processor", "interface org.osgi.framework.Constants.FRAMEWORK_PROCESSOR");
-		annotationConstants.put("org.osgi.framework.executionenvironment", "interface org.osgi.framework.Constants.FRAMEWORK_EXECUTIONENVIRONMENT");
-		annotationConstants.put("org.osgi.framework.bootdelegation", "interface org.osgi.framework.Constants.FRAMEWORK_BOOTDELEGATION");
-		annotationConstants.put("org.osgi.framework.system.packages", "interface org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES");
-		annotationConstants.put("org.osgi.framework.system.packages.extra", "interface org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA");
-		annotationConstants.put("org.osgi.supports.framework.extension", "interface org.osgi.framework.Constants.SUPPORTS_FRAMEWORK_EXTENSION");
-		annotationConstants.put("org.osgi.supports.bootclasspath.extension", "interface org.osgi.framework.Constants.SUPPORTS_BOOTCLASSPATH_EXTENSION");
-		annotationConstants.put("org.osgi.supports.framework.fragment", "interface org.osgi.framework.Constants.SUPPORTS_FRAMEWORK_FRAGMENT");
-		annotationConstants.put("org.osgi.supports.framework.requirebundle", "interface org.osgi.framework.Constants.SUPPORTS_FRAMEWORK_REQUIREBUNDLE");
-		annotationConstants.put("org.osgi.framework.security", "interface org.osgi.framework.Constants.FRAMEWORK_SECURITY");
-		annotationConstants.put("osgi", "interface org.osgi.framework.Constants.FRAMEWORK_SECURITY_OSGI");
-		annotationConstants.put("org.osgi.framework.storage", "interface org.osgi.framework.Constants.FRAMEWORK_STORAGE");
-		annotationConstants.put("org.osgi.framework.storage.clean", "interface org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN");
-		annotationConstants.put("onFirstInit", "interface org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT");
-		annotationConstants.put("org.osgi.framework.library.extensions", "interface org.osgi.framework.Constants.FRAMEWORK_LIBRARY_EXTENSIONS");
-		annotationConstants.put("org.osgi.framework.command.execpermission", "interface org.osgi.framework.Constants.FRAMEWORK_EXECPERMISSION");
-		annotationConstants.put("org.osgi.framework.trust.repositories", "interface org.osgi.framework.Constants.FRAMEWORK_TRUST_REPOSITORIES");
-		annotationConstants.put("org.osgi.framework.windowsystem", "interface org.osgi.framework.Constants.FRAMEWORK_WINDOWSYSTEM");
-		annotationConstants.put("org.osgi.framework.startlevel.beginning", "interface org.osgi.framework.Constants.FRAMEWORK_BEGINNING_STARTLEVEL");
-		annotationConstants.put("org.osgi.framework.bundle.parent", "interface org.osgi.framework.Constants.FRAMEWORK_BUNDLE_PARENT");
-		annotationConstants.put("service.id", "interface org.osgi.framework.Constants.SERVICE_ID");
-		annotationConstants.put("service.pid", "interface org.osgi.framework.Constants.SERVICE_PID");
-		annotationConstants.put("service.ranking", "interface org.osgi.framework.Constants.SERVICE_RANKING");
-		annotationConstants.put("service.vendor", "interface org.osgi.framework.Constants.SERVICE_VENDOR");
-		annotationConstants.put("service.description", "interface org.osgi.framework.Constants.SERVICE_DESCRIPTION");
 		// class org.apache.sling.engine.EngineConstants
 		annotationConstants.put("javax.servlet.Filter", "class org.apache.sling.engine.EngineConstants.FILTER_NAME");
 		annotationConstants.put("sling.filter.scope", "class org.apache.sling.engine.EngineConstants.SLING_FILTER_SCOPE");
@@ -396,6 +289,7 @@ public class ConstantsChecker {
 		annotationConstants.put("FORWARD", "class org.apache.sling.engine.EngineConstants.FILTER_SCOPE_FORWARD");
 		annotationConstants.put("REQUEST", "class org.apache.sling.engine.EngineConstants.FILTER_SCOPE_REQUEST");
 
+		ANNOTATION_CONSTANTS = Collections.unmodifiableMap(annotationConstants);
 	}
 
 	private ConstantsChecker() {
@@ -403,19 +297,19 @@ public class ConstantsChecker {
 	}
 
 	public static boolean isAnnotationConstant(String value) {
-		return annotationConstants.containsKey(value);
-	}
-
-	public static String getConstantFieldName(String value) {
-		return constants.get(value);
-	}
-
-	public static boolean isConstant(String value) {
-		return constants.containsKey(value);
+		return ANNOTATION_CONSTANTS.containsKey(value);
 	}
 
 	public static String getAnnotationConstantFieldName(String value) {
-		return annotationConstants.get(value);
+		return ANNOTATION_CONSTANTS.get(value);
+	}
+
+	public static String getConstantFieldName(String value) {
+		return CONSTANTS.get(value);
+	}
+
+	public static boolean isConstant(String value) {
+		return CONSTANTS.containsKey(value);
 	}
 
 }
