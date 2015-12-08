@@ -55,6 +55,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar-plugin-api-version>3.7.3</sonar-plugin-api-version>
 		<sonar.version>4.5.4</sonar.version>
+        <sonar.java.plugin>3.8</sonar.java.plugin>
 	</properties>
 
 	<repositories>
@@ -74,7 +75,7 @@
         <dependency>
             <groupId>org.sonarsource.java</groupId>
             <artifactId>sonar-java-plugin</artifactId>
-            <version>3.8</version>
+            <version>${sonar.java.plugin}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -89,7 +90,7 @@
         <dependency>
             <groupId>org.sonarsource.java</groupId>
             <artifactId>java-checks-testkit</artifactId>
-            <version>3.8</version>
+            <version>${sonar.java.plugin}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
