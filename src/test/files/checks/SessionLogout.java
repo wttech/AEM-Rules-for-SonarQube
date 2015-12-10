@@ -1,4 +1,4 @@
-package com.cognifide.zg.webapp.componentregistry.core.definition;
+package com.example;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
@@ -51,12 +51,12 @@ public class SessionLogout {
 	}
 
 	public void four() {
-		Session session = null;
+		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
 		session = createAdminSession();
 	}
 
 	public void five() {
-		Session session = null;
+		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
 		try {
 			session = repository.loginAdministrative(null);
 		} catch (RepositoryException e) {
@@ -69,7 +69,7 @@ public class SessionLogout {
 	}
 
 	public void six() {
-		Session session = null;
+		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
 		try {
 			session = repository.loginService(null, null);
 		} catch (RepositoryException e) {
@@ -82,7 +82,7 @@ public class SessionLogout {
 	}
 
 	public void seven() {
-		Session session = null;
+		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
 		session = jump();
 	}
 

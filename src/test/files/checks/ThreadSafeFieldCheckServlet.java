@@ -1,24 +1,18 @@
 package com.example;
 
-import java.io.IOException;
-import java.lang.Deprecated;
-
-import javax.servlet.ServletException;
-import com.day.cq.wcm.api.PageManager;
 import javax.jcr.Session;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
-import com.google.common.base.Objects;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+
+import com.day.cq.wcm.api.PageManager;
 
 @Component
 @Service(value = javax.servlet.Servlet.class)
@@ -27,16 +21,16 @@ public class ThreadSafeFieldCheckExample extends SlingSafeMethodsServlet {
     @Reference
     private LayoutCache layoutCache;
 
-    private ResourceResolver resourceResolver;
+    private ResourceResolver resourceResolver; // Noncompliant {{Usage of org.apache.sling.api.resource.ResourceResolver as a field is not thread safe.}}
 
-    public ResourceResolver resourceResolver2;
+    public ResourceResolver resourceResolver2; // Noncompliant {{Usage of org.apache.sling.api.resource.ResourceResolver as a field is not thread safe.}}
 
     @Deprecated
-    public static final ResourceResolver staticOne;
+    public static final ResourceResolver staticOne; // Noncompliant {{Usage of org.apache.sling.api.resource.ResourceResolver as a field is not thread safe.}}
 
-    private PageManager pageManager;
+    private PageManager pageManager; // Noncompliant {{Usage of com.day.cq.wcm.api.PageManager as a field is not thread safe.}}
 
-    private Session session;
+    private Session session; // Noncompliant {{Usage of javax.jcr.Session as a field is not thread safe.}}
 
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)

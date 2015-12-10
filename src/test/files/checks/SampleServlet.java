@@ -28,7 +28,7 @@ public class SampleServlet extends SlingAllMethodsServlet {
 	@Override
 	protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
 			throws ServletException, IOException {
-		ResourceResolver resourceResolver = null;
+		ResourceResolver resourceResolver = null; // Noncompliant {{ResourceResolver should be closed in finally block.}}
 		try {
 			resourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
 		} catch (LoginException e) {
@@ -79,7 +79,7 @@ public class SampleServlet extends SlingAllMethodsServlet {
 	}
 
 	public void checkWrongJumpMethod() {
-		ResourceResolver resourceResolver = null;
+		ResourceResolver resourceResolver = null; // Noncompliant {{ResourceResolver should be closed in finally block.}}
 		try {
 			resourceResolver = getResourceResolverForUser(resourceResolverFactory, null);
 		} catch (LoginException e) {
