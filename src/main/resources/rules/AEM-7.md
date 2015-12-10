@@ -1,30 +1,25 @@
-Manually created Session should be logged out.
-== Example
-
-=== Do
-
+Manually created ``Session`` should be logged out after it is no longer needed. The ``logout()`` method releases all resources associated with ``Session``.
+== Noncompliant Code Example
 ``
 Session session = null;
 try {
-	session = repo.loginService(null, null);
-	// do stuff
+	session = repository.loginService("myService", null);
+	// ...
 } catch (RepositoryException e) {
-	LOGGER.error("Unable to create session", e);
+	// ...
+} 
+``
+== Compliant Solution
+``
+Session session = null;
+try {
+	session = repository.loginService("myService", null);
+	// ...
+} catch (RepositoryException e) {
+	// ...
 } finally {
-	if (session != null && session.isLive()) {
-		session.logout();
-	}
-}
-``
-
-=== Don't
-
-``
-Session session = null;
-try {
-	session = repo.loginService(null, null);
-	// do stuff
-} catch (RepositoryException e) {
-	LOGGER.error("Unable to create session", e);
+    if (session != null && session.isLive()) {
+        session.logout();
+    }
 }
 ``

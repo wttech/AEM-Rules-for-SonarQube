@@ -1,11 +1,23 @@
 Use constants available in AEM instead of repeating inline literals.
 == Noncompliant Code Example
 ``
-@SlingServlet(resourceTypes = "sling/servlet/default", selectors = { "components" }, extensions = "json", methods = "GET")
+@SlingServlet(
+        resourceTypes = { "some/resource/path" },
+        selectors = { "inspect", "install" },
+        extensions = { "json" },
+        methods = { "POST" } // Noncompliant; Use predefined constant available in org.apache.sling.api.servlets.HttpConstants.METHOD_POST
+)
 public class ComponentServlet extends SlingAllMethodsServlet {
 ``
-== Compliant Code Example
+== Compliant Solution
 ``
-@SlingServlet(resourceTypes = ServletResolverConstants.DEFAULT_SERVLET_NAME, selectors = { "components" }, extensions = "json", methods = HttpConstants.METHOD_GET)
+import org.apache.sling.api.servlets.HttpConstants;
+// ...
+@SlingServlet(
+        resourceTypes = { "some/resource/path" },
+        selectors = { "inspect", "install" },
+        extensions = { "json" },
+        methods = { HttpConstants.METHOD_POST }
+)
 public class ComponentServlet extends SlingAllMethodsServlet {
 ``
