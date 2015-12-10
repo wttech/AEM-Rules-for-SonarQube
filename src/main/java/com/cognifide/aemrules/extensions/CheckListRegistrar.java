@@ -12,14 +12,15 @@ public class CheckListRegistrar implements CheckRegistrar {
 
 	public static Class[] getCheckClasses() {
 		return new Class[] {
-				ConstantsCheck.class,
 				AnnotationsConstantsCheck.class,
-				ThreadSafeFieldCheck.class,
+				ConstantsCheck.class,
 				InjectorShouldBeClosedCheck.class,
 				InjectorTryWithResourcesCheck.class,
+				ModelsShouldNotUseSessionCheck.class,
+				PreferSlingServletAnnotation.class,
 				ResourceResolverShouldBeClosed.class,
 				SessionShouldBeLoggedOut.class,
-				PreferSlingServletAnnotation.class
+				ThreadSafeFieldCheck.class
 		};
 	}
 
