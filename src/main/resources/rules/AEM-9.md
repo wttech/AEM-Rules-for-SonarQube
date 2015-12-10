@@ -1,0 +1,1 @@
+Objects annotated by @SliceResource should not use any session based objects, except places like constructor and overridden com.cognifide.slice.api.model.InitializableModel.afterCreated() method.
