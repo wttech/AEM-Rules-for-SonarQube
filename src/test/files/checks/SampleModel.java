@@ -31,11 +31,11 @@ public class SampleModel implements InitializableModel {
 	}
 
 	public String getPropRR() {
-		return (String) resolver.getAttribute("TEST");
+		return (String) resolver.getAttribute("TEST"); // Noncompliant {{Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.}}
 	}
 
 	public ResourceResolver getResolver() {
-		return resolver;
+		return resolver; // Noncompliant {{Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.}}
 	}
 
 	@Override
