@@ -7,6 +7,7 @@ import java.util.List;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
+import com.cognifide.aemrules.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.checks.ConstantsCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
@@ -23,6 +24,7 @@ public class CheckListRegistrar implements CheckRegistrar {
 	public static Class[] getCheckClasses() {
 		// @formatter:off
 		return new Class[] {
+				AdministrativeAccessUsageCheck.class,
 				ConstantsCheck.class,
 				AnnotationsConstantsCheck.class,
 				ThreadSafeFieldCheck.class,
