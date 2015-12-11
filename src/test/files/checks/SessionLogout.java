@@ -56,7 +56,7 @@ public class SessionLogout {
 	}
 
 	public void five() {
-		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
+		Session session = null; // Noncompliant
 		try {
 			session = repository.loginAdministrative(null);
 		} catch (RepositoryException e) {
@@ -69,7 +69,7 @@ public class SessionLogout {
 	}
 
 	public void six() {
-		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
+		Session session = null; // Noncompliant
 		try {
 			session = repository.loginService(null, null);
 		} catch (RepositoryException e) {
@@ -82,7 +82,7 @@ public class SessionLogout {
 	}
 
 	public void seven() {
-		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
+		Session session = null; // Noncompliant
 		session = jump();
 	}
 
