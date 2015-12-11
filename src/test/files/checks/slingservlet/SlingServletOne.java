@@ -18,7 +18,7 @@ import java.io.IOException;
 		@Property(name = "sling.servlet.selectors", value = { "selector" }),
 		@Property(name = "sling.servlet.extensions", value = { "tab" }),
 		@Property(name = "sling.servlet.methods", value = { HttpConstants.METHOD_GET }) })
-public class SlingTestOne extends SlingSafeMethodsServlet {
+public class SlingTestOne extends SlingSafeMethodsServlet { // Noncompliant {{Prefer cleaner @SlingServlet annotation.}}
 
 	@Override
 	protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)

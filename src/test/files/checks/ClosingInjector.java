@@ -1,4 +1,4 @@
-package com.cognifide.example;
+package com.example;
 
 import com.cognifide.slice.api.injector.InjectorWithContext;
 import com.cognifide.slice.api.provider.ModelProvider;
@@ -15,14 +15,14 @@ public class ClosingInjector {
 	}
 
 	private void firstCase(ResourceResolver resourceResolver, String path) {
-		InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // BUG
-		InjectorWithContext injector2 = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // BUG
+		InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
+		InjectorWithContext injector2 = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
 		ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 		injector2.close();
 	}
 
 	private void firstCase2(ResourceResolver resourceResolver, String path) {
-		InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // BUG
+		InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
 		InjectorWithContext injector2 = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver);
 		try {
 			ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
@@ -32,14 +32,14 @@ public class ClosingInjector {
 	}
 
 	private void secondCase(ResourceResolver resourceResolver) {
-		InjectorWithContext injector = null; // BUG
+		InjectorWithContext injector = null; // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
 		injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver);
 		ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 	}
 
 	private void thirdCase(String path, ResourceResolver resourceResolver) {
 		if (path.startsWith(":-)")) {
-			InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // BUG
+			InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
 			ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
 		}
 	}
@@ -54,7 +54,7 @@ public class ClosingInjector {
 			injector.close();
 		}
 
-		InjectorWithContext injector2 = InjectorUtil.getInjector(INJECTOR_NAME, request); // BUG
+		InjectorWithContext injector2 = InjectorUtil.getInjector(INJECTOR_NAME, request); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
 		try {
 			ModelProvider modelProvider = injector2.getInstance(ModelProvider.class);
 		} finally {
@@ -69,7 +69,7 @@ public class ClosingInjector {
 			ModelProvider modelProvider = injector3a.getInstance(ModelProvider.class);
 		}
 
-		InjectorWithContext injector4 = InjectorUtil.getInjector(INJECTOR_NAME, request); // BUG
+		InjectorWithContext injector4 = InjectorUtil.getInjector(INJECTOR_NAME, request); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
 		try {
 			ModelProvider modelProvider = injector4.getInstance(ModelProvider.class);
 			injector4.close();
@@ -78,7 +78,7 @@ public class ClosingInjector {
 		}
 
 		try {
-			InjectorWithContext injector6 = InjectorUtil.getInjector(INJECTOR_NAME, request); // BUG
+			InjectorWithContext injector6 = InjectorUtil.getInjector(INJECTOR_NAME, request); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
 			ModelProvider modelProvider = injector6.getInstance(ModelProvider.class);
 			injector6.close();
 		} finally {
