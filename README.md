@@ -11,7 +11,7 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 ## Prerequisites
 
 * SonarQube 4.5.4 or newer
-* Java 3.3 plugin
+* Java 3.8 plugin
 * Maven 2.x, 3.x
 
 ## Installation
@@ -20,6 +20,12 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 2. Paste it into `sonarqube/extensions/plugins` directory.
 3. Restart SonarQube.
 4. Go to rules section and activate AEM rules in your profile.
+
+# Release notes
+
+## 0.5
+
+RND-398 Support for Java 3.8 plugin.
 
 # Commercial Support
 
