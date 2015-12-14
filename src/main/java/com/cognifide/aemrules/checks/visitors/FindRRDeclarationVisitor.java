@@ -1,6 +1,8 @@
 package com.cognifide.aemrules.checks.visitors;
 
 import com.google.common.collect.Sets;
+
+import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.tree.*;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
@@ -9,6 +11,7 @@ import java.util.Set;
 
 /**
  * Finds all injector variable declarations. Used in method's bodies only.
+ * Works only for declaration within the same file - api limitations: {@link Symbol#declaration()}
  */
 public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
@@ -35,7 +38,8 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 				resourceResolvers.add((VariableTree) variable.symbol().declaration());
 			} else if (isRR(methodInvocation) && methodInvocation.methodSelect().is(Kind.IDENTIFIER)) {
 				MethodTree methodDeclaration = getMethodTree(methodInvocation);
-				if (isManuallyCreatedResourceResolver(methodDeclaration)) {
+				// variable 'methodDeclaration' can be null in case when method declaration isn't within the same file.
+				if (methodDeclaration != null && isManuallyCreatedResourceResolver(methodDeclaration)) {
 					resourceResolvers.add((VariableTree) getDeclaration((IdentifierTree) tree.variable()));
 				}
 			}
@@ -62,6 +66,11 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 		return (MethodTree) getDeclaration(method);
 	}
 
+	/**
+	 * Works for declaration within the same file only - mentioned in {@link Symbol#declaration()} 
+	 * @param variable identifier tree
+	 * @return the Tree of the declaration of this variable. Null if declaration does not occur in the currently analyzed file.
+	 */
 	private Tree getDeclaration(IdentifierTree variable) {
 		return variable.symbol().declaration();
 	}
