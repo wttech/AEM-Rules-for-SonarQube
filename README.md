@@ -23,7 +23,7 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 
 # Commercial Support
 
-Technical support can be made available if needed. Please [contact us](mailto:michal.chudy@cognifide.com) for more details.
+Technical support can be made available if needed. Please [contact us](mailto:labs-support@cognifide.com) for more details.
 
 We can:
 
