@@ -1,11 +1,11 @@
 package com.example;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
-import com.sun.org.apache.xml.internal.security.utils.resolver.ResourceResolver;
 
 /**
  * @author Krzysztof Watral
@@ -14,6 +14,8 @@ import com.sun.org.apache.xml.internal.security.utils.resolver.ResourceResolver;
 public class SampleModel implements InitializableModel {
 
 	private final ResourceResolver resolver;
+
+	private ResourceResolver resolver2;
 
 	@JcrProperty
 	private String prop;
@@ -31,7 +33,9 @@ public class SampleModel implements InitializableModel {
 	}
 
 	public String getPropRR() {
-		return (String) resolver.getAttribute("TEST"); // Noncompliant {{Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.}}
+		resolver.getAttribute("TEST"); // Noncompliant {{Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.}}
+		StringUtils.isBlank(resolver2.getAttribute("TEST")); // Noncompliant {{Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.}}
+		return "null";
 	}
 
 	public ResourceResolver getResolver() {
