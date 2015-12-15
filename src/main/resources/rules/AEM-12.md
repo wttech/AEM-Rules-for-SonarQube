@@ -1,0 +1,1 @@
+Fields that are annotated with @JcrProperty should not be access from within constructor.
