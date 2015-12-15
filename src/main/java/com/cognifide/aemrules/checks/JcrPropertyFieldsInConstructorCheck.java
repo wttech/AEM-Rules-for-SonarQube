@@ -4,7 +4,6 @@ import java.util.Set;
 
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.model.declaration.MethodTreeImpl;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.AnnotationTree;
@@ -14,7 +13,6 @@ import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
-import org.sonar.plugins.java.api.tree.TypeTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 import com.google.common.collect.Sets;
@@ -32,14 +30,30 @@ public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor impleme
 
 	private JavaFileScannerContext context;
 
-	private CheckClassVisitor classVisitor;
+	private final Set<String> annotatedVariables = Sets.newHashSet();
+
+	@Override
+	public void visitClass(ClassTree classTree) {
+		classTree.accept(new CheckAnnotatedVariables());
+		super.visitClass(classTree);
+	}
 
 	@Override
 	public void scanFile(JavaFileScannerContext context) {
 		this.context = context;
-		classVisitor = new CheckClassVisitor();
-		context.getTree().accept(classVisitor);
 		scan(context.getTree());
+	}
+
+	@Override
+	public void visitMethod(MethodTree tree) {
+		if (tree.is(MethodTree.Kind.CONSTRUCTOR)) {
+			CheckUsageInConstructorVisitor visitor = new CheckUsageInConstructorVisitor(methodParams(tree));
+			tree.accept(visitor);
+			for (Tree error : visitor.errors) {
+				context.addIssue(error, this, RULE_MESSAGE);
+			}
+		}
+		super.visitMethod(tree);
 	}
 
 	private Set<String> methodParams(MethodTree tree) {
@@ -50,87 +64,64 @@ public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor impleme
 		return params;
 	}
 
-	@Override
-	public void visitMethod(MethodTree tree) {
-		if (isConstructor(tree)) {
-			final Set<String> methodParams = methodParams(tree);
-			final Set<Tree> errors = Sets.newHashSet();
+	private class CheckAnnotatedVariables extends BaseTreeVisitor {
+		@Override
+		public void visitVariable(VariableTree tree) {
+			CheckAppliedAnnotationsVisitor visitor = new CheckAppliedAnnotationsVisitor();
+			tree.accept(visitor);
 
-			tree.accept(new BaseTreeVisitor() {
-				@Override
-				public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
-					if (classVisitor.annotatedVariables.contains(tree.identifier().symbol().name())) {
-						errors.add(tree);
-					}
-					super.visitMemberSelectExpression(tree);
-				}
-
-				@Override
-				public void visitIdentifier(IdentifierTree tree) {
-					if (tree.symbol().isVariableSymbol()) {
-						if (!methodParams.contains(tree.symbol().name())) {
-							if (classVisitor.annotatedVariables.contains(tree.symbol().name())) {
-								errors.add(tree);
-							}
-						}
-					}
-
-					super.visitIdentifier(tree);
-				}
-			});
-
-			for (Tree error : errors) {
-				context.addIssue(error, this, RULE_MESSAGE);
+			if (visitor.hasJcrPropertyAnnotation()) {
+				annotatedVariables.add(tree.symbol().name());
 			}
+			super.visitVariable(tree);
 		}
-
-		super.visitMethod(tree);
 	}
 
-	public boolean isConstructor(MethodTree tree) {
-		return ((MethodTreeImpl) tree).getGrammarRuleKey() == MethodTree.Kind.CONSTRUCTOR;
-	}
+	private class CheckAppliedAnnotationsVisitor extends BaseTreeVisitor {
 
-	private boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
-		return typeTree.symbolType().fullyQualifiedName().equals(fullyQualifiedName);
-	}
+		private static final String JCR_PROPERTY_ANNOTATION = "com.cognifide.slice.mapper.annotation.JcrProperty";
 
-	private class CheckClassVisitor extends BaseTreeVisitor {
-
-		private final Set<String> annotatedVariables = Sets.newHashSet();
+		private boolean jcrPropertyAnnotation;
 
 		@Override
-		public void visitClass(ClassTree classTree) {
-			classTree.accept(new BaseTreeVisitor() {
-				@Override
-				public void visitVariable(VariableTree tree) {
-					CheckAppliedAnnotationsVisitor visitor = new CheckAppliedAnnotationsVisitor();
-					tree.accept(visitor);
-
-					if (visitor.hasJcrPropertyAnnotation()) {
-						annotatedVariables.add(tree.symbol().name());
-					}
-					super.visitVariable(tree);
-				}
-			});
-			super.visitClass(classTree);
+		public void visitAnnotation(AnnotationTree annotationTree) {
+			jcrPropertyAnnotation = annotationTree.annotationType().symbolType().is(JCR_PROPERTY_ANNOTATION);
+			super.visitAnnotation(annotationTree);
 		}
 
-		private class CheckAppliedAnnotationsVisitor extends BaseTreeVisitor {
+		public boolean hasJcrPropertyAnnotation() {
+			return jcrPropertyAnnotation;
+		}
+	}
 
-			private static final String JCR_PROPERTY_ANNOTATION = "com.cognifide.slice.mapper.annotation.JcrProperty";
+	private class CheckUsageInConstructorVisitor extends BaseTreeVisitor {
 
-			private boolean jcrPropertyAnnotation;
+		final Set<String> methodParams;
 
-			@Override
-			public void visitAnnotation(AnnotationTree annotationTree) {
-				jcrPropertyAnnotation |= isOfType(annotationTree.annotationType(), JCR_PROPERTY_ANNOTATION);
-				super.visitAnnotation(annotationTree);
+		final Set<Tree> errors = Sets.newHashSet();
+
+		CheckUsageInConstructorVisitor(final Set<String> methodParams) {
+			this.methodParams = methodParams;
+		}
+
+		@Override
+		public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
+			if (annotatedVariables.contains(tree.identifier().symbol().name())) {
+				errors.add(tree);
 			}
+			super.visitMemberSelectExpression(tree);
+		}
 
-			public boolean hasJcrPropertyAnnotation() {
-				return jcrPropertyAnnotation;
+		@Override
+		public void visitIdentifier(IdentifierTree tree) {
+			if (tree.symbol().isVariableSymbol()) {
+				if (!methodParams.contains(tree.symbol().name())) {
+					if (annotatedVariables.contains(tree.symbol().name())) {
+						errors.add(tree);
+					}
+				}
 			}
+			super.visitIdentifier(tree);
 		}
 	}
 }

@@ -23,12 +23,12 @@ public class JcrPropertySampleModel {
 	}
 
 	public JcrPropertySampleModel(int i) {
-		if( StringUtils.isBlank(name) ) // Noncompliant  {{Fields annotated by @JcrProperty shouldn't be access from constructor.}}
-			modName = surname + i; // Noncompliant  {{Fields annotated by @JcrProperty shouldn't be access from constructor.}}
+		if( StringUtils.isBlank(name) ) // Noncompliant {{Fields annotated by @JcrProperty shouldn't be access from constructor.}}
+			modName = surname + i; // Noncompliant
 	}
 
 	public JcrPropertySampleModel(String surname) {
-		this.surname = surname; // Noncompliant  {{Fields annotated by @JcrProperty shouldn't be access from constructor.}}
+		this.surname = surname; // Noncompliant
 	}
 
 	public String getName() {
