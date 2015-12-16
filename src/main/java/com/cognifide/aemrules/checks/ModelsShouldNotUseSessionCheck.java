@@ -58,7 +58,7 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 	}
 
 	private boolean isRegularMethod(MethodTree tree) {
-		boolean constructor = ((MethodTreeImpl) tree).getGrammarRuleKey() == MethodTree.Kind.CONSTRUCTOR;
+		boolean constructor = tree.is(MethodTree.Kind.CONSTRUCTOR);
 		boolean afterCreated = implementations.isImplementingInitializableModel() && "afterCreated".equals(tree.symbol().name());
 		return !constructor && !afterCreated;
 	}
@@ -77,7 +77,7 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 	}
 
 	private boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
-		return typeTree.symbolType().fullyQualifiedName().equals(fullyQualifiedName);
+		return typeTree.symbolType().is(fullyQualifiedName);
 	}
 
 	private class CheckImplementationsVisitor extends BaseTreeVisitor {
