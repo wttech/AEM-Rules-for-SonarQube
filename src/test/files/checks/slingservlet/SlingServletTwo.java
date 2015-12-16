@@ -18,7 +18,7 @@ import java.io.IOException;
 @Properties({
 		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide"),
 		@Property(name = Constants.SERVICE_DESCRIPTION, value = "Some description") })
-public class SlingTestTwo extends SlingSafeMethodsServlet {
+public class SlingTestTwo extends SlingSafeMethodsServlet { // Noncompliant {{@Component nor @Service annotation is not needed when @SlingServlet is used.}}
 
 	@Override
 	protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)

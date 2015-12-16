@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cognifide.aemrules</groupId>
-	<artifactId>aemrules</artifactId>
+    <artifactId>aemrules</artifactId>
     <version>0.5-SNAPSHOT</version>
 
     <name>AEM Rules for SonarQube</name>
@@ -13,10 +13,10 @@
     <packaging>sonar-plugin</packaging>
 
     <inceptionYear>2015</inceptionYear>
-	<organization>
-		<name>Cognifide Limited</name>
-		<url>http://www.cognifide.com</url>
-	</organization>
+    <organization>
+        <name>Cognifide Limited</name>
+        <url>http://www.cognifide.com</url>
+    </organization>
 
     <licenses>
         <license>
@@ -46,38 +46,38 @@
         <tag>HEAD</tag>
     </scm>
 
-	<issueManagement>
-		<system>jira</system>
-		<url>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</url>
-	</issueManagement>
+    <issueManagement>
+        <system>jira</system>
+        <url>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</url>
+    </issueManagement>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sonar-plugin-api-version>3.7.3</sonar-plugin-api-version>
-		<sonar.version>4.5.4</sonar.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar-plugin-api-version>3.7.3</sonar-plugin-api-version>
+        <sonar.version>4.5.4</sonar.version>
+        <sonar.java.plugin>3.8</sonar.java.plugin>
+    </properties>
 
-	<repositories>
-		<repository>
-			<id>adobe-releases</id>
-			<url>http://repo.adobe.com/nexus/content/groups/public/</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>adobe-releases</id>
+            <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.codehaus.sonar</groupId>
-			<artifactId>sonar-plugin-api</artifactId>
-			<version>4.5.4</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.codehaus.sonar-plugins.java</groupId>
-			<artifactId>java-squid</artifactId>
-			<version>3.2</version>
-			<scope>compile</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.sonar</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
+            <version>4.5.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.java</groupId>
+            <artifactId>sonar-java-plugin</artifactId>
+            <version>${sonar.java.plugin}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Unit Test dependencies -->
 
@@ -85,6 +85,18 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.java</groupId>
+            <artifactId>java-checks-testkit</artifactId>
+            <version>${sonar.java.plugin}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.30</version>
             <scope>test</scope>
         </dependency>
         <dependency>
