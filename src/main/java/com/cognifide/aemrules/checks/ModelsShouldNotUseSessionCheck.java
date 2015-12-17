@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.model.declaration.MethodTreeImpl;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.AnnotationTree;
@@ -31,20 +30,28 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 	public static final String RULE_MESSAGE =
 			"Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.";
 
+	private static final String INITIALIZABLE_MODEL_INTERFACE = "com.cognifide.slice.api.model.InitializableModel";
+
 	private JavaFileScannerContext context;
 
 	private CheckAppliedAnnotationsVisitor annotations;
 
-	private CheckImplementationsVisitor implementations;
+	private boolean implementedInitializableModel;
 
 	@Override
 	public void scanFile(@Nonnull JavaFileScannerContext context) {
 		this.context = context;
 		annotations = new CheckAppliedAnnotationsVisitor();
-		implementations = new CheckImplementationsVisitor();
 		context.getTree().accept(annotations);
-		context.getTree().accept(implementations);
 		scan(context.getTree());
+	}
+
+	@Override
+	public void visitClass(ClassTree classTree) {
+		for (TypeTree typeTree : classTree.superInterfaces()) {
+			implementedInitializableModel |= isOfType(typeTree, INITIALIZABLE_MODEL_INTERFACE);
+		}
+		super.visitClass(classTree);
 	}
 
 	@Override
@@ -59,7 +66,7 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 
 	private boolean isRegularMethod(MethodTree tree) {
 		boolean constructor = tree.is(MethodTree.Kind.CONSTRUCTOR);
-		boolean afterCreated = implementations.isImplementingInitializableModel() && "afterCreated".equals(tree.symbol().name());
+		boolean afterCreated = implementedInitializableModel && "afterCreated".equals(tree.symbol().name());
 		return !constructor && !afterCreated;
 	}
 
@@ -78,25 +85,6 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 
 	private boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
 		return typeTree.symbolType().is(fullyQualifiedName);
-	}
-
-	private class CheckImplementationsVisitor extends BaseTreeVisitor {
-
-		private static final String INITIALIZABLE_MODEL_INTERFACE = "com.cognifide.slice.api.model.InitializableModel";
-
-		private boolean isImplementingInitializableModel;
-
-		@Override
-		public void visitClass(ClassTree classTree) {
-			for (TypeTree typeTree : classTree.superInterfaces()) {
-				isImplementingInitializableModel |= isOfType(typeTree, INITIALIZABLE_MODEL_INTERFACE);
-			}
-			super.visitClass(classTree);
-		}
-
-		public boolean isImplementingInitializableModel() {
-			return isImplementingInitializableModel;
-		}
 	}
 
 	private class CheckAppliedAnnotationsVisitor extends BaseTreeVisitor {
