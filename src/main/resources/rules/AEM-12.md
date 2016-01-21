@@ -1,4 +1,4 @@
-Fields that are annotated with @JcrProperty should not be access from within constructor.
+Fields that are annotated with @JcrProperty should not be accessed from within constructor.
 
 == Example
 

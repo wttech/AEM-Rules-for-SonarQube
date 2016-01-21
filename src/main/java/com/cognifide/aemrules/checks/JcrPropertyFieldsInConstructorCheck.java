@@ -26,7 +26,7 @@ public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor impleme
 
 	public static final String RULE_KEY = "AEM-12";
 
-	public static final String RULE_MESSAGE = "Fields annotated by @JcrProperty shouldn't be access from constructor.";
+	public static final String RULE_MESSAGE = "Fields annotated by @JcrProperty shouldn't be accessed from constructor.";
 
 	private JavaFileScannerContext context;
 
