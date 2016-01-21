@@ -15,6 +15,10 @@ public class JcrPropertySampleModel {
 	    length = name.length();
 	}
 
+	public JcrPropertySampleModel(String name) {
+	    this.name = name;
+	}
+
 	public int getLength() {
 	    return length;
 	}
@@ -30,6 +34,25 @@ public class JcrPropertySampleModel {
 
 	public int getLength() {
 	    return name.length();
+	}
+}
+``
+
+``
+@SliceResource
+public class JcrPropertySampleModel  implements InitializableModel {
+	@JcrProperty
+	private String name;
+
+	private int length;
+
+	@Override
+	public void afterCreated() {
+	    length = name.length();
+	}
+
+	public int getLength() {
+	    return length;
 	}
 }
 ``

@@ -16,11 +16,12 @@ import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 import com.google.common.collect.Sets;
+import java.util.Collections;
 
 @Rule(
-		key = JcrPropertyFieldsInConstructorCheck.RULE_KEY,
-		name = JcrPropertyFieldsInConstructorCheck.RULE_MESSAGE,
-		priority = Priority.MINOR
+	key = JcrPropertyFieldsInConstructorCheck.RULE_KEY,
+	name = JcrPropertyFieldsInConstructorCheck.RULE_MESSAGE,
+	priority = Priority.MINOR
 )
 public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -49,7 +50,7 @@ public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor impleme
 		if (tree.is(MethodTree.Kind.CONSTRUCTOR)) {
 			CheckUsageInConstructorVisitor visitor = new CheckUsageInConstructorVisitor(methodParams(tree));
 			tree.accept(visitor);
-			for (Tree error : visitor.errors) {
+			for (Tree error : visitor.getErrors()) {
 				context.addIssue(error, this, RULE_MESSAGE);
 			}
 		}
@@ -65,6 +66,7 @@ public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor impleme
 	}
 
 	private class CheckAnnotatedVariables extends BaseTreeVisitor {
+
 		@Override
 		public void visitVariable(VariableTree tree) {
 			CheckAppliedAnnotationsVisitor visitor = new CheckAppliedAnnotationsVisitor();
@@ -96,12 +98,16 @@ public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor impleme
 
 	private class CheckUsageInConstructorVisitor extends BaseTreeVisitor {
 
-		final Set<String> methodParams;
+		private final Set<String> methodParams;
 
-		final Set<Tree> errors = Sets.newHashSet();
+		private final Set<Tree> errors = Sets.newHashSet();
 
-		CheckUsageInConstructorVisitor(final Set<String> methodParams) {
+		private CheckUsageInConstructorVisitor(final Set<String> methodParams) {
 			this.methodParams = methodParams;
+		}
+
+		public Set<Tree> getErrors() {
+			return Collections.unmodifiableSet(errors);
 		}
 
 		@Override
