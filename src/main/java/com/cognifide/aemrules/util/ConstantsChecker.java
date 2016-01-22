@@ -92,7 +92,6 @@ public class ConstantsChecker {
 				.put("mix:lastModified", "interface com.day.cq.commons.jcr.JcrConstants.MIX_LAST_MODIFIED")
 
 				// interface com.day.cq.dam.api.DamConstants
-				.put("renditions", "interface com.day.cq.dam.api.DamConstants.RENDITIONS_FOLDER")
 				.put("dam:Asset", "interface com.day.cq.dam.api.DamConstants.NT_DAM_ASSET")
 				.put("dam:AssetContent", "interface com.day.cq.dam.api.DamConstants.NT_DAM_ASSETCONTENT")
 				.put("dam:extracted", "interface com.day.cq.dam.api.DamConstants.PN_EXTRACTED")
@@ -155,10 +154,7 @@ public class ConstantsChecker {
 				.put("allowedChildren", "interface com.day.cq.wcm.api.NameConstants.PN_ALLOWED_CHILDREN")
 				.put("allowedParents", "interface com.day.cq.wcm.api.NameConstants.PN_ALLOWED_PARENTS")
 				.put("componentGroup", "interface com.day.cq.wcm.api.NameConstants.PN_COMPONENT_GROUP")
-				.put("ranking", "interface com.day.cq.wcm.api.NameConstants.PN_RANKING")
 				.put("sitePath", "interface com.day.cq.wcm.api.NameConstants.PN_SITE_PATH")
-				.put("params", "interface com.day.cq.wcm.api.NameConstants.NN_PARAMS")
-				.put("virtual", "interface com.day.cq.wcm.api.NameConstants.NN_VIRTUAL")
 				.put("cq:templatePath", "interface com.day.cq.wcm.api.NameConstants.PN_TEMPLATE_PATH")
 				.put("cq:template", "interface com.day.cq.wcm.api.NameConstants.NN_TEMPLATE")
 				.put("cq:tagName", "interface com.day.cq.wcm.api.NameConstants.PN_TAG_NAME")
@@ -175,21 +171,12 @@ public class ConstantsChecker {
 				.put("cq:dropTargets", "interface com.day.cq.wcm.api.NameConstants.NN_DROP_TARGETS")
 				.put("cq:listeners", "interface com.day.cq.wcm.api.NameConstants.NN_LISTENERS")
 				.put("propertyName", "interface com.day.cq.wcm.api.NameConstants.PN_DT_NAME")
-				.put("accept", "interface com.day.cq.wcm.api.NameConstants.PN_DT_ACCEPT")
-				.put("groups", "interface com.day.cq.wcm.api.NameConstants.PN_DT_GROUPS")
 				.put("cq:inherit", "interface com.day.cq.wcm.api.NameConstants.PN_INHERIT")
 				.put("cq:designPath", "interface com.day.cq.wcm.api.NameConstants.PN_DESIGN_PATH")
 				.put("cq:parentPath", "interface com.day.cq.wcm.api.NameConstants.PN_PARENT_PATH")
-				.put("cq:name", "interface com.day.cq.wcm.api.NameConstants.PN_NAME")
 				.put("cq:childrenOrder", "interface com.day.cq.wcm.api.NameConstants.PN_CHILDREN_ORDER")
 				.put("cq:siblingOrder", "interface com.day.cq.wcm.api.NameConstants.PN_SIBLING_ORDER")
 				.put("cq:versionComment", "interface com.day.cq.wcm.api.NameConstants.PN_VERSION_COMMENT")
-				.put("shortTitle", "interface com.day.cq.wcm.api.NameConstants.PN_SHORT_TITLE")
-				.put("pageTitle", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_TITLE")
-				.put("navTitle", "interface com.day.cq.wcm.api.NameConstants.PN_NAV_TITLE")
-				.put("hideInNav", "interface com.day.cq.wcm.api.NameConstants.PN_HIDE_IN_NAV")
-				.put("onTime", "interface com.day.cq.wcm.api.NameConstants.PN_ON_TIME")
-				.put("offTime", "interface com.day.cq.wcm.api.NameConstants.PN_OFF_TIME")
 				.put("cq:lastModified", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_MOD")
 				.put("cq:lastModifiedBy", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_MOD_BY")
 				.put("cq:lastReplicated", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATED")
@@ -221,10 +208,14 @@ public class ConstantsChecker {
 				// interface com.day.cq.tagging.TagConstants
 				.put("cq:Tag", "interface com.day.cq.tagging.TagConstants.NT_TAG")
 				.put("cq:Taggable", "interface com.day.cq.tagging.TagConstants.NT_TAGGABLE")
-				.put("cq:tags", "interface com.day.cq.tagging.TagConstants.PN_TAGS")
+				
 				.put("cq:movedTo", "interface com.day.cq.tagging.TagConstants.PN_MOVED_TO")
 				.put("cq:backlinks", "interface com.day.cq.tagging.TagConstants.PN_BACKLINKS")
 
+				// mix
+				.put("cq:tags", "interface com.day.cq.tagging.TagConstants.PN_TAGS or interface com.day.cq.wcm.api.NameConstants.PN_TAGS")
+				.put("cq:name", "interface com.day.cq.dam.api.DamConstants.PN_NAME or interface com.day.cq.wcm.api.NameConstants.PN_NAME")
+			
 				.build();
 
 		ANNOTATION_CONSTANTS = ImmutableMap.<String, String>builder()
