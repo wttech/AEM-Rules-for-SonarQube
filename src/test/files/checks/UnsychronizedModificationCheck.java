@@ -6,7 +6,7 @@ import org.osgi.service.component.ComponentContext;
 
 @Component
 @Service
-public class S {
+public class UnsychronizedModificationCheck {
 
 	private Object lockObj = new Object();
 

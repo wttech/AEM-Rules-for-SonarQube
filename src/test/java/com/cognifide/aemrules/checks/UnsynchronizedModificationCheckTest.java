@@ -2,11 +2,11 @@ package com.cognifide.aemrules.checks;
 
 import org.junit.Test;
 
-public class UnsychronizedModificationCheckTest extends AbstractBaseTest {
+public class UnsynchronizedModificationCheckTest extends AbstractBaseTest {
 
 	@Test
 	public void unsychronizedModificationCheck() {
-		check = new UnsychronizedModificationCheck();
+		check = new UnsynchronizedModificationCheck();
 		filename = "src/test/files/checks/UnsychronizedModificationCheck.java";
 		verify();
 	}

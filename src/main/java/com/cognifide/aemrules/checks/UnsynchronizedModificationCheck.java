@@ -33,11 +33,11 @@ import com.google.common.collect.Sets;
 		priority = Priority.CRITICAL,
 		tags = {Tag.BUG, Tag.MULTI_THREADING}
 )
-public class UnsychronizedModificationCheck extends SubscriptionBaseVisitor {
+public class UnsynchronizedModificationCheck extends SubscriptionBaseVisitor {
 
-	private Deque<Boolean> inSynchronizedBlock = Lists.newLinkedList();
+	private final Deque<Boolean> inSynchronizedBlock = Lists.newLinkedList();
 
-	private Set<Symbol> fields = Sets.newHashSet();
+	private final Set<Symbol> fields = Sets.newHashSet();
 
 	private boolean service;
 
