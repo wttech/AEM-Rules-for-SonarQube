@@ -1,6 +1,5 @@
 package com.example;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.sling.api.resource.Resource;
@@ -16,12 +15,36 @@ public class IteratingResourcesCheck {
 		return models;
 	}
 
+	public List<SimpleModel> iteratingDoWhile(Iterator<Resource> resources, ModelProvider modelProvider) {
+		List<SimpleModel> models = new ArrayList<>();
+		Resource resource = null;
+		do { // Noncompliant
+			resource = resources.hasNext() ? resources.next() : null;
+			if (null != resource) {
+				models.add(modelProvider.get(SimpleModel.class, resource));
+			}
+		} while (null != resource);
+		return models;
+	}
+
 	public List<SimpleModel> iteratingWhileInnerMethod(Iterator<Resource> resources, ModelProvider modelProvider) {
 		List<SimpleModel> models = new ArrayList<>();
 		while (resources.hasNext()) { // Noncompliant
 			Resource resource = resources.next();
 			addModel(models, modelProvider, SimpleModel.class, resource);
 		}
+		return models;
+	}
+
+	public List<SimpleModel> iteratingDoWhile(Iterator<Resource> resources, ModelProvider modelProvider) {
+		List<SimpleModel> models = new ArrayList<>();
+		Resource resource = null;
+		do { // Noncompliant
+			resource = resources.hasNext() ? resources.next() : null;
+			if (null != resource) {
+				addModel(models, modelProvider, SimpleModel.class, resource);
+			}
+		} while (null != resource);
 		return models;
 	}
 
@@ -93,6 +116,10 @@ public class IteratingResourcesCheck {
 			modelProvider.get(SimpleModel.class, resource);
 			break;
 		}
+		do {
+			modelProvider.get(SimpleModel.class, resource);
+			break;
+		} while (true);
 		for (String s : Collections.<String>emptyList()) {
 			modelProvider.get(SimpleModel.class, resource);
 			break;
@@ -113,9 +140,17 @@ public class IteratingResourcesCheck {
 			modelProvider.get(SimpleModel.class, resource);
 			break;
 		}
+		do {
+			modelProvider.get(SimpleModel.class, resource);
+			break;
+		} while (stringList.iterator().hasNext());
 		while (stringIt.hasNext()) {
 			modelProvider.get(SimpleModel.class, resource);
 			break;
 		}
+		do {
+			modelProvider.get(SimpleModel.class, resource);
+			break;
+		} while (stringIt.hasNext());
 	}
 }

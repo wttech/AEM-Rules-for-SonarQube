@@ -9,6 +9,8 @@ import org.sonar.java.checks.methods.TypeCriteria;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
+import org.sonar.plugins.java.api.tree.DoWhileStatementTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.ForEachStatement;
 import org.sonar.plugins.java.api.tree.ForStatementTree;
@@ -20,6 +22,7 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.ParameterizedTypeTree;
 import org.sonar.plugins.java.api.tree.StatementTree;
 import org.sonar.plugins.java.api.tree.Tree;
+import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.TypeTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 import org.sonar.plugins.java.api.tree.WhileStatementTree;
@@ -59,6 +62,18 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 	public void visitWhileStatement(WhileStatementTree tree) {
 		checkModelProviderInLoop(tree, tree.condition(), tree.statement());
 		super.visitWhileStatement(tree);
+	}
+
+	@Override
+	public void visitDoWhileStatement(DoWhileStatementTree tree) {
+		if (tree.condition() instanceof BinaryExpressionTree) {
+			DoWhileBinaryExpressionVisitor visitor = new DoWhileBinaryExpressionVisitor();
+			tree.condition().accept(visitor);
+			if (visitor.containsResourceComparison()) {
+				checkModelProviderCall(tree, tree.statement());
+			}
+		}
+		super.visitDoWhileStatement(tree);
 	}
 
 	@Override
@@ -115,7 +130,7 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 		if (type instanceof ParameterizedTypeTree) {
 			ListTree<Tree> trees = ((ParameterizedTypeTree) type).typeArguments();
 			for (Tree tree : trees) {
-				if (((IdentifierTree) tree).symbol().type().isSubtypeOf(RESOURCE_TYPE)) {
+				if (((TypeTree) tree).symbolType().isSubtypeOf(RESOURCE_TYPE)) {
 					return true;
 				}
 			}
@@ -144,6 +159,29 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 
 		public boolean isModelProviderGetCalled() {
 			return modelProviderGetCalled;
+		}
+	}
+
+	private static class DoWhileBinaryExpressionVisitor extends BaseTreeVisitor {
+
+		private boolean containsResourceComparison;
+
+		public boolean containsResourceComparison() {
+			return containsResourceComparison;
+		}
+
+		@Override
+		public void visitBinaryExpression(BinaryExpressionTree tree) {
+			containsResourceComparison = hasResourceComparison(tree);
+			super.visitBinaryExpression(tree);
+		}
+
+		private boolean hasResourceComparison(BinaryExpressionTree tree) {
+			return isResource(tree.leftOperand()) || isResource(tree.rightOperand());
+		}
+
+		private boolean isResource(ExpressionTree operand) {
+			return !operand.is(Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(RESOURCE_TYPE);
 		}
 	}
 
