@@ -83,7 +83,7 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 		}
 	}
 
-	private boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
+	private static boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
 		return typeTree.symbolType().is(fullyQualifiedName);
 	}
 

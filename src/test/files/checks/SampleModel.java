@@ -34,7 +34,7 @@ public class SampleModel implements InitializableModel {
 
 	public String getPropRR() {
 		resolver.getAttribute("TEST"); // Noncompliant {{Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.}}
-		StringUtils.isBlank(resolver2.getAttribute("TEST")); // Noncompliant
+		StringUtils.isBlank((String) resolver2.getAttribute("TEST")); // Noncompliant
 		return "null";
 	}
 

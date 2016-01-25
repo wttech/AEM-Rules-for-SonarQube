@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks.visitors;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 
 import org.sonar.plugins.java.api.semantic.Type;
@@ -8,22 +9,21 @@ import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.ReturnStatementTree;
 
 import com.google.common.collect.Sets;
+import java.util.Collections;
+import org.sonar.plugins.java.api.tree.ExpressionTree;
 
 /**
  * @author Krzysztof Watral
  */
 public class SessionUsageVisitor extends BaseTreeVisitor {
 
-	private static final Set<String> SESSION_CLASSES = Sets.newHashSet();
+	private static final Set<String> SESSION_CLASSES = ImmutableSet.of(
+		"javax.jcr.Session",
+		"com.day.cq.wcm.api.PageManager",
+		"org.apache.sling.api.SlingHttpServletRequest",
+		"org.apache.sling.api.resource.ResourceResolver");
 
-	static {
-		SESSION_CLASSES.add("javax.jcr.Session");
-		SESSION_CLASSES.add("com.day.cq.wcm.api.PageManager");
-		SESSION_CLASSES.add("org.apache.sling.api.SlingHttpServletRequest");
-		SESSION_CLASSES.add("org.apache.sling.api.resource.ResourceResolver");
-	}
-
-	private Set<MemberSelectExpressionTree> sessionMemberSelect = Sets.newHashSet();
+	private final Set<MemberSelectExpressionTree> sessionMemberSelect = Sets.newHashSet();
 
 	private ReturnStatementTree returnStatementTree;
 
@@ -37,14 +37,15 @@ public class SessionUsageVisitor extends BaseTreeVisitor {
 
 	@Override
 	public void visitReturnStatement(ReturnStatementTree tree) {
-		if (!isValid(tree.expression().symbolType())) {
+		ExpressionTree expression = tree.expression();
+		if (null != expression && !isValid(expression.symbolType())) {
 			returnStatementTree = tree;
 		}
 		super.visitReturnStatement(tree);
 	}
 
 	public Set<MemberSelectExpressionTree> getSessionMemberSelect() {
-		return sessionMemberSelect;
+		return Collections.unmodifiableSet(sessionMemberSelect);
 	}
 
 	public ReturnStatementTree getReturnStatementTree() {
