@@ -19,7 +19,6 @@ public class ConstantsChecker {
 				.put("jcr:child", "interface com.day.cq.commons.jcr.JcrConstants.JCR_CHILD")
 				.put("jcr:childNodeDefinition", "interface com.day.cq.commons.jcr.JcrConstants.JCR_CHILDNODEDEFINITION")
 				.put("jcr:content", "interface com.day.cq.commons.jcr.JcrConstants.JCR_CONTENT")
-				.put("jcr:created", "interface com.day.cq.commons.jcr.JcrConstants.JCR_CREATED")
 				.put("jcr:data", "interface com.day.cq.commons.jcr.JcrConstants.JCR_DATA")
 				.put("jcr:defaultPrimaryType", "interface com.day.cq.commons.jcr.JcrConstants.JCR_DEFAULTPRIMARYTYPE")
 				.put("jcr:defaultValues", "interface com.day.cq.commons.jcr.JcrConstants.JCR_DEFAULTVALUES")
@@ -32,7 +31,6 @@ public class ConstantsChecker {
 				.put("jcr:isCheckedOut", "interface com.day.cq.commons.jcr.JcrConstants.JCR_ISCHECKEDOUT")
 				.put("jcr:isMixin", "interface com.day.cq.commons.jcr.JcrConstants.JCR_ISMIXIN")
 				.put("jcr:language", "interface com.day.cq.commons.jcr.JcrConstants.JCR_LANGUAGE")
-				.put("jcr:lastModified", "interface com.day.cq.commons.jcr.JcrConstants.JCR_LASTMODIFIED")
 				.put("jcr:lockIsDeep", "interface com.day.cq.commons.jcr.JcrConstants.JCR_LOCKISDEEP")
 				.put("jcr:lockOwner", "interface com.day.cq.commons.jcr.JcrConstants.JCR_LOCKOWNER")
 				.put("jcr:mandatory", "interface com.day.cq.commons.jcr.JcrConstants.JCR_MANDATORY")
@@ -84,9 +82,6 @@ public class ConstantsChecker {
 				.put("nt:versionLabels", "interface com.day.cq.commons.jcr.JcrConstants.NT_VERSIONLABELS")
 				.put("nt:versionedChild", "interface com.day.cq.commons.jcr.JcrConstants.NT_VERSIONEDCHILD")
 				.put("jcr:title", "interface com.day.cq.commons.jcr.JcrConstants.JCR_TITLE")
-				.put("jcr:description", "interface com.day.cq.commons.jcr.JcrConstants.JCR_DESCRIPTION")
-				.put("jcr:createdBy", "interface com.day.cq.commons.jcr.JcrConstants.JCR_CREATED_BY")
-				.put("jcr:lastModifiedBy", "interface com.day.cq.commons.jcr.JcrConstants.JCR_LAST_MODIFIED_BY")
 				.put("mix:title", "interface com.day.cq.commons.jcr.JcrConstants.MIX_TITLE")
 				.put("mix:created", "interface com.day.cq.commons.jcr.JcrConstants.MIX_CREATED")
 				.put("mix:lastModified", "interface com.day.cq.commons.jcr.JcrConstants.MIX_LAST_MODIFIED")
@@ -177,18 +172,13 @@ public class ConstantsChecker {
 				.put("cq:childrenOrder", "interface com.day.cq.wcm.api.NameConstants.PN_CHILDREN_ORDER")
 				.put("cq:siblingOrder", "interface com.day.cq.wcm.api.NameConstants.PN_SIBLING_ORDER")
 				.put("cq:versionComment", "interface com.day.cq.wcm.api.NameConstants.PN_VERSION_COMMENT")
+				.put("onTime", "interface com.day.cq.wcm.api.NameConstants.PN_ON_TIME")
+				.put("offTime", "interface com.day.cq.wcm.api.NameConstants.PN_OFF_TIME")
 				.put("cq:lastModified", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_MOD")
 				.put("cq:lastModifiedBy", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_MOD_BY")
-				.put("cq:lastReplicated", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATED")
-				.put("cq:lastReplicatedBy", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATED_BY")
-				.put("cq:lastReplicationAction", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATION_ACTION")
 				.put("cq:defaultView", "interface com.day.cq.wcm.api.NameConstants.PN_DEFAULT_VIEW")
 				.put("sling:vanityPath", "interface com.day.cq.wcm.api.NameConstants.PN_SLING_VANITY_PATH")
 				.put("cq:allowedTemplates", "interface com.day.cq.wcm.api.NameConstants.PN_ALLOWED_TEMPLATES")
-				.put("vanityUrl", "interface com.day.cq.wcm.api.NameConstants.PN_VANITY_URL")
-				.put("cq:lastPublished", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_PUBLISHED")
-				.put("cq:lastPublishedBy", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_PUBLISHED_BY")
-				.put("cq:lastReplicationStatus", "interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATION_STATUS")
 
 				// interface com.day.cq.wcm.webservicesupport.ConfigurationConstants
 				.put("cq/cloudserviceconfigs/components/servicepage", "interface com.day.cq.wcm.webservicesupport.ConfigurationConstants.RT_SERVICE")
@@ -208,14 +198,96 @@ public class ConstantsChecker {
 				// interface com.day.cq.tagging.TagConstants
 				.put("cq:Tag", "interface com.day.cq.tagging.TagConstants.NT_TAG")
 				.put("cq:Taggable", "interface com.day.cq.tagging.TagConstants.NT_TAGGABLE")
-				
 				.put("cq:movedTo", "interface com.day.cq.tagging.TagConstants.PN_MOVED_TO")
 				.put("cq:backlinks", "interface com.day.cq.tagging.TagConstants.PN_BACKLINKS")
 
+				// interface com.day.cq.replication.ReplicationStatus
+				.put("cq:ReplicationStatus", "interface com.day.cq.replication.ReplicationStatus.NODE_TYPE")
+
+				// interface org.apache.jackrabbit.vault.packaging.JcrPackage
+				.put("application/zip", "interface org.apache.jackrabbit.vault.packaging.JcrPackage.MIME_TYPE")
+				.put("vlt:definition", "interface org.apache.jackrabbit.vault.packaging.JcrPackage.NN_VLT_DEFINITION")
+				.put("vlt:Package", "interface org.apache.jackrabbit.vault.packaging.JcrPackage.NT_VLT_PACKAGE")
+				.put("vlt:PackageDefinition", "interface org.apache.jackrabbit.vault.packaging.JcrPackage.NT_VLT_PACKAGE_DEFINITION")
+
+				// interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition
+				.put("acHandling", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_AC_HANDLING")
+				.put("buildCount", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_BUILD_COUNT")
+				.put("cndPattern", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_CND_PATTERN")
+				.put("dependencies", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_DEPENDENCIES")
+				.put("noIntermediateSaves", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_DISABLE_INTERMEDIATE_SAVE")
+				.put("lastUnpacked", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LAST_UNPACKED")
+				.put("lastUnpackedBy", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LAST_UNPACKED_BY")
+				.put("lastUnwrapped", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LAST_UNWRAPPED")
+				.put("lastUnwrappedBy", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LAST_UNWRAPPED_BY")
+				.put("lastWrapped", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LAST_WRAPPED")
+				.put("lastWrappedBy", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LAST_WRAPPED_BY")
+				.put("requiresRestart", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_REQUIRES_RESTART")
+				.put("requiresRoot", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_REQUIRES_ROOT")
+				.put("subPackages", "interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_SUB_PACKAGES")
+
+				// interface org.apache.sling.api.resource.ResourceResolverFactory
+				.put("user.password", "interface org.apache.sling.api.resource.ResourceResolverFactory.PASSWORD")
+				.put("sling.service.subservice", "interface org.apache.sling.api.resource.ResourceResolverFactory.SUBSERVICE")
+				.put("user.name", "interface org.apache.sling.api.resource.ResourceResolverFactory.USER")
+				.put("user.impersonation", "interface org.apache.sling.api.resource.ResourceResolverFactory.USER_IMPERSONATION")
+
+				// class com.adobe.granite.workflow.event.WorkflowEvent
+				.put("Delagatee", "class com.adobe.granite.workflow.event.WorkflowEvent.DELEGATEE")
+				.put("EventType", "class com.adobe.granite.workflow.event.WorkflowEvent.EVENT_TYPE")
+				.put("fromNodeName", "class com.adobe.granite.workflow.event.WorkflowEvent.FROM_NODE_NAME")
+				.put("JobFailed", "class com.adobe.granite.workflow.event.WorkflowEvent.JOB_FAILED_EVENT")
+				.put("ModelDeleted", "class com.adobe.granite.workflow.event.WorkflowEvent.MODEL_DELETED_EVENT")
+				.put("ModelDeployed", "class com.adobe.granite.workflow.event.WorkflowEvent.MODEL_DEPLOYED_EVENT")
+				.put("NodeTransition", "class com.adobe.granite.workflow.event.WorkflowEvent.NODE_TRANSITION_EVENT")
+				.put("ParentWorkflowId", "class com.adobe.granite.workflow.event.WorkflowEvent.PARENT_WORKFLOW_ID")
+				.put("ProcessTimeout", "class com.adobe.granite.workflow.event.WorkflowEvent.PROCESS_TIMEOUT_EVENT")
+				.put("ResourceCollectionModified", "class com.adobe.granite.workflow.event.WorkflowEvent.RESOURCE_COLLECTION_MODIFIED")
+				.put("TimeStamp", "class com.adobe.granite.workflow.event.WorkflowEvent.TIME_STAMP")
+				.put("toNodeName", "class com.adobe.granite.workflow.event.WorkflowEvent.TO_NODE_NAME")
+				.put("User", "class com.adobe.granite.workflow.event.WorkflowEvent.USER")
+				.put("VariableName", "class com.adobe.granite.workflow.event.WorkflowEvent.VARIABLE_NAME")
+				.put("VariableUpdate", "class com.adobe.granite.workflow.event.WorkflowEvent.VARIABLE_UPDATE_EVENT")
+				.put("VariableValue", "class com.adobe.granite.workflow.event.WorkflowEvent.VARIABLE_VALUE")
+				.put("Workdata", "class com.adobe.granite.workflow.event.WorkflowEvent.WORK_DATA")
+				.put("Workitem", "class com.adobe.granite.workflow.event.WorkflowEvent.WORK_ITEM")
+				.put("WorkflowAborted", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_ABORTED_EVENT")
+				.put("WorkflowCompleted", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_COMPLETED_EVENT")
+				.put("WorkflowInstanceId", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_INSTANCE_ID")
+				.put("WorkflowName", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_NAME")
+				.put("WorkflowNode", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_NODE")
+				.put("WorkflowResumed", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_RESUMED_EVENT")
+				.put("WorkflowStarted", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_STARTED_EVENT")
+				.put("WorkflowSuspended", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_SUSPENDED_EVENT")
+				.put("WorkflowVersion", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKFLOW_VERSION")
+				.put("WorkItemDelegated", "class com.adobe.granite.workflow.event.WorkflowEvent.WORKITEM_DELEGATION_EVENT")
+
 				// mix
+				.put("cq:lastReplicated",
+					"interface com.day.cq.replication.ReplicationStatus.NODE_PROPERTY_LAST_REPLICATED"
+						+ " or interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATED")
+				.put("cq:lastReplicatedBy",
+					"interface com.day.cq.replication.ReplicationStatus.NODE_PROPERTY_LAST_REPLICATED_BY"
+						+ " or interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATED_BY")
+				.put("cq:lastReplicationAction",
+					"interface com.day.cq.replication.ReplicationStatus.NODE_PROPERTY_LAST_REPLICATION_ACTION"
+						+ " or interface com.day.cq.wcm.api.NameConstants.PN_PAGE_LAST_REPLICATION_ACTION")
 				.put("cq:tags", "interface com.day.cq.tagging.TagConstants.PN_TAGS or interface com.day.cq.wcm.api.NameConstants.PN_TAGS")
 				.put("cq:name", "interface com.day.cq.dam.api.DamConstants.PN_NAME or interface com.day.cq.wcm.api.NameConstants.PN_NAME")
-			
+				.put("jcr:created",
+					"interface com.day.cq.commons.jcr.JcrConstants.JCR_CREATED"
+						+ " or interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_CREATED")
+				.put("jcr:createdBy",
+					"interface com.day.cq.commons.jcr.JcrConstants.JCR_CREATED_BY"
+						+ " or interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_CREATED_BY")
+				.put("jcr:description",
+					"interface com.day.cq.commons.jcr.JcrConstants.JCR_DESCRIPTION"
+						+ " or interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_DESCRIPTION")
+				.put("jcr:lastModified",
+					"interface com.day.cq.commons.jcr.JcrConstants.JCR_LASTMODIFIED"
+						+ " or interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LASTMODIFIED")
+				.put("jcr:lastModifiedBy", "interface com.day.cq.commons.jcr.JcrConstants.JCR_LAST_MODIFIED_BY"
+					+ " or interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_LASTMODIFIED_BY")
 				.build();
 
 		ANNOTATION_CONSTANTS = ImmutableMap.<String, String>builder()
@@ -363,6 +435,9 @@ public class ConstantsChecker {
 				.put("INCLUDE", "class org.apache.sling.engine.EngineConstants.FILTER_SCOPE_INCLUDE")
 				.put("FORWARD", "class org.apache.sling.engine.EngineConstants.FILTER_SCOPE_FORWARD")
 				.put("REQUEST", "class org.apache.sling.engine.EngineConstants.FILTER_SCOPE_REQUEST")
+
+				// class com.adobe.granite.workflow.event.WorkflowEvent
+				.put("com/adobe/granite/workflow/event", "class com.adobe.granite.workflow.event.WorkflowEvent.EVENT_TOPIC")
 
 				.build();
 	}

@@ -1,7 +1,7 @@
 package com.example;
 
 class Constants {
-	public static final String JCR_CREATED = "jcr:created"; // Noncompliant {{Use predefined constant instead of hardcoded value. (interface com.day.cq.commons.jcr.JcrConstants.JCR_CREATED)}}
+	public static final String JCR_CREATED = "jcr:created"; // Noncompliant {{Use predefined constant instead of hardcoded value. (interface com.day.cq.commons.jcr.JcrConstants.JCR_CREATED or interface org.apache.jackrabbit.vault.packaging.JcrPackageDefinition.PN_CREATED)}}
 	public static final String NT_FOLDER = "nt:folder"; // Noncompliant {{Use predefined constant instead of hardcoded value. (interface com.day.cq.commons.jcr.JcrConstants.NT_FOLDER)}}
 	public static final String NT_DAM_ASSET;
 	static {
