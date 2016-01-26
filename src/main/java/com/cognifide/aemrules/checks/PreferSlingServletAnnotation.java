@@ -28,13 +28,13 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
 
 	public static final String SERVLET_RESOLVER_CONSTANTS_CLASS = "org.apache.sling.servlets.resolver.internal.ServletResolverConstants";
 
-	private static final Set SERVLET_CONSTANTS = Sets.newHashSet(
+	private static final Set<String> SERVLET_CONSTANTS = Sets.newHashSet(
 			"SLING_SERVLET_METHODS",
 			"SLING_SERVLET_EXTENSIONS",
 			"SLING_SERVLET_SELECTORS",
 			"SLING_SERVLET_RESOURCE_TYPES");
 
-	private static final Set SERVLET_CONSTANTS_VALUES = Sets.newHashSet(
+	private static final Set<String> SERVLET_CONSTANTS_VALUES = Sets.newHashSet(
 			"sling.servlet.paths",
 			"sling.servlet.resourceTypes",
 			"sling.servlet.selectors",
