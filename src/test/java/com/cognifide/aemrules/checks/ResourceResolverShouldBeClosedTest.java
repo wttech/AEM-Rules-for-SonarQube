@@ -27,4 +27,11 @@ public class ResourceResolverShouldBeClosedTest {
 				.next().atLine(82);
 	}
 
+	@Test
+	public void checkResourceResolverNotClosedInFinallyBlockWhenResourceResolverComesFromDifferentClass() {
+		check = new ResourceResolverShouldBeClosed();
+		filename = "src/test/files/checks/ResourceResolverConsumer.java";
+		verifyNoIssues();
+	}
+
 }

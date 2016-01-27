@@ -35,4 +35,24 @@ public class TestClasspath {
 		}
 	}
 
+	protected JavaFileScanner check;
+
+	protected String filename;
+
+	protected void verify() {
+		verify(true);
+	}
+
+	protected void verify(boolean withJarClassPath) {
+		if (withJarClassPath) {
+			JavaCheckVerifier.verify(filename, check, CLASSPATH_JAR);
+		} else {
+			JavaCheckVerifier.verify(filename, check);
+		}
+	}
+	
+	protected void verifyNoIssues() {
+		JavaCheckVerifier.verifyNoIssue(filename, check);
+	}
+
 }
