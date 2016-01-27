@@ -31,12 +31,12 @@ public class SynchornizedKeywordUsageCheck extends SubscriptionBaseVisitor {
 
 	static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
 
-	private static final List<Tree.Kind> ACCEPTED_NODE_KIDNS = 
+	private static final List<Tree.Kind> ACCEPTED_NODE_KINDS = 
 		ImmutableList.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);
 	
 	@Override
 	public List<Tree.Kind> nodesToVisit() {
-		return ACCEPTED_NODE_KIDNS;
+		return ACCEPTED_NODE_KINDS;
 	}
 
 	@Override
