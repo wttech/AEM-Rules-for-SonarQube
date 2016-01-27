@@ -1,27 +1,29 @@
 package com.cognifide.aemrules.checks;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestClasspath {
+import org.apache.commons.lang.StringUtils;
+import org.sonar.java.checks.verifier.JavaCheckVerifier;
+import org.sonar.plugins.java.api.JavaFileScanner;
+
+public abstract class AbstractBaseTest {
 
 	/**
 	 * JAR dependencies for classpath execution
 	 */
-	public static final List<File> CLASSPATH_JAR;
+	private static final List<File> CLASSPATH_JAR;
 
 	/**
 	 * When run from maven.
 	 */
-	public static final String SUREFIRE_TEST_CLASS_PATH = "surefire.test.class.path";
+	private static final String SUREFIRE_TEST_CLASS_PATH = "surefire.test.class.path";
 
 	/**
 	 * When run from IDE.
 	 */
-	public static final String JAVA_CLASS_PATH = "java.class.path";
+	private static final String JAVA_CLASS_PATH = "java.class.path";
 
 	static {
 		CLASSPATH_JAR = new ArrayList<>();
@@ -50,9 +52,8 @@ public class TestClasspath {
 			JavaCheckVerifier.verify(filename, check);
 		}
 	}
-	
+
 	protected void verifyNoIssues() {
 		JavaCheckVerifier.verifyNoIssue(filename, check);
 	}
-
 }
