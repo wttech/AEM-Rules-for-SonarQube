@@ -1,4 +1,4 @@
-![Cognifide logo](http://cognifide.github.io/Carty/assets/media/cognifide_logo.png)
+![Cognifide logo](http://cognifide.github.io/images/cognifide-logo.png)
 
 # About AEM Rules for SonarQube
 
