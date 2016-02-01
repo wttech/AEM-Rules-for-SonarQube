@@ -12,6 +12,7 @@ import com.cognifide.aemrules.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.checks.ConstantsCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
+import com.cognifide.aemrules.checks.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.checks.IteratingResourcesCheck;
 import com.cognifide.aemrules.checks.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.checks.PreferSlingServletAnnotation;
@@ -26,17 +27,18 @@ public class CheckListRegistrar implements CheckRegistrar {
 	public static Class[] getCheckClasses() {
 		// @formatter:off
 		return new Class[] {
-				ConstantsCheck.class,
 				AnnotationsConstantsCheck.class,
-				ThreadSafeFieldCheck.class,
+				ConstantsCheck.class,
+				HttpConstantCheck.class,
 				InjectorShouldBeClosedCheck.class,
 				InjectorTryWithResourcesCheck.class,
+				ModelsShouldNotUseSessionCheck.class,
 				IteratingResourcesCheck.class,
+				JcrPropertyFieldsInConstructorCheck.class,
+				PreferSlingServletAnnotation.class,
 				ResourceResolverShouldBeClosed.class,
 				SessionShouldBeLoggedOut.class,
-				PreferSlingServletAnnotation.class,
-				HttpConstantCheck.class,
-				JcrPropertyFieldsInConstructorCheck.class
+				ThreadSafeFieldCheck.class
 		};
 		// @formatter:on
 	}
