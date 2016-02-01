@@ -15,6 +15,7 @@ import com.cognifide.aemrules.checks.PreferSlingServletAnnotation;
 import com.cognifide.aemrules.checks.ResourceResolverShouldBeClosed;
 import com.cognifide.aemrules.checks.SessionShouldBeLoggedOut;
 import com.cognifide.aemrules.checks.ThreadSafeFieldCheck;
+import com.cognifide.aemrules.checks.UnsynchronizedModificationCheck;
 
 public class CheckListRegistrar implements CheckRegistrar {
 
@@ -30,7 +31,8 @@ public class CheckListRegistrar implements CheckRegistrar {
 				InjectorTryWithResourcesCheck.class,
 				ResourceResolverShouldBeClosed.class,
 				SessionShouldBeLoggedOut.class,
-				PreferSlingServletAnnotation.class
+				PreferSlingServletAnnotation.class,
+				UnsynchronizedModificationCheck.class
 		};
 		// @formatter:on
 	}
