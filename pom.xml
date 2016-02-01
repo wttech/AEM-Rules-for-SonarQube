@@ -78,6 +78,12 @@
             <version>${sonar.java.plugin}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.sonarsource.java</groupId>
+            <artifactId>java-checks</artifactId>
+            <version>${sonar.java.plugin}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Unit Test dependencies -->
 
