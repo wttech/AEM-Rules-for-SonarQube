@@ -1,4 +1,4 @@
-![Cognifide logo](http://cognifide.github.io/Carty/assets/media/cognifide_logo.png)
+![Cognifide logo](http://cognifide.github.io/images/cognifide-logo.png)
 
 # About AEM Rules for SonarQube
 
@@ -11,7 +11,7 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 ## Prerequisites
 
 * SonarQube 4.5.4 or newer
-* Java 3.3 plugin
+* Java 3.8 plugin
 * Maven 2.x, 3.x
 
 ## Installation
@@ -21,9 +21,15 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 3. Restart SonarQube.
 4. Go to rules section and activate AEM rules in your profile.
 
+# Release notes
+
+## 0.5
+
+RND-398 Support for Java 3.8 plugin.
+
 # Commercial Support
 
-Technical support can be made available if needed. Please [contact us](mailto:michal.chudy@cognifide.com) for more details.
+Technical support can be made available if needed. Please [contact us](mailto:labs-support@cognifide.com) for more details.
 
 We can:
 
