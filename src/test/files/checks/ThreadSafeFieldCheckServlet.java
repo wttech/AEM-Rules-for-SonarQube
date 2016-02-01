@@ -23,10 +23,10 @@ public class ThreadSafeFieldCheckExample extends SlingSafeMethodsServlet {
 
     private ResourceResolver resourceResolver; // Noncompliant {{Usage of org.apache.sling.api.resource.ResourceResolver as a field is not thread safe.}}
 
-    public ResourceResolver resourceResolver2; // Noncompliant {{Usage of org.apache.sling.api.resource.ResourceResolver as a field is not thread safe.}}
+    public ResourceResolver resourceResolver2; // Noncompliant
 
     @Deprecated
-    public static final ResourceResolver staticOne; // Noncompliant {{Usage of org.apache.sling.api.resource.ResourceResolver as a field is not thread safe.}}
+    public static final ResourceResolver staticOne; // Noncompliant
 
     private PageManager pageManager; // Noncompliant {{Usage of com.day.cq.wcm.api.PageManager as a field is not thread safe.}}
 
