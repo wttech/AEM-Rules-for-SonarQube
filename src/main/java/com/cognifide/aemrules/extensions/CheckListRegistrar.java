@@ -4,13 +4,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.cognifide.aemrules.checks.HttpConstantCheck;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
+import com.cognifide.aemrules.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.checks.ConstantsCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
+import com.cognifide.aemrules.checks.ModelsShouldNotUseSessionCheck;
+import com.cognifide.aemrules.checks.IteratingResourcesCheck;
+import com.cognifide.aemrules.checks.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.checks.PreferSlingServletAnnotation;
 import com.cognifide.aemrules.checks.ResourceResolverShouldBeClosed;
 import com.cognifide.aemrules.checks.SessionShouldBeLoggedOut;
@@ -24,15 +29,20 @@ public class CheckListRegistrar implements CheckRegistrar {
 	public static Class[] getCheckClasses() {
 		// @formatter:off
 		return new Class[] {
-				ConstantsCheck.class,
+				AdministrativeAccessUsageCheck.class,
 				AnnotationsConstantsCheck.class,
-				ThreadSafeFieldCheck.class,
+				ConstantsCheck.class,
+				HttpConstantCheck.class,
 				InjectorShouldBeClosedCheck.class,
 				InjectorTryWithResourcesCheck.class,
+				ModelsShouldNotUseSessionCheck.class,
+				IteratingResourcesCheck.class,
+				JcrPropertyFieldsInConstructorCheck.class,
+				PreferSlingServletAnnotation.class,
 				ResourceResolverShouldBeClosed.class,
 				SessionShouldBeLoggedOut.class,
-				PreferSlingServletAnnotation.class,
-				SynchornizedKeywordUsageCheck.class
+				SynchornizedKeywordUsageCheck.class,
+				ThreadSafeFieldCheck.class
 		};
 		// @formatter:on
 	}
