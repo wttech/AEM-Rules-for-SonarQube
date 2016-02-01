@@ -79,7 +79,7 @@ public class SampleServlet extends SlingAllMethodsServlet {
 	}
 
 	public void checkWrongJumpMethod() {
-		ResourceResolver resourceResolver = null; // Noncompliant {{ResourceResolver should be closed in finally block.}}
+		ResourceResolver resourceResolver = null; // Noncompliant
 		try {
 			resourceResolver = getResourceResolverForUser(resourceResolverFactory, null);
 		} catch (LoginException e) {
