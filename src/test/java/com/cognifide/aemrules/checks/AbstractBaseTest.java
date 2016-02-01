@@ -53,4 +53,7 @@ public abstract class AbstractBaseTest {
 		}
 	}
 
+	protected void verifyNoIssues() {
+		JavaCheckVerifier.verifyNoIssue(filename, check);
+	}
 }

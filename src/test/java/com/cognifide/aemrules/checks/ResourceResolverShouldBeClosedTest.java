@@ -11,4 +11,11 @@ public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
 		verify();
 	}
 
+	@Test
+	public void checkResourceResolverNotClosedInFinallyBlockWhenResourceResolverComesFromDifferentClass() {
+		check = new ResourceResolverShouldBeClosed();
+		filename = "src/test/files/checks/ResourceResolverConsumer.java";
+		verifyNoIssues();
+	}
+
 }
