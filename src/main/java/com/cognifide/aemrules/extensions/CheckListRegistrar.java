@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.cognifide.aemrules.checks.HttpConstantCheck;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
@@ -34,6 +35,7 @@ public class CheckListRegistrar implements CheckRegistrar {
 				ResourceResolverShouldBeClosed.class,
 				SessionShouldBeLoggedOut.class,
 				PreferSlingServletAnnotation.class,
+				HttpConstantCheck.class,
 				JcrPropertyFieldsInConstructorCheck.class
 		};
 		// @formatter:on
