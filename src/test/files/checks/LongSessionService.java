@@ -1,4 +1,4 @@
-package com.cognifide.gskce.core.cug;
+package com.example;
 
 import java.util.Map;
 import javax.jcr.RepositoryException;
