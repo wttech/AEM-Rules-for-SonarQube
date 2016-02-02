@@ -18,4 +18,11 @@ public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
 		verifyNoIssues();
 	}
 
+	@Test
+	public void checkResourceResolverNotClosedWhenItIsOpenedInActivateAndClosedInDeactivate() {
+		check = new ResourceResolverShouldBeClosed();
+		filename = "src/test/files/checks/LongSessionService.java";
+		verifyNoIssues();
+	}
+
 }

@@ -10,8 +10,8 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Finds all injector variable declarations. Used in method's bodies only.
- * Works only for declaration within the same file - api limitations: {@link Symbol#declaration()}
+ * Finds all injector variable declarations. Used in method's bodies only. Works only for declaration within the same
+ * file - api limitations: {@link Symbol#declaration()}
  */
 public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
@@ -67,9 +67,11 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 	}
 
 	/**
-	 * Works for declaration within the same file only - mentioned in {@link Symbol#declaration()} 
+	 * Works for declaration within the same file only - mentioned in {@link Symbol#declaration()}
+	 *
 	 * @param variable identifier tree
-	 * @return the Tree of the declaration of this variable. Null if declaration does not occur in the currently analyzed file.
+	 * @return the Tree of the declaration of this variable. Null if declaration does not occur in the currently
+	 * analyzed file.
 	 */
 	private Tree getDeclaration(IdentifierTree variable) {
 		return variable.symbol().declaration();
@@ -119,7 +121,7 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 		@Override
 		public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-			if (isMethodInvocation(tree) && getDeclaration((IdentifierTree) tree.variable()).equals(declarationOfReturnedVariable)) {
+			if (isMethodInvocation(tree) && variableIsEqualToReturnedVariableIn(tree)) {
 				MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.expression();
 				if (isManuallyCreatedResourceResolver(methodInvocation)) {
 					this.createdManually = true;
@@ -130,6 +132,11 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 				}
 			}
 			super.visitAssignmentExpression(tree);
+		}
+
+		private boolean variableIsEqualToReturnedVariableIn(AssignmentExpressionTree tree) {
+			return tree.variable() instanceof IdentifierTree
+				&& getDeclaration((IdentifierTree) tree.variable()).equals(declarationOfReturnedVariable);
 		}
 
 		public boolean isCreatedManually() {
