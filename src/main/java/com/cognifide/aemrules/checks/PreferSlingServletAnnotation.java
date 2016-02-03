@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
@@ -16,7 +17,8 @@ import static org.sonar.plugins.java.api.tree.Tree.Kind.*;
 @Rule(
 		key = PreferSlingServletAnnotation.RULE_KEY,
 		name = PreferSlingServletAnnotation.RULE_MESSAGE,
-		priority = Priority.MINOR
+		priority = Priority.MINOR,
+		tags = Tags.AEM
 )
 public class PreferSlingServletAnnotation extends BaseTreeVisitor implements JavaFileScanner {
 

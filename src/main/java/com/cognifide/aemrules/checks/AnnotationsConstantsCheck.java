@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.ConstantsChecker;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
@@ -14,7 +15,8 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 @Rule(
 		key = AnnotationsConstantsCheck.RULE_KEY,
 		name = AnnotationsConstantsCheck.RULE_MESSAGE,
-		priority = Priority.MINOR
+		priority = Priority.MINOR,
+		tags = Tags.AEM
 )
 public class AnnotationsConstantsCheck extends BaseTreeVisitor implements JavaFileScanner {
 

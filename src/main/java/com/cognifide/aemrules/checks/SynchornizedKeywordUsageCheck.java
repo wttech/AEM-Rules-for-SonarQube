@@ -1,7 +1,7 @@
 package com.cognifide.aemrules.checks;
 
-import static com.cognifide.aemrules.checks.PreferSlingServletAnnotation.NAME;
 import static com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck.DESCRIPTION;
+import com.cognifide.aemrules.tag.Tags;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.sonar.check.Priority;
@@ -17,23 +17,21 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 @Rule(
 	key = SynchornizedKeywordUsageCheck.RULE_KEY,
-	name = NAME,
+	name = SynchornizedKeywordUsageCheck.MESSAGE,
 	description = DESCRIPTION,
 	priority = Priority.INFO,
-	tags = {Tag.MULTI_THREADING, Tag.PERFORMANCE})
+	tags = {Tag.MULTI_THREADING, Tag.PERFORMANCE, Tags.AEM})
 public class SynchornizedKeywordUsageCheck extends SubscriptionBaseVisitor {
 
-	private static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
+	static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
 
 	static final String RULE_KEY = "AEM-15";
 
-	static final String NAME = "'synchronaized' keyword was used";
-
 	static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
 
-	private static final List<Tree.Kind> ACCEPTED_NODE_KINDS = 
-		ImmutableList.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);
-	
+	private static final List<Tree.Kind> ACCEPTED_NODE_KINDS
+		= ImmutableList.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);
+
 	@Override
 	public List<Tree.Kind> nodesToVisit() {
 		return ACCEPTED_NODE_KINDS;

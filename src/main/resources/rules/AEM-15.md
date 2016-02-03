@@ -1,4 +1,4 @@
-Usage of 'synchronized' keyword should be avoided if possible. Check if using 'synchronized' can be replaced with more sophisticated solution.
+Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.
 
 == Noncompliant Code Example
 
@@ -34,7 +34,7 @@ public synchronized void increment() { // Noncompliant
 }
 ``
 
-== Compliant Code Example
+== Compliant Solution
 
 ``
 import java.util.List;
@@ -76,6 +76,5 @@ public void increment() {
 
 == See
 More details:
-
-* [Java 7 java.util.concurrent javadoc](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/package-summary.html).
-* [Java 8 java.util.concurrent javadoc](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html).
+[Java 7 java.util.concurrent javadoc](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/package-summary.html)
+[Java 8 java.util.concurrent javadoc](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/package-summary.html)

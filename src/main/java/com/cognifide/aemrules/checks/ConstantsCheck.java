@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.ConstantsChecker;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
@@ -15,7 +16,8 @@ import java.util.List;
 @Rule(
 		key = ConstantsCheck.RULE_KEY,
 		name = ConstantsCheck.RULE_MESSAGE,
-		priority = Priority.MINOR
+		priority = Priority.MINOR,
+		tags = Tags.AEM
 )
 public class ConstantsCheck extends IssuableSubscriptionVisitor {
 

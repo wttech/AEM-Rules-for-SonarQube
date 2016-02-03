@@ -1,17 +1,19 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 import java.util.List;
+import org.sonar.java.tag.Tag;
 
 @Rule(
-		key = InjectorTryWithResourcesCheck.RULE_KEY,
-		name = InjectorTryWithResourcesCheck.RULE_MESSAGE,
-		priority = Priority.INFO,
-		tags = {"java7"}
+	key = InjectorTryWithResourcesCheck.RULE_KEY,
+	name = InjectorTryWithResourcesCheck.RULE_MESSAGE,
+	priority = Priority.INFO,
+	tags = {Tag.JAVA_7, Tags.AEM}
 )
 public class InjectorTryWithResourcesCheck extends InjectorShouldBeClosedCheck {
 

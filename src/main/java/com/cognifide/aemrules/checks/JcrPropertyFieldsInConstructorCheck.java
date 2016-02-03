@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import java.util.Set;
 
 import org.sonar.check.Priority;
@@ -21,7 +22,8 @@ import java.util.Collections;
 @Rule(
 	key = JcrPropertyFieldsInConstructorCheck.RULE_KEY,
 	name = JcrPropertyFieldsInConstructorCheck.RULE_MESSAGE,
-	priority = Priority.MINOR
+	priority = Priority.MINOR,
+	tags = Tags.AEM
 )
 public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor implements JavaFileScanner {
 

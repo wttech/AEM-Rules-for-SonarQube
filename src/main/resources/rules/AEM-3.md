@@ -3,7 +3,7 @@ Rule checks for the occurrence of any instance or static fields of following typ
 * org.apache.sling.api.resource.ResourceResolver
 * javax.jcr.Session
 * com.day.cq.wcm.api.PageManager
-== Noncompliant Code Examples
+== Noncompliant Code Example
 ``
 public class ComponentsServlet extends SlingSafeMethodsServlet {
 
