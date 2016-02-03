@@ -25,8 +25,8 @@ public class ThreadSafeFieldCheckExample extends SlingSafeMethodsServlet {
 
     public ResourceResolver resourceResolver2; // Noncompliant
 
-    @Deprecated
-    public static final ResourceResolver staticOne; // Noncompliant
+    @Deprecated // Noncompliant
+    public static final ResourceResolver staticOne;
 
     private PageManager pageManager; // Noncompliant {{Usage of com.day.cq.wcm.api.PageManager as a field is not thread safe.}}
 
