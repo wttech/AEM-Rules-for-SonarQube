@@ -45,11 +45,11 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 	private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER =
 	// @formatter:off
 		MethodMatcher
-		.create()
-		.typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
-		.name("get")
-		.addParameter(TypeCriteria.anyType())
-		.addParameter(RESOURCE_TYPE);
+			.create()
+			.typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
+			.name("get")
+			.addParameter(TypeCriteria.anyType())
+			.addParameter(RESOURCE_TYPE);
 	// @formatter:on
 
 	private JavaFileScannerContext context;

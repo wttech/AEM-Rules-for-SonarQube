@@ -47,16 +47,16 @@ public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 	@Override
 	protected List<MethodMatcher> getMethodInvocationMatchers() {
 		return ImmutableList.of(
-					//@formatter:off
-					MethodMatcher.create()
-							.typeDefinition("org.apache.sling.jcr.api.SlingRepository")
-							.name("loginAdministrative")
-					.addParameter("java.lang.String"),
-					MethodMatcher.create()
-							.typeDefinition("org.apache.sling.api.resource.ResourceResolverFactory")
-							.name("getAdministrativeResourceResolver")
-							.addParameter("java.util.Map")
-					//@formatter:on
+				//@formatter:off
+				MethodMatcher.create()
+						.typeDefinition("org.apache.sling.jcr.api.SlingRepository")
+						.name("loginAdministrative")
+				.addParameter("java.lang.String"),
+				MethodMatcher.create()
+						.typeDefinition("org.apache.sling.api.resource.ResourceResolverFactory")
+						.name("getAdministrativeResourceResolver")
+						.addParameter("java.util.Map")
+				//@formatter:on
 		);
 	}
 }
