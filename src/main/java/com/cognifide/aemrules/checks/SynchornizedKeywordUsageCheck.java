@@ -45,7 +45,7 @@ public class SynchornizedKeywordUsageCheck extends SubscriptionBaseVisitor {
 				tree.accept(visitor);
 				break;
 			case SYNCHRONIZED_STATEMENT:
-				addIssue(tree, MESSAGE);
+				reportIssue(tree, MESSAGE);
 				break;
 		}
 		super.visitNode(tree);
@@ -64,7 +64,7 @@ public class SynchornizedKeywordUsageCheck extends SubscriptionBaseVisitor {
 			List<ModifierKeywordTree> modifiers = tree.modifiers().modifiers();
 			for (ModifierKeywordTree modifier : modifiers) {
 				if (modifier.modifier() == Modifier.SYNCHRONIZED) {
-					visitor.addIssue(tree, MESSAGE);
+					visitor.reportIssue(tree, MESSAGE);
 				}
 			}
 			super.visitMethod(tree);

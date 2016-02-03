@@ -76,7 +76,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 			VariableTree variableField = (VariableTree) member;
 			String name = variableField.type().symbolType().fullyQualifiedName();
 			if (nonThreadSafeTypes.contains(name)) {
-				context.addIssue(member, this, String.format(RULE_MESSAGE, name));
+				context.reportIssue(this, member, String.format(RULE_MESSAGE, name));
 			}
 		}
 	}

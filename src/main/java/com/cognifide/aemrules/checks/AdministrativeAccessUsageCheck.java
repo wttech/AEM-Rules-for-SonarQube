@@ -40,7 +40,7 @@ public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 	@Override
 	protected void onMethodInvocationFound(MethodInvocationTree mit) {
 		String method = ((MemberSelectExpressionTree) mit.methodSelect()).identifier().name();
-		context.addIssue(mit, this, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
+		context.reportIssue(this, mit, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
 		super.onMethodInvocationFound(mit);
 	}
 

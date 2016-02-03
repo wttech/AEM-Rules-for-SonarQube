@@ -42,7 +42,7 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
 		for (VariableTree injector : resolvers) {
 			boolean closed = checkIfResourceResolverIsClosed(method, injector);
 			if (!closed) {
-				context.addIssue(injector, this, RULE_MESSAGE);
+				context.reportIssue(this, injector, RULE_MESSAGE);
 			}
 		}
 		super.visitMethod(method);

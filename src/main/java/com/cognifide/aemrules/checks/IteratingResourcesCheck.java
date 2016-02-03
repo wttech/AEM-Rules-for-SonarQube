@@ -103,7 +103,7 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 		MethodInvocationTreeVisitor methodInvocationTreeVisitor = new MethodInvocationTreeVisitor();
 		statement.accept(methodInvocationTreeVisitor);
 		if (methodInvocationTreeVisitor.isModelProviderGetCalled()) {
-			context.addIssue(tree, this, RULE_MESSAGE);
+			context.reportIssue(this, tree, RULE_MESSAGE);
 		}
 	}
 

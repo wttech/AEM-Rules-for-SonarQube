@@ -43,7 +43,7 @@ public class InjectorShouldBeClosedCheck extends BaseTreeVisitor implements Java
 		for (VariableTree injector : injectors) {
 			boolean closed = checkIfInjectorIsClosedInMethod(method, injector);
 			if (!closed) {
-				context.addIssue(injector, this, RULE_MESSAGE);
+				context.reportIssue(this, injector, RULE_MESSAGE);
 			}
 		}
 		super.visitMethod(method);

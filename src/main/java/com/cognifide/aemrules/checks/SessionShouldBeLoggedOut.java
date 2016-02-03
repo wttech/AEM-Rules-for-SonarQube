@@ -42,7 +42,7 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 		for (VariableTree session : sessions) {
 			boolean closed = checkIfLoggedOut(method, session);
 			if (!closed) {
-				context.addIssue(session, this, RULE_MESSAGE);
+				context.reportIssue(this, session, RULE_MESSAGE);
 			}
 		}
 		super.visitMethod(method);

@@ -35,7 +35,7 @@ public class HttpConstantCheck extends IssuableSubscriptionVisitor {
 	public void visitNode(Tree stringLiteral) {
 		String literalValue = removeQuotes(((LiteralTree) stringLiteral).value());
 		if (HTTP_LITERAL.equalsIgnoreCase(literalValue)) {
-			addIssue(stringLiteral, RULE_MESSAGE);
+			reportIssue(stringLiteral, RULE_MESSAGE);
 		}
 		super.visitNode(stringLiteral);
 	}

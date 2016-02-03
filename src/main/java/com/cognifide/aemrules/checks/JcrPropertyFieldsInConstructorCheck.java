@@ -53,7 +53,7 @@ public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor impleme
 			CheckUsageInConstructorVisitor visitor = new CheckUsageInConstructorVisitor(methodParams(tree));
 			tree.accept(visitor);
 			for (Tree error : visitor.getErrors()) {
-				context.addIssue(error, this, RULE_MESSAGE);
+				context.reportIssue(this, error, RULE_MESSAGE);
 			}
 		}
 		super.visitMethod(tree);

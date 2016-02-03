@@ -77,11 +77,11 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 		tree.accept(sessionUsageVisitor);
 
 		if (null != sessionUsageVisitor.getReturnStatementTree()) {
-			context.addIssue(sessionUsageVisitor.getReturnStatementTree(), this, RULE_MESSAGE);
+			context.reportIssue(this, sessionUsageVisitor.getReturnStatementTree(), RULE_MESSAGE);
 		}
 
 		for (MemberSelectExpressionTree sessionMember : sessionUsageVisitor.getSessionMemberSelect()) {
-			context.addIssue(sessionMember, this, RULE_MESSAGE);
+			context.reportIssue(this, sessionMember, RULE_MESSAGE);
 		}
 	}
 
