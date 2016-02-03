@@ -42,8 +42,8 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 
 	private static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
 
-	private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER
-		= // @formatter:off
+	private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER =
+	// @formatter:off
 		MethodMatcher
 		.create()
 		.typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
