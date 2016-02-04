@@ -9,7 +9,7 @@ public class AemRulesRulesDefinition implements RulesDefinition {
 		NewRepository repo = context.createRepository(CheckListRegistrar.REPOSITORY_KEY, "java");
 		repo.setName(CheckListRegistrar.REPOSITORY_KEY);
 		RulesLoader rulesLoader = new RulesLoader();
-		rulesLoader.load(repo, CheckListRegistrar.getCheckClasses());
+		rulesLoader.load(repo, CheckListRegistrar.CHECK_CLASSES);
 		repo.done();
 	}
 

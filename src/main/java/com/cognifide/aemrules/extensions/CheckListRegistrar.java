@@ -1,6 +1,5 @@
 package com.cognifide.aemrules.extensions;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,36 +20,33 @@ import com.cognifide.aemrules.checks.ResourceResolverShouldBeClosed;
 import com.cognifide.aemrules.checks.SessionShouldBeLoggedOut;
 import com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck;
 import com.cognifide.aemrules.checks.ThreadSafeFieldCheck;
+import com.google.common.collect.ImmutableList;
 
 public class CheckListRegistrar implements CheckRegistrar {
 
 	public static final String REPOSITORY_KEY = "AEM Rules";
 
-	public static Class[] getCheckClasses() {
-		// @formatter:off
-		return new Class[] {
-				AdministrativeAccessUsageCheck.class,
-				AnnotationsConstantsCheck.class,
-				ConstantsCheck.class,
-				HttpConstantCheck.class,
-				InjectorShouldBeClosedCheck.class,
-				InjectorTryWithResourcesCheck.class,
-				ModelsShouldNotUseSessionCheck.class,
-				IteratingResourcesCheck.class,
-				JcrPropertyFieldsInConstructorCheck.class,
-				PreferSlingServletAnnotation.class,
-				ResourceResolverShouldBeClosed.class,
-				SessionShouldBeLoggedOut.class,
-				SynchornizedKeywordUsageCheck.class,
-				ThreadSafeFieldCheck.class
-		};
-		// @formatter:on
-	}
+	public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
+		= ImmutableList.<Class<? extends JavaCheck>>builder()
+		.add(AdministrativeAccessUsageCheck.class)
+		.add(AnnotationsConstantsCheck.class)
+		.add(ConstantsCheck.class)
+		.add(HttpConstantCheck.class)
+		.add(InjectorShouldBeClosedCheck.class)
+		.add(InjectorTryWithResourcesCheck.class)
+		.add(ModelsShouldNotUseSessionCheck.class)
+		.add(IteratingResourcesCheck.class)
+		.add(JcrPropertyFieldsInConstructorCheck.class)
+		.add(PreferSlingServletAnnotation.class)
+		.add(ResourceResolverShouldBeClosed.class)
+		.add(SessionShouldBeLoggedOut.class)
+		.add(SynchornizedKeywordUsageCheck.class)
+		.add(ThreadSafeFieldCheck.class)
+		.build();
 
 	@Override
 	public void register(RegistrarContext registrarContext) {
-		List checkClasses = Arrays.asList(getCheckClasses());
-		registrarContext.registerClassesForRepository(REPOSITORY_KEY, checkClasses,
-				Collections.<Class<? extends JavaCheck>>emptyList());
+		registrarContext.registerClassesForRepository(REPOSITORY_KEY, CHECK_CLASSES,
+			Collections.<Class<? extends JavaCheck>>emptyList());
 	}
 }
