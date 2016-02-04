@@ -13,7 +13,7 @@ import com.cognifide.aemrules.checks.ConstantsCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
 import com.cognifide.aemrules.checks.ModelsShouldNotUseSessionCheck;
-import com.cognifide.aemrules.checks.IteratingResourcesCheck;
+import com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck;
 import com.cognifide.aemrules.checks.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.checks.PreferSlingServletAnnotation;
 import com.cognifide.aemrules.checks.ResourceResolverShouldBeClosed;

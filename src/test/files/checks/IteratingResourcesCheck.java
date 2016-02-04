@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.sling.api.resource.Resource;
 import com.cognifide.slice.api.provider.ModelProvider;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class IteratingResourcesCheck {
 
@@ -93,6 +96,28 @@ public class IteratingResourcesCheck {
 			//models.add(modelProvider.get(SimpleModel.class, resources.next()));
 		}
 		return models;
+	}
+
+	public void a(List<String> list) {
+		for (Iterator<? extends CharSequence> iter = list.iterator(); iter.hasNext(); ) {
+			CharSequence seq = iter.next();
+			FileInputStream fis = null;
+			if (seq.equals("sequence")) {
+				try {
+					fis = new FileInputStream((String) seq);
+				} catch (FileNotFoundException x) {
+					//not important
+				} finally {
+					if (null != fis) {
+						try {
+							fis.close();
+						} catch (IOException x) {
+							//not important
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public List<SimpleModel> getModelsListFromIterator(Iterator<Resource> resources, ModelProvider modelProvider) {
