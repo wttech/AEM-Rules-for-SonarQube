@@ -18,7 +18,7 @@ package com.cognifide.aemrules.checks.slice.iterator;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-public class VariableTreeVisitor extends BaseTreeVisitor {
+class VariableTreeVisitor extends BaseTreeVisitor {
 
 	private boolean withResourceTypeVariable;
 
