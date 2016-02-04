@@ -1,9 +1,8 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import java.util.Set;
 
-import org.sonar.check.Priority;
-import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -14,12 +13,15 @@ import org.sonar.plugins.java.api.tree.TypeTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 import com.google.common.collect.Sets;
+import org.sonar.check.Priority;
+import org.sonar.check.Rule;
+import org.sonar.java.tag.Tag;
 
 @Rule(
 		key = ThreadSafeFieldCheck.RULE_KEY,
 		name = ThreadSafeFieldCheck.RULE_NAME,
 		priority = Priority.CRITICAL,
-		tags = {"bug"}
+		tags = {Tag.BUG, Tags.AEM}
 )
 public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -74,7 +76,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 			VariableTree variableField = (VariableTree) member;
 			String name = variableField.type().symbolType().fullyQualifiedName();
 			if (nonThreadSafeTypes.contains(name)) {
-				context.addIssue(member, this, String.format(RULE_MESSAGE, name));
+				context.reportIssue(this, member, String.format(RULE_MESSAGE, name));
 			}
 		}
 	}

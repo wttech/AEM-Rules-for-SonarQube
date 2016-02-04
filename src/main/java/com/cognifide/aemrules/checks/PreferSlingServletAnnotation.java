@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
@@ -16,7 +17,8 @@ import static org.sonar.plugins.java.api.tree.Tree.Kind.*;
 @Rule(
 		key = PreferSlingServletAnnotation.RULE_KEY,
 		name = PreferSlingServletAnnotation.RULE_MESSAGE,
-		priority = Priority.MINOR
+		priority = Priority.MINOR,
+		tags = Tags.AEM
 )
 public class PreferSlingServletAnnotation extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -62,9 +64,9 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
 		if (isSlingServlet(tree)) {
 			scan(tree.modifiers());
 			if (!annotations.hasSlingServletAnnotation()) {
-				context.addIssue(tree, this, RULE_MESSAGE);
+				context.reportIssue(this, tree, RULE_MESSAGE);
 			} else if (annotations.hasMixedUpAnnotations()) {
-				context.addIssue(tree, this, "@Component nor @Service annotation is not needed when @SlingServlet is used.");
+				context.reportIssue(this, tree, "@Component nor @Service annotation is not needed when @SlingServlet is used.");
 			}
 		}
 	}
@@ -87,7 +89,7 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
 			LiteralTree literal = (LiteralTree) expression;
 			if (SERVLET_CONSTANTS_VALUES.contains(removeQuotes(literal.value()))) {
 				String message = String.format(PROPERTY_MESSAGE, literal.value());
-				context.addIssue(annotationTree, this, message);
+				context.reportIssue(this, annotationTree, message);
 			}
 		} else if (expression.is(IDENTIFIER, MEMBER_SELECT)) {
 			IdentifierTree identifier = expression.is(IDENTIFIER) ? (IdentifierTree) expression : ((MemberSelectExpressionTree) expression).identifier();
@@ -95,7 +97,7 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
 			Type type = identifier.symbol().owner().type();
 			if (type != null && type.fullyQualifiedName().equals(SERVLET_RESOLVER_CONSTANTS_CLASS) && SERVLET_CONSTANTS.contains(name)) {
 				String message = String.format(PROPERTY_MESSAGE, name);
-				context.addIssue(annotationTree, this, message);
+				context.reportIssue(this, annotationTree, message);
 			}
 		}
 	}

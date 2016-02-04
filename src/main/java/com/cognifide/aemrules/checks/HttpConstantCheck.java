@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -14,7 +15,8 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 @Rule(
 		key = HttpConstantCheck.RULE_KEY,
 		name = HttpConstantCheck.RULE_MESSAGE,
-		priority = Priority.MINOR
+		priority = Priority.MINOR,
+		tags = Tags.AEM
 )
 public class HttpConstantCheck extends IssuableSubscriptionVisitor {
 
@@ -33,7 +35,7 @@ public class HttpConstantCheck extends IssuableSubscriptionVisitor {
 	public void visitNode(Tree stringLiteral) {
 		String literalValue = removeQuotes(((LiteralTree) stringLiteral).value());
 		if (HTTP_LITERAL.equalsIgnoreCase(literalValue)) {
-			addIssue(stringLiteral, RULE_MESSAGE);
+			reportIssue(stringLiteral, RULE_MESSAGE);
 		}
 		super.visitNode(stringLiteral);
 	}

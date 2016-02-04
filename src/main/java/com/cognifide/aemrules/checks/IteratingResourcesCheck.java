@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
 
 import org.sonar.check.Priority;
@@ -28,9 +29,10 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 import org.sonar.plugins.java.api.tree.WhileStatementTree;
 
 @Rule(
-		key = IteratingResourcesCheck.RULE_KEY,
-		name = IteratingResourcesCheck.RULE_MESSAGE,
-		priority = Priority.MINOR
+	key = IteratingResourcesCheck.RULE_KEY,
+	name = IteratingResourcesCheck.RULE_MESSAGE,
+	priority = Priority.MINOR,
+	tags = Tags.AEM
 )
 public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -41,14 +43,14 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 	private static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
 
 	private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER =
-			// @formatter:off
-			MethodMatcher
-					.create()
-					.typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
-					.name("get")
-					.addParameter(TypeCriteria.anyType())
-					.addParameter(RESOURCE_TYPE);
-			// @formatter:on
+	// @formatter:off
+		MethodMatcher
+			.create()
+			.typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
+			.name("get")
+			.addParameter(TypeCriteria.anyType())
+			.addParameter(RESOURCE_TYPE);
+	// @formatter:on
 
 	private JavaFileScannerContext context;
 
@@ -101,7 +103,7 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 		MethodInvocationTreeVisitor methodInvocationTreeVisitor = new MethodInvocationTreeVisitor();
 		statement.accept(methodInvocationTreeVisitor);
 		if (methodInvocationTreeVisitor.isModelProviderGetCalled()) {
-			context.addIssue(tree, this, RULE_MESSAGE);
+			context.reportIssue(this, tree, RULE_MESSAGE);
 		}
 	}
 

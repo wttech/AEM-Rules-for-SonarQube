@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +16,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 @Rule(
-		key = AdministrativeAccessUsageCheck.RULE_KEY,
-		name = AdministrativeAccessUsageCheck.RULE_MESSAGE,
-		priority = Priority.MAJOR
+	key = AdministrativeAccessUsageCheck.RULE_KEY,
+	name = AdministrativeAccessUsageCheck.RULE_MESSAGE,
+	priority = Priority.MAJOR,
+	tags = Tags.AEM
 )
 public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 
@@ -26,9 +28,9 @@ public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 	public static final String RULE_MESSAGE = "Do not use deprecated administrative access methods";
 
 	private static final Map<String, String> SUBSTITUTES = ImmutableMap.<String, String>builder()
-			.put("loginAdministrative", "loginService")
-			.put("getAdministrativeResourceResolver", "getServiceResourceResolver")
-			.build();
+		.put("loginAdministrative", "loginService")
+		.put("getAdministrativeResourceResolver", "getServiceResourceResolver")
+		.build();
 
 	@Override
 	public List<Tree.Kind> nodesToVisit() {
@@ -38,7 +40,7 @@ public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 	@Override
 	protected void onMethodInvocationFound(MethodInvocationTree mit) {
 		String method = ((MemberSelectExpressionTree) mit.methodSelect()).identifier().name();
-		context.addIssue(mit, this, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
+		context.reportIssue(this, mit, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
 		super.onMethodInvocationFound(mit);
 	}
 
@@ -49,7 +51,7 @@ public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 				MethodMatcher.create()
 						.typeDefinition("org.apache.sling.jcr.api.SlingRepository")
 						.name("loginAdministrative")
-						.addParameter("java.lang.String"),
+				.addParameter("java.lang.String"),
 				MethodMatcher.create()
 						.typeDefinition("org.apache.sling.api.resource.ResourceResolverFactory")
 						.name("getAdministrativeResourceResolver")

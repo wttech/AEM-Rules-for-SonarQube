@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.ConstantsChecker;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
@@ -15,7 +16,8 @@ import java.util.List;
 @Rule(
 		key = ConstantsCheck.RULE_KEY,
 		name = ConstantsCheck.RULE_MESSAGE,
-		priority = Priority.MINOR
+		priority = Priority.MINOR,
+		tags = Tags.AEM
 )
 public class ConstantsCheck extends IssuableSubscriptionVisitor {
 
@@ -33,7 +35,7 @@ public class ConstantsCheck extends IssuableSubscriptionVisitor {
 		String literalValue = removeQuotes(((LiteralTree) stringLiteral).value());
 		if (ConstantsChecker.isConstant(literalValue)) {
 			String constantFieldName = ConstantsChecker.getConstantFieldName(literalValue);
-			addIssue(stringLiteral, String.format("%s (%s)", RULE_MESSAGE, constantFieldName));
+			reportIssue(stringLiteral, String.format("%s (%s)", RULE_MESSAGE, constantFieldName));
 		}
 		super.visitNode(stringLiteral);
 	}

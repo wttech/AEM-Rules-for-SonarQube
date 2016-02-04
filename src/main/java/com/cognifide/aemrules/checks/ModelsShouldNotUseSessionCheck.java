@@ -14,21 +14,23 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.TypeTree;
 
 import com.cognifide.aemrules.checks.visitors.SessionUsageVisitor;
+import com.cognifide.aemrules.tag.Tags;
 
 /**
  * @author Krzysztof Watral
  */
 @Rule(
-		key = ModelsShouldNotUseSessionCheck.RULE_KEY,
-		name = ModelsShouldNotUseSessionCheck.RULE_MESSAGE,
-		priority = Priority.BLOCKER
+	key = ModelsShouldNotUseSessionCheck.RULE_KEY,
+	name = ModelsShouldNotUseSessionCheck.RULE_MESSAGE,
+	priority = Priority.BLOCKER,
+	tags = Tags.AEM
 )
 public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements JavaFileScanner {
 
 	public static final String RULE_KEY = "AEM-9";
 
-	public static final String RULE_MESSAGE =
-			"Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.";
+	public static final String RULE_MESSAGE
+		= "Objects annotated by @SliceResource should not use (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated()) and return any session based object.";
 
 	private static final String INITIALIZABLE_MODEL_INTERFACE = "com.cognifide.slice.api.model.InitializableModel";
 
@@ -75,11 +77,11 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 		tree.accept(sessionUsageVisitor);
 
 		if (null != sessionUsageVisitor.getReturnStatementTree()) {
-			context.addIssue(sessionUsageVisitor.getReturnStatementTree(), this, RULE_MESSAGE);
+			context.reportIssue(this, sessionUsageVisitor.getReturnStatementTree(), RULE_MESSAGE);
 		}
 
 		for (MemberSelectExpressionTree sessionMember : sessionUsageVisitor.getSessionMemberSelect()) {
-			context.addIssue(sessionMember, this, RULE_MESSAGE);
+			context.reportIssue(this, sessionMember, RULE_MESSAGE);
 		}
 	}
 

@@ -1,8 +1,6 @@
 Fields that are annotated with @JcrProperty should not be accessed from within constructor.
 
-== Example
-
-=== Noncompliant Code Example
+== Noncompliant Code Example
 ``
 @SliceResource
 public class JcrPropertySampleModel {
@@ -25,7 +23,7 @@ public class JcrPropertySampleModel {
 }
 ``
 
-=== Compliant Solution
+== Compliant Solution
 ``
 @SliceResource
 public class JcrPropertySampleModel {

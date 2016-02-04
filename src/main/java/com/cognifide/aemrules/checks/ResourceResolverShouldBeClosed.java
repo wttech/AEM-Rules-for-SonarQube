@@ -3,6 +3,7 @@ package com.cognifide.aemrules.checks;
 import com.cognifide.aemrules.checks.visitors.CheckClosedVisitor;
 import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
 import com.cognifide.aemrules.checks.visitors.FindRRDeclarationVisitor;
+import com.cognifide.aemrules.tag.Tags;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -16,9 +17,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Rule(
-		key = ResourceResolverShouldBeClosed.RULE_KEY,
-		name = ResourceResolverShouldBeClosed.RULE_MESSAGE,
-		priority = Priority.CRITICAL
+	key = ResourceResolverShouldBeClosed.RULE_KEY,
+	name = ResourceResolverShouldBeClosed.RULE_MESSAGE,
+	priority = Priority.CRITICAL,
+	tags = Tags.AEM
 )
 public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -40,7 +42,7 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
 		for (VariableTree injector : resolvers) {
 			boolean closed = checkIfResourceResolverIsClosed(method, injector);
 			if (!closed) {
-				context.addIssue(injector, this, RULE_MESSAGE);
+				context.reportIssue(this, injector, RULE_MESSAGE);
 			}
 		}
 		super.visitMethod(method);

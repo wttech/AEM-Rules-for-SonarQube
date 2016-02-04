@@ -3,6 +3,7 @@ package com.cognifide.aemrules.checks;
 import com.cognifide.aemrules.checks.visitors.CheckLoggedOutVisitor;
 import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
 import com.cognifide.aemrules.checks.visitors.FindSessionDeclarationVisitor;
+import com.cognifide.aemrules.tag.Tags;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -16,9 +17,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Rule(
-		key = SessionShouldBeLoggedOut.RULE_KEY,
-		name = SessionShouldBeLoggedOut.RULE_MESSAGE,
-		priority = Priority.CRITICAL
+	key = SessionShouldBeLoggedOut.RULE_KEY,
+	name = SessionShouldBeLoggedOut.RULE_MESSAGE,
+	priority = Priority.CRITICAL,
+	tags = Tags.AEM
 )
 public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -40,7 +42,7 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 		for (VariableTree session : sessions) {
 			boolean closed = checkIfLoggedOut(method, session);
 			if (!closed) {
-				context.addIssue(session, this, RULE_MESSAGE);
+				context.reportIssue(this, session, RULE_MESSAGE);
 			}
 		}
 		super.visitMethod(method);
