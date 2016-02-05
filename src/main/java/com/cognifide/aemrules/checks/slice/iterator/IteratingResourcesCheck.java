@@ -1,12 +1,10 @@
-package com.cognifide.aemrules.checks;
+package com.cognifide.aemrules.checks.slice.iterator;
 
 import com.cognifide.aemrules.tag.Tags;
 import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
 
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.checks.methods.MethodMatcher;
-import org.sonar.java.checks.methods.TypeCriteria;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -16,16 +14,10 @@ import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.ForEachStatement;
 import org.sonar.plugins.java.api.tree.ForStatementTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
-import org.sonar.plugins.java.api.tree.ListTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
-import org.sonar.plugins.java.api.tree.MethodTree;
-import org.sonar.plugins.java.api.tree.ParameterizedTypeTree;
 import org.sonar.plugins.java.api.tree.StatementTree;
 import org.sonar.plugins.java.api.tree.Tree;
-import org.sonar.plugins.java.api.tree.Tree.Kind;
-import org.sonar.plugins.java.api.tree.TypeTree;
-import org.sonar.plugins.java.api.tree.VariableTree;
 import org.sonar.plugins.java.api.tree.WhileStatementTree;
 
 @Rule(
@@ -40,17 +32,7 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 
 	public static final String RULE_MESSAGE = "Use ModelProvider#getListFromResources instead of iteration";
 
-	private static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
-
-	private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER =
-	// @formatter:off
-		MethodMatcher
-			.create()
-			.typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
-			.name("get")
-			.addParameter(TypeCriteria.anyType())
-			.addParameter(RESOURCE_TYPE);
-	// @formatter:on
+	static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
 
 	private JavaFileScannerContext context;
 
@@ -124,79 +106,14 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 	}
 
 	private boolean isResourceIterator(IdentifierTree expression) {
+		boolean result = false;
 		Tree declaration = expression.symbol().declaration();
-		if (!(declaration instanceof VariableTree)) {
-			return false;
+		if (null != declaration) {
+			VariableTreeVisitor treeVisitor = new VariableTreeVisitor();
+			declaration.accept(treeVisitor);
+			result = treeVisitor.hasResourceTypeVariable();
 		}
-		TypeTree type = ((VariableTree) declaration).type();
-		if (type instanceof ParameterizedTypeTree) {
-			ListTree<Tree> trees = ((ParameterizedTypeTree) type).typeArguments();
-			for (Tree tree : trees) {
-				if (((TypeTree) tree).symbolType().isSubtypeOf(RESOURCE_TYPE)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private static class MethodInvocationTreeVisitor extends BaseTreeVisitor {
-
-		private boolean modelProviderGetCalled;
-
-		@Override
-		public void visitMethodInvocation(MethodInvocationTree tree) {
-			if (MODEL_PROVIDER_GET_MATCHER.matches(tree)) {
-				modelProviderGetCalled = true;
-			} else {
-				MethodInvocationTreeVisitor visitor = new MethodInvocationTreeVisitor();
-				MethodTree methodDeclaration = getMethodTree(tree);
-				if (methodDeclaration != null) {
-					methodDeclaration.accept(visitor);
-					modelProviderGetCalled |= visitor.isModelProviderGetCalled();
-				}
-			}
-			super.visitMethodInvocation(tree);
-		}
-
-		public boolean isModelProviderGetCalled() {
-			return modelProviderGetCalled;
-		}
-	}
-
-	private static class DoWhileBinaryExpressionVisitor extends BaseTreeVisitor {
-
-		private boolean containsResourceComparison;
-
-		public boolean containsResourceComparison() {
-			return containsResourceComparison;
-		}
-
-		@Override
-		public void visitBinaryExpression(BinaryExpressionTree tree) {
-			containsResourceComparison = hasResourceComparison(tree);
-			super.visitBinaryExpression(tree);
-		}
-
-		private boolean hasResourceComparison(BinaryExpressionTree tree) {
-			return isResource(tree.leftOperand()) || isResource(tree.rightOperand());
-		}
-
-		private boolean isResource(ExpressionTree operand) {
-			return !operand.is(Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(RESOURCE_TYPE);
-		}
-	}
-
-	private static MethodTree getMethodTree(MethodInvocationTree methodInvocation) {
-		if (methodInvocation.methodSelect() instanceof IdentifierTree) {
-			IdentifierTree method = (IdentifierTree) methodInvocation.methodSelect();
-			return (MethodTree) getDeclaration(method);
-		}
-		return null;
-	}
-
-	private static Tree getDeclaration(IdentifierTree variable) {
-		return variable.symbol().declaration();
+		return result;
 	}
 
 }

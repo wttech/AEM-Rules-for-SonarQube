@@ -1,8 +1,8 @@
-package com.cognifide.aemrules.checks;
+package com.cognifide.aemrules.checks.resourceresolver.close;
 
 import com.cognifide.aemrules.checks.visitors.CheckClosedVisitor;
 import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
-import com.cognifide.aemrules.checks.visitors.FindRRDeclarationVisitor;
+import com.cognifide.aemrules.checks.resourceresolver.close.FindRRDeclarationVisitor;
 import com.cognifide.aemrules.tag.Tags;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;

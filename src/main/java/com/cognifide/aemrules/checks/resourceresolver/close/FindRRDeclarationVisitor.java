@@ -1,4 +1,4 @@
-package com.cognifide.aemrules.checks.visitors;
+package com.cognifide.aemrules.checks.resourceresolver.close;
 
 import com.google.common.collect.Sets;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * Finds all injector variable declarations. Used in method's bodies only. Works only for declaration within the same
  * file - api limitations: {@link Symbol#declaration()}
  */
-public class FindRRDeclarationVisitor extends BaseTreeVisitor {
+class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 	public static final String RESOURCE_RESOLVER_NAME = "org.apache.sling.api.resource.ResourceResolver";
 
@@ -21,7 +21,7 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 	private final Set<VariableTree> resourceResolvers;
 
-	public FindRRDeclarationVisitor() {
+	FindRRDeclarationVisitor() {
 		resourceResolvers = Sets.newHashSet();
 	}
 
@@ -31,16 +31,16 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 	@Override
 	public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-		if (isMethodInvocation(tree)) {
-			MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.expression();
+		if (isExpressionAMethodInvocation(tree) && isVaraibleAnIdentifier(tree)) {
+			final MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.expression();
+			final IdentifierTree identifier = (IdentifierTree) tree.variable();
 			if (isManuallyCreatedResourceResolver(methodInvocation)) {
-				IdentifierTree variable = (IdentifierTree) tree.variable();
-				resourceResolvers.add((VariableTree) variable.symbol().declaration());
-			} else if (isRR(methodInvocation) && methodInvocation.methodSelect().is(Kind.IDENTIFIER)) {
+				resourceResolvers.add((VariableTree) identifier.symbol().declaration());
+			} else if (isResourceResolver(methodInvocation) && methodInvocation.methodSelect().is(Kind.IDENTIFIER)) {
 				MethodTree methodDeclaration = getMethodTree(methodInvocation);
 				// variable 'methodDeclaration' can be null in case when method declaration isn't within the same file.
 				if (methodDeclaration != null && isManuallyCreatedResourceResolver(methodDeclaration)) {
-					resourceResolvers.add((VariableTree) getDeclaration((IdentifierTree) tree.variable()));
+					resourceResolvers.add((VariableTree) getDeclaration(identifier));
 				}
 			}
 		}
@@ -54,11 +54,15 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 	}
 
 	private boolean isManuallyCreatedResourceResolver(MethodInvocationTree methodInvocation) {
-		return isRR(methodInvocation) && isRRF(methodInvocation);
+		return isResourceResolver(methodInvocation) && isRRF(methodInvocation);
 	}
 
-	private boolean isMethodInvocation(AssignmentExpressionTree tree) {
+	private boolean isExpressionAMethodInvocation(AssignmentExpressionTree tree) {
 		return tree.expression().is(Kind.METHOD_INVOCATION);
+	}
+
+	private boolean isVaraibleAnIdentifier(AssignmentExpressionTree tree) {
+		return tree.variable().is(Kind.IDENTIFIER);
 	}
 
 	private MethodTree getMethodTree(MethodInvocationTree methodInvocation) {
@@ -93,7 +97,7 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 		return invocationTree.symbol().owner().type().fullyQualifiedName().equals(RESOURCE_RESOLVER_FACTORY);
 	}
 
-	private boolean isRR(MethodInvocationTree invocationTree) {
+	private boolean isResourceResolver(MethodInvocationTree invocationTree) {
 		return invocationTree.symbolType().fullyQualifiedName().equals(RESOURCE_RESOLVER_NAME);
 	}
 
@@ -121,7 +125,7 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 		@Override
 		public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-			if (isMethodInvocation(tree) && variableIsEqualToReturnedVariableIn(tree)) {
+			if (isExpressionAMethodInvocation(tree) && variableIsEqualToReturnedVariableIn(tree)) {
 				MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.expression();
 				if (isManuallyCreatedResourceResolver(methodInvocation)) {
 					this.createdManually = true;
@@ -135,7 +139,7 @@ public class FindRRDeclarationVisitor extends BaseTreeVisitor {
 		}
 
 		private boolean variableIsEqualToReturnedVariableIn(AssignmentExpressionTree tree) {
-			return tree.variable() instanceof IdentifierTree
+			return tree.variable().is(Kind.IDENTIFIER)
 				&& getDeclaration((IdentifierTree) tree.variable()).equals(declarationOfReturnedVariable);
 		}
 

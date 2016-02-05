@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
 import org.junit.Test;
 
 public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
