@@ -15,7 +15,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 @Rule(
 		key = HttpConstantCheck.RULE_KEY,
 		name = HttpConstantCheck.RULE_MESSAGE,
-		priority = Priority.MINOR,
+		priority = Priority.INFO,
 		tags = Tags.AEM
 )
 public class HttpConstantCheck extends IssuableSubscriptionVisitor {
