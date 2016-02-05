@@ -7,8 +7,15 @@ public class JcrPropertyFieldsInConstructorTest extends AbstractBaseTest {
 	@Test
 	public void checkLackOfAnnotation() {
 		check = new JcrPropertyFieldsInConstructorCheck();
-		filename = "src/test/files/checks/JcrPropertySampleModel.java";
+		filename = "src/test/files/checks/jcrproperty/JcrPropertySampleModel.java";
 		verify();
+	}
+
+	@Test
+	public void checkModelWithoutJcrPropertyAnnotation() {
+		check = new JcrPropertyFieldsInConstructorCheck();
+		filename = "src/test/files/checks/jcrproperty/NoJcrPropertyModel.java";
+		verifyNoIssues();
 	}
 
 

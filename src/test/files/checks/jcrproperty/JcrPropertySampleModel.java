@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
+import java.util.Properties;
+import javax.inject.Inject;
 
 /**
  * @author Krzysztof Watral
@@ -19,6 +21,8 @@ public class JcrPropertySampleModel {
 
 	private String modName;
 
+	private String city;
+
 	public JcrPropertySampleModel() {
 	}
 
@@ -26,6 +30,12 @@ public class JcrPropertySampleModel {
 		if (StringUtils.isBlank(name)) { // Noncompliant {{Fields annotated by @JcrProperty shouldn't be accessed from constructor.}}
 			modName = surname + i; // Noncompliant
 		}
+		city = "Poznan";
+	}
+	
+	@Inject
+	public JcrPropertySampleModel(Properties properties) {
+		city = properties.getProperty("city");
 	}
 
 	public JcrPropertySampleModel(String surname) {
