@@ -1,1 +1,1 @@
-We should not use http as a literal in our projects because if we want to switch to https, our code will be not ready.
+We should not use ``http`` as a literal in our projects because if we want to switch to ``https``, our code will be not ready.
