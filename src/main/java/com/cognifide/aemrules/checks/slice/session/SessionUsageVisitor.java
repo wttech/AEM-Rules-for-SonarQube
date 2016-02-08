@@ -11,6 +11,7 @@ import org.sonar.plugins.java.api.tree.ReturnStatementTree;
 import com.google.common.collect.Sets;
 import java.util.Collections;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 /**
@@ -51,6 +52,10 @@ class SessionUsageVisitor extends BaseTreeVisitor {
 			returnStatementTree = tree;
 		}
 		super.visitReturnStatement(tree);
+	}
+
+	@Override
+	public void visitMethodInvocation(MethodInvocationTree tree) {
 	}
 
 	private boolean isNotNullLiteral(ExpressionTree expression) {

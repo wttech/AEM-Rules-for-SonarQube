@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks.slice.session;
 
+import com.cognifide.aemrules.util.TypeUtils;
 import javax.annotation.Nonnull;
 
 import org.sonar.check.Priority;
@@ -13,6 +14,9 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.TypeTree;
 
 import com.cognifide.aemrules.tag.Tags;
+import java.util.Iterator;
+import org.sonar.plugins.java.api.tree.Modifier;
+import org.sonar.plugins.java.api.tree.ModifierKeywordTree;
 
 /**
  * @author Krzysztof Watral
@@ -49,23 +53,32 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 	@Override
 	public void visitClass(ClassTree classTree) {
 		for (TypeTree typeTree : classTree.superInterfaces()) {
-			implementedInitializableModel |= isOfType(typeTree, INITIALIZABLE_MODEL_INTERFACE);
+			implementedInitializableModel |= TypeUtils.isOfType(typeTree, INITIALIZABLE_MODEL_INTERFACE);
 		}
 		super.visitClass(classTree);
 	}
 
 	@Override
 	public void visitMethod(MethodTree tree) {
-		if (sliceAnnotationVisitor.hasSliceResourceAnnotation() && isRegularMethod(tree)) {
+		if (sliceAnnotationVisitor.hasSliceResourceAnnotation()
+			&& !isConstructorOrAfterCreatedMethod(tree)
+			&& !isPrivateMethod(tree)) {
 			checkSessionUsage(tree);
 		}
 		super.visitMethod(tree);
 	}
 
-	private boolean isRegularMethod(MethodTree tree) {
-		boolean constructor = tree.is(MethodTree.Kind.CONSTRUCTOR);
-		boolean afterCreated = implementedInitializableModel && "afterCreated".equals(tree.symbol().name());
-		return !constructor && !afterCreated;
+	private boolean isConstructorOrAfterCreatedMethod(MethodTree tree) {
+		return tree.is(MethodTree.Kind.CONSTRUCTOR)
+			|| (implementedInitializableModel && "afterCreated".equals(tree.symbol().name()));
+	}
+
+	private boolean isPrivateMethod(MethodTree tree) {
+		boolean result = false;
+		for (Iterator<ModifierKeywordTree> iterator = tree.modifiers().modifiers().iterator(); iterator.hasNext() && !result;) {
+			result = iterator.next().modifier() == Modifier.PRIVATE;
+		}
+		return result;
 	}
 
 	private void checkSessionUsage(MethodTree tree) {
@@ -79,10 +92,6 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 		for (MemberSelectExpressionTree sessionMember : sessionUsageVisitor.getSessionMemberSelect()) {
 			context.reportIssue(this, sessionMember, RULE_MESSAGE);
 		}
-	}
-
-	private boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
-		return typeTree.symbolType().is(fullyQualifiedName);
 	}
 
 }
