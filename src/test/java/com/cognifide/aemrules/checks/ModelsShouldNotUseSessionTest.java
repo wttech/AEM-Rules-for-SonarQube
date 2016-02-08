@@ -12,18 +12,18 @@ public class ModelsShouldNotUseSessionTest extends AbstractBaseTest {
 
 	@Rule
 	public CheckMessagesVerifierRule checkMessagesVerifier = new CheckMessagesVerifierRule();
-//
-//	@Test
-//	public void check() {
-//		check = new ModelsShouldNotUseSessionCheck();
-//		filename = "src/test/files/checks/SampleModel.java";
-//		verify();
-//	}
+
+	@Test
+	public void check() {
+		check = new ModelsShouldNotUseSessionCheck();
+		filename = "src/test/files/checks/session/SampleModel.java";
+		verify();
+	}
 
 	@Test
 	public void checkPrivateMethodUsage() {
 		check = new ModelsShouldNotUseSessionCheck();
-		filename = "src/test/files/checks/SampleModel2.java";
+		filename = "src/test/files/checks/session/ModelWithSessionLeak.java";
 		verify();
 	}
 }

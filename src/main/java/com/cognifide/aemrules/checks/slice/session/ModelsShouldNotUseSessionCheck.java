@@ -9,7 +9,6 @@ import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.ClassTree;
-import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.TypeTree;
 
@@ -32,7 +31,7 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 	public static final String RULE_KEY = "AEM-9";
 
 	public static final String RULE_MESSAGE
-		= "Objects annotated by @SliceResource should not use or return any session based object. (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated())";
+		= "Objects annotated by @SliceResource should not use or return any session based object, except in constructor or com.cognifide.slice.api.model.InitializableModel.afterCreated().";
 
 	private static final String INITIALIZABLE_MODEL_INTERFACE = "com.cognifide.slice.api.model.InitializableModel";
 
@@ -63,7 +62,7 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 		if (sliceAnnotationVisitor.hasSliceResourceAnnotation()
 			&& !isConstructorOrAfterCreatedMethod(tree)
 			&& !isPrivateMethod(tree)) {
-			checkSessionUsage(tree);
+			tree.accept(new MethodInvocationVisitor(this, context));
 		}
 		super.visitMethod(tree);
 	}
@@ -80,18 +79,4 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 		}
 		return result;
 	}
-
-	private void checkSessionUsage(MethodTree tree) {
-		SessionUsageVisitor sessionUsageVisitor = new SessionUsageVisitor();
-		tree.accept(sessionUsageVisitor);
-
-		if (null != sessionUsageVisitor.getReturnStatementTree()) {
-			context.reportIssue(this, sessionUsageVisitor.getReturnStatementTree(), RULE_MESSAGE);
-		}
-
-		for (MemberSelectExpressionTree sessionMember : sessionUsageVisitor.getSessionMemberSelect()) {
-			context.reportIssue(this, sessionMember, RULE_MESSAGE);
-		}
-	}
-
 }

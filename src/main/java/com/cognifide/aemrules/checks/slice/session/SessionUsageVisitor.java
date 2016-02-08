@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks.slice.session;
 
+import static com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck.RULE_MESSAGE;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 
@@ -8,10 +9,9 @@ import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.ReturnStatementTree;
 
-import com.google.common.collect.Sets;
-import java.util.Collections;
+import org.sonar.plugins.java.api.JavaFileScanner;
+import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
-import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 /**
@@ -25,22 +25,19 @@ class SessionUsageVisitor extends BaseTreeVisitor {
 		"org.apache.sling.api.SlingHttpServletRequest",
 		"org.apache.sling.api.resource.ResourceResolver");
 
-	private final Set<MemberSelectExpressionTree> sessionMemberSelect = Sets.newHashSet();
+	private final JavaFileScanner javaFileScanner;
 
-	private ReturnStatementTree returnStatementTree;
+	private final JavaFileScannerContext context;
 
-	public Set<MemberSelectExpressionTree> getSessionMemberSelect() {
-		return Collections.unmodifiableSet(sessionMemberSelect);
-	}
-
-	public ReturnStatementTree getReturnStatementTree() {
-		return returnStatementTree;
+	SessionUsageVisitor(JavaFileScanner javaFileScanner, JavaFileScannerContext context) {
+		this.javaFileScanner = javaFileScanner;
+		this.context = context;
 	}
 
 	@Override
 	public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
 		if (isSubtypeOfSessionClass(tree.expression())) {
-			sessionMemberSelect.add(tree);
+			context.reportIssue(javaFileScanner, tree, RULE_MESSAGE);
 		}
 		super.visitMemberSelectExpression(tree);
 	}
@@ -49,13 +46,9 @@ class SessionUsageVisitor extends BaseTreeVisitor {
 	public void visitReturnStatement(ReturnStatementTree tree) {
 		ExpressionTree expression = tree.expression();
 		if (isNotNullLiteral(expression) && isSubtypeOfSessionClass(expression)) {
-			returnStatementTree = tree;
+			context.reportIssue(javaFileScanner, tree, RULE_MESSAGE);
 		}
 		super.visitReturnStatement(tree);
-	}
-
-	@Override
-	public void visitMethodInvocation(MethodInvocationTree tree) {
 	}
 
 	private boolean isNotNullLiteral(ExpressionTree expression) {

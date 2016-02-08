@@ -5,24 +5,24 @@ import com.cognifide.slice.mapper.annotation.SliceResource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 @SliceResource
-public class SampleModel2 implements InitializableModel {
+public class ModelWithSessionLeak implements InitializableModel {
 
 	private final ResourceResolver resolver;
 
 	private Object attribute;
 
-	public SampleModel2(ResourceResolver resolver) {
+	public ModelWithSessionLeak(ResourceResolver resolver) {
 		this.resolver = resolver;
 		updateAttribute(resolver);
 	}
 
 	public ResourceResolver getResolver() {
-		return resolver; // Noncompliant {{Objects annotated by @SliceResource should not use or return any session based object. (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated())}}
+		return resolver; // Noncompliant {{Objects annotated by @SliceResource should not use or return any session based object, except in constructor or com.cognifide.slice.api.model.InitializableModel.afterCreated().}}
 	}
 
 	public Object getAttribute() {
-		updateAttribute3(resolver); // Noncompliant
-		update(resolver); // Noncompliant
+		updateAttribute3(resolver);
+		update(resolver);
 		return attribute;
 	}
 
@@ -33,17 +33,19 @@ public class SampleModel2 implements InitializableModel {
 	}
 	
 	private void update(ResourceResolver resolver) {
-		updateAttribute2(resolver);
+		if (true) {
+			updateAttribute2(resolver);
+		}
 	}
 
 	private void updateAttribute3(ResourceResolver resolver) {
-		attribute = resolver.getAttribute("attribute");
-		attribute = this.resolver.getAttribute("attribute");
+		attribute = resolver.getAttribute("attribute"); // Noncompliant
+		attribute = this.resolver.getAttribute("attribute"); // Noncompliant
 	}
 
 	private void updateAttribute2(ResourceResolver resolver) {
-		attribute = resolver.getAttribute("attribute");
-		attribute = this.resolver.getAttribute("attribute");
+		attribute = resolver.getAttribute("attribute"); // Noncompliant
+		attribute = this.resolver.getAttribute("attribute"); // Noncompliant
 	}
 
 	private void updateAttribute(ResourceResolver resolver) {
