@@ -5,7 +5,7 @@ import com.cognifide.slice.mapper.annotation.SliceResource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 @SliceResource
-public class ModelWithSessionLeak implements InitializableModel {
+public class ModelWithSessionLeak extends ParameterAwareModel implements InitializableModel {
 
 	private final ResourceResolver resolver;
 
@@ -24,6 +24,11 @@ public class ModelWithSessionLeak implements InitializableModel {
 		updateAttribute3(resolver);
 		update(resolver);
 		return attribute;
+	}
+	
+	public ResourceResolver getResourceResolver() {
+		String parameter = findParameter(resolver);
+		return null;
 	}
 
 	@Override
