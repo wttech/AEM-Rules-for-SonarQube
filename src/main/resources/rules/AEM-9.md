@@ -1,4 +1,5 @@
-Objects annotated by @SliceResource should not use any session based objects, except places like constructor and overridden com.cognifide.slice.api.model.InitializableModel.afterCreated() method.
+Objects annotated by ``@SliceResource`` should not use any session based objects, except places like constructor and overridden ``com.cognifide.slice.api.model.InitializableModel.afterCreated()`` method.
+Classes dependent on session live as long as the original session is opened. Using for example ``ResourceResolver`` outside a constructor or ``afterCreated`` method may result in ``IllegalStateException`` (when ``ResourceResolver`` was already closed) or not refreshed session warning.
 
 == Noncompliant Code Example
 ``

@@ -1,4 +1,4 @@
-Fields that are annotated with @JcrProperty should not be accessed from within constructor.
+Fields that are annotated with ``@JcrProperty`` should not be accessed from within constructor. Setting value to those fields will have no effect because they will be overwritten by Slice. Invoking methods on those fields will cause NullPointerException.
 
 == Noncompliant Code Example
 ``

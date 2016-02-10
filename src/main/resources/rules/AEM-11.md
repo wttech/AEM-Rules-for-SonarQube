@@ -9,8 +9,19 @@ Session session = slingRepository.loginAdministrative(workspace);
 ``
 == Compliant Solution
 ``
-ResourceResolver resourceResolver = resolverFactory.getServiceResourceResolver(credentials);
+try (ResourceResolver resourceResolver = resolverFactory.getServiceResourceResolver(null)) {
+	...
+}
 ``
+or
+``
+Map<String, Object> param = new HashMap<String, Object>();
+param.put(ResourceResolverFactory.SUBSERVICE, "sub service name");
+try (ResourceResolver resourceResolver = resolverFactory.getServiceResourceResolver(param)) {
+	...
+}
+``
+or
 ``
 Session session = slingRepository.loginService(subServiceName, workspace);
 ``

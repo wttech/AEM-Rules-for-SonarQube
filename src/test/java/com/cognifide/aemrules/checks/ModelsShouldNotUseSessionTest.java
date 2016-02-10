@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import org.junit.Rule;
 import org.junit.Test;
 import org.sonar.squidbridge.checks.CheckMessagesVerifierRule;
