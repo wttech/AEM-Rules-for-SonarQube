@@ -1,5 +1,6 @@
 package com.cognifide.aemrules.checks.slice.session;
 
+import com.cognifide.aemrules.util.TypeUtils;
 import javax.annotation.Nonnull;
 
 import org.sonar.check.Priority;
@@ -8,11 +9,13 @@ import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.ClassTree;
-import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.TypeTree;
 
 import com.cognifide.aemrules.tag.Tags;
+import java.util.Iterator;
+import org.sonar.plugins.java.api.tree.Modifier;
+import org.sonar.plugins.java.api.tree.ModifierKeywordTree;
 
 /**
  * @author Krzysztof Watral
@@ -28,7 +31,7 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 	public static final String RULE_KEY = "AEM-9";
 
 	public static final String RULE_MESSAGE
-		= "Objects annotated by @SliceResource should not use or return any session based object. (except: constructor, com.cognifide.slice.api.model.InitializableModel.afterCreated())";
+		= "Objects annotated by @SliceResource should not use or return any session based object, except in constructor or com.cognifide.slice.api.model.InitializableModel.afterCreated().";
 
 	private static final String INITIALIZABLE_MODEL_INTERFACE = "com.cognifide.slice.api.model.InitializableModel";
 
@@ -49,40 +52,31 @@ public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements J
 	@Override
 	public void visitClass(ClassTree classTree) {
 		for (TypeTree typeTree : classTree.superInterfaces()) {
-			implementedInitializableModel |= isOfType(typeTree, INITIALIZABLE_MODEL_INTERFACE);
+			implementedInitializableModel |= TypeUtils.isOfType(typeTree, INITIALIZABLE_MODEL_INTERFACE);
 		}
 		super.visitClass(classTree);
 	}
 
 	@Override
 	public void visitMethod(MethodTree tree) {
-		if (sliceAnnotationVisitor.hasSliceResourceAnnotation() && isRegularMethod(tree)) {
-			checkSessionUsage(tree);
+		if (sliceAnnotationVisitor.hasSliceResourceAnnotation()
+			&& !isConstructorOrAfterCreatedMethod(tree)
+			&& !isPrivateMethod(tree)) {
+			tree.accept(new MethodInvocationVisitor(this, context));
 		}
 		super.visitMethod(tree);
 	}
 
-	private boolean isRegularMethod(MethodTree tree) {
-		boolean constructor = tree.is(MethodTree.Kind.CONSTRUCTOR);
-		boolean afterCreated = implementedInitializableModel && "afterCreated".equals(tree.symbol().name());
-		return !constructor && !afterCreated;
+	private boolean isConstructorOrAfterCreatedMethod(MethodTree tree) {
+		return tree.is(MethodTree.Kind.CONSTRUCTOR)
+			|| (implementedInitializableModel && "afterCreated".equals(tree.symbol().name()));
 	}
 
-	private void checkSessionUsage(MethodTree tree) {
-		SessionUsageVisitor sessionUsageVisitor = new SessionUsageVisitor();
-		tree.accept(sessionUsageVisitor);
-
-		if (null != sessionUsageVisitor.getReturnStatementTree()) {
-			context.reportIssue(this, sessionUsageVisitor.getReturnStatementTree(), RULE_MESSAGE);
+	private boolean isPrivateMethod(MethodTree tree) {
+		boolean result = false;
+		for (Iterator<ModifierKeywordTree> iterator = tree.modifiers().modifiers().iterator(); iterator.hasNext() && !result;) {
+			result = iterator.next().modifier() == Modifier.PRIVATE;
 		}
-
-		for (MemberSelectExpressionTree sessionMember : sessionUsageVisitor.getSessionMemberSelect()) {
-			context.reportIssue(this, sessionMember, RULE_MESSAGE);
-		}
+		return result;
 	}
-
-	private boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
-		return typeTree.symbolType().is(fullyQualifiedName);
-	}
-
 }

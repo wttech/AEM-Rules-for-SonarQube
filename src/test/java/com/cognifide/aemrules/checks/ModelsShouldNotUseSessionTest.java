@@ -16,7 +16,14 @@ public class ModelsShouldNotUseSessionTest extends AbstractBaseTest {
 	@Test
 	public void check() {
 		check = new ModelsShouldNotUseSessionCheck();
-		filename = "src/test/files/checks/SampleModel.java";
+		filename = "src/test/files/checks/session/SampleModel.java";
+		verify();
+	}
+
+	@Test
+	public void checkPrivateMethodUsage() {
+		check = new ModelsShouldNotUseSessionCheck();
+		filename = "src/test/files/checks/session/ModelWithSessionLeak.java";
 		verify();
 	}
 }
