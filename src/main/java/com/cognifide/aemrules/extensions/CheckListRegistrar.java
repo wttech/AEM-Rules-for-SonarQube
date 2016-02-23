@@ -14,7 +14,7 @@ import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
 import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck;
-import com.cognifide.aemrules.checks.JcrPropertyFieldsInConstructorCheck;
+import com.cognifide.aemrules.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.checks.PreferSlingServletAnnotation;
 import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
 import com.cognifide.aemrules.checks.SessionShouldBeLoggedOut;

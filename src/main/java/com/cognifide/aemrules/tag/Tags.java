@@ -18,7 +18,9 @@ package com.cognifide.aemrules.tag;
 public class Tags {
 
 	public static final String AEM = "aem";
-	
+
+	public static final String SLICE = "slice";
+
 	private Tags() {
 		throw new AssertionError();
 	}

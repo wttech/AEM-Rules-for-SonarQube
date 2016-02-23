@@ -24,7 +24,7 @@ import org.sonar.plugins.java.api.tree.ModifierKeywordTree;
 	key = ModelsShouldNotUseSessionCheck.RULE_KEY,
 	name = ModelsShouldNotUseSessionCheck.RULE_MESSAGE,
 	priority = Priority.BLOCKER,
-	tags = Tags.AEM
+	tags = {Tags.AEM, Tags.SLICE}
 )
 public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements JavaFileScanner {
 
