@@ -22,4 +22,27 @@ public class SynchornizedKeywordUsageCheck {
 	public synchronized void increment() { // Noncompliant
 		counter++;
 	}
+
+	@Override
+	public synchronized void doubleIncrement() { // Noncompliant
+		counter++;
+		counter++;
+	}
+
+	@Override
+	public synchronized void tripleIncrement() { // Noncompliant
+		counter++;
+		counter++;
+		counter++;
+	}
+
+	public 
+	synchronized // Noncompliant
+	void
+	quadrupleIncrement() {
+		counter++;
+		counter++;
+		counter++;
+		counter++;
+	}
 }
