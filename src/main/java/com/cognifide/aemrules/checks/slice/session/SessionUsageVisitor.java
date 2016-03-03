@@ -12,6 +12,7 @@ import org.sonar.plugins.java.api.tree.ReturnStatementTree;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.NewClassTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 /**
@@ -32,6 +33,11 @@ class SessionUsageVisitor extends BaseTreeVisitor {
 	SessionUsageVisitor(JavaFileScanner javaFileScanner, JavaFileScannerContext context) {
 		this.javaFileScanner = javaFileScanner;
 		this.context = context;
+	}
+
+	@Override
+	public void visitNewClass(NewClassTree tree) {
+		// ignore anonymous classes here
 	}
 
 	@Override
