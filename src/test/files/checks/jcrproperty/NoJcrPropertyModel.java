@@ -1,8 +1,10 @@
 package com.example;
 
+import com.cognifide.slice.mapper.annotation.SliceResource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
+@SliceResource
 public class NoJcrPropertyModel {
 
 	private final String label;

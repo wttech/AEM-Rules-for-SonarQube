@@ -24,7 +24,7 @@ import org.sonar.plugins.java.api.tree.WhileStatementTree;
 	key = IteratingResourcesCheck.RULE_KEY,
 	name = IteratingResourcesCheck.RULE_MESSAGE,
 	priority = Priority.MINOR,
-	tags = Tags.AEM
+	tags = {Tags.AEM, Tags.SLICE}
 )
 public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFileScanner {
 
