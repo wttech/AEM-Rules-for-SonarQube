@@ -16,6 +16,8 @@
 package com.cognifide.aemrules.checks.slice.iterator;
 
 import static com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck.RESOURCE_TYPE;
+import java.util.HashSet;
+import java.util.Set;
 import org.sonar.java.checks.methods.MethodMatcher;
 import org.sonar.java.checks.methods.TypeCriteria;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -33,7 +35,17 @@ class MethodInvocationTreeVisitor extends BaseTreeVisitor {
 		.addParameter(TypeCriteria.anyType())
 		.addParameter(RESOURCE_TYPE);
 
+	private final Set<MethodInvocationTree> visitedMethodInvocationTrees;
+
 	private boolean modelProviderGetCalled;
+
+	MethodInvocationTreeVisitor() {
+		this(new HashSet<MethodInvocationTree>(16));
+	}
+
+	MethodInvocationTreeVisitor(Set<MethodInvocationTree> visitedMethodInvocationTrees) {
+		this.visitedMethodInvocationTrees = new HashSet<>(visitedMethodInvocationTrees);
+	}
 
 	public boolean isModelProviderGetCalled() {
 		return modelProviderGetCalled;
@@ -41,17 +53,28 @@ class MethodInvocationTreeVisitor extends BaseTreeVisitor {
 
 	@Override
 	public void visitMethodInvocation(MethodInvocationTree tree) {
-		if (MODEL_PROVIDER_GET_MATCHER.matches(tree)) {
-			modelProviderGetCalled = true;
-		} else {
-			MethodInvocationTreeVisitor visitor = new MethodInvocationTreeVisitor();
-			MethodTree methodDeclaration = getMethodTree(tree);
-			if (methodDeclaration != null) {
-				methodDeclaration.accept(visitor);
-				modelProviderGetCalled |= visitor.isModelProviderGetCalled();
+		if (wasNotVisitedYet(tree)) {
+			if (MODEL_PROVIDER_GET_MATCHER.matches(tree)) {
+				modelProviderGetCalled = true;
+			} else {
+				MethodTree methodDeclaration = getMethodTree(tree);
+				if (methodDeclaration != null) {
+					MethodInvocationTreeVisitor visitor = new MethodInvocationTreeVisitor(visitedMethodInvocationTrees);
+					methodDeclaration.accept(visitor);
+					modelProviderGetCalled = visitor.isModelProviderGetCalled();
+				} else {
+					super.visitMethodInvocation(tree);
+				}
 			}
 		}
-		super.visitMethodInvocation(tree);
+	}
+
+	private boolean wasNotVisitedYet(MethodInvocationTree tree) {
+		boolean wasNotVisited = !visitedMethodInvocationTrees.contains(tree);
+		if (wasNotVisited) {
+			visitedMethodInvocationTrees.add(tree);
+		}
+		return wasNotVisited;
 	}
 
 	private MethodTree getMethodTree(MethodInvocationTree methodInvocation) {
