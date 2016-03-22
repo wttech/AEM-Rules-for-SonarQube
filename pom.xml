@@ -163,7 +163,7 @@
                     <pluginClass>com.cognifide.aemrules.AemRulesSonarPlugin</pluginClass>
                     <pluginName>${project.name}</pluginName>
                     <pluginDescription>${project.description}</pluginDescription>
-                    <pluginIssueTrackerUrl></pluginIssueTrackerUrl>
+                    <pluginIssueTrackerUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</pluginIssueTrackerUrl>
                     <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginSourcesUrl>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
                     <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
