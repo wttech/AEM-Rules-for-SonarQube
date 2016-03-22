@@ -8,7 +8,7 @@
 
 As we all know, SonarQube is a great tool that helps us increase quality of our codebase. However, it does apply mainly to general Java issues. As we know, we can hurt ourselves much more doing AEM. This tool is intended to find common bugs and bad smells specific for AEM development. Documentation of each rule is available from SonarQube interface after plugin installation.
 
-Do you like this? Visit Cognifide Labs.
+To see more tools like this, visit [Cognifide Labs](http://cognifide.github.io/)
 
 ## Prerequisites
 
