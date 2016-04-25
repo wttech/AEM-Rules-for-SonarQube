@@ -55,6 +55,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.version>4.5.6</sonar.version>
         <sonar.java.plugin>3.9</sonar.java.plugin>
+        <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
     </properties>
 
     <repositories>
@@ -163,11 +164,32 @@
                     <pluginClass>com.cognifide.aemrules.AemRulesSonarPlugin</pluginClass>
                     <pluginName>${project.name}</pluginName>
                     <pluginDescription>${project.description}</pluginDescription>
-                    <pluginIssueTrackerUrl></pluginIssueTrackerUrl>
+                    <pluginIssueTrackerUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</pluginIssueTrackerUrl>
                     <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginSourcesUrl>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
                     <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
                     <basePlugin>java</basePlugin>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.1.0</version>
+                <configuration>
+                    <coberturaReports>
+                        <coberturaReport>${project.basedir}/target/report/coverage.xml</coberturaReport>
+                    </coberturaReports>
+                    <repoToken>${coveralls.repo.token}</repoToken>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <format>xml</format>
+                    <maxmem>256m</maxmem>
+                    <check>true</check>
                 </configuration>
             </plugin>
         </plugins>
