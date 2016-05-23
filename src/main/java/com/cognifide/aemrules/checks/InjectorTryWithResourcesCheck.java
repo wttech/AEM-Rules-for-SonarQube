@@ -7,13 +7,12 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 import java.util.List;
-import org.sonar.java.tag.Tag;
 
 @Rule(
 	key = InjectorTryWithResourcesCheck.RULE_KEY,
 	name = InjectorTryWithResourcesCheck.RULE_MESSAGE,
 	priority = Priority.INFO,
-	tags = {Tag.JAVA_7, Tags.AEM}
+	tags = {Tags.AEM}
 )
 public class InjectorTryWithResourcesCheck extends InjectorShouldBeClosedCheck {
 
