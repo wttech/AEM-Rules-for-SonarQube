@@ -178,4 +178,8 @@ public class IteratingResourcesCheck {
 			break;
 		} while (stringIt.hasNext());
 	}
+
+	class SimpleModel{
+
+	}
 }
