@@ -13,8 +13,8 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 
 ## Prerequisites
 
-* SonarQube 4.5.4 or newer
-* Java 3.8 plugin
+* SonarQube 4.5.7
+* Java 3.13.1 plugin
 * Maven 2.x, 3.x
 
 ## Installation
