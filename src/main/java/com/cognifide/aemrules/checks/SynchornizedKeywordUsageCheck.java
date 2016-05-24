@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.checks.SubscriptionBaseVisitor;
 import org.sonar.java.tag.Tag;
+import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Modifier;
@@ -20,7 +20,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 	description = DESCRIPTION,
 	priority = Priority.INFO,
 	tags = {Tag.MULTI_THREADING, Tag.PERFORMANCE})
-public class SynchornizedKeywordUsageCheck extends SubscriptionBaseVisitor {
+public class SynchornizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
 	static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
 
@@ -52,9 +52,9 @@ public class SynchornizedKeywordUsageCheck extends SubscriptionBaseVisitor {
 
 	private static class SynchronizedMethodVisitor extends BaseTreeVisitor {
 
-		private final SubscriptionBaseVisitor visitor;
+		private final IssuableSubscriptionVisitor visitor;
 
-		SynchronizedMethodVisitor(SubscriptionBaseVisitor visitor) {
+		SynchronizedMethodVisitor(IssuableSubscriptionVisitor visitor) {
 			this.visitor = visitor;
 		}
 
