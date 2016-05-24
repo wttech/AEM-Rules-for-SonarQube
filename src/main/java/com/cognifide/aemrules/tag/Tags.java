@@ -21,6 +21,8 @@ public class Tags {
 
 	public static final String SLICE = "slice";
 
+	public static final String SLING_MODELS = "sling-models";
+
 	private Tags() {
 		throw new AssertionError();
 	}
