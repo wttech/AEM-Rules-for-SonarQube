@@ -5,7 +5,7 @@
 
     <groupId>com.cognifide.aemrules</groupId>
     <artifactId>aemrules</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
 
     <name>AEM Rules for SonarQube</name>
     <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM development.</description>
@@ -139,6 +139,18 @@
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.servlets.resolver</artifactId>
             <version>2.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.api</artifactId>
+            <version>2.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.models.api</artifactId>
+            <version>1.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.cognifide.aemrules.checks.HttpConstantCheck;
+import com.cognifide.aemrules.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
@@ -12,6 +13,7 @@ import com.cognifide.aemrules.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.checks.ConstantsCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
+import com.cognifide.aemrules.checks.ModifiableValueMapUsageCheck;
 import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck;
 import com.cognifide.aemrules.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
@@ -42,6 +44,8 @@ public class CheckListRegistrar implements CheckRegistrar {
 		.add(SessionShouldBeLoggedOut.class)
 		.add(SynchornizedKeywordUsageCheck.class)
 		.add(ThreadSafeFieldCheck.class)
+		.add(DefaultInjectionStrategyAnnotationCheck.class)
+		.add(ModifiableValueMapUsageCheck.class)
 		.build();
 
 	@Override
