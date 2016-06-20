@@ -13,7 +13,8 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 
 ## Prerequisites
 
-* SonarQube 4.5.7
+* SonarQube 4.5.7 for AEM Rules 0.5
+* SonarQube 5.4 for AEM Rules 0.6
 * Java 3.13.1 plugin
 * Maven 2.x, 3.x
 
@@ -88,6 +89,10 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
   - ``ModifiableValueMap`` should be replaced by ``ValueMap`` if no changeable methods invoked.
 
 # Release notes
+
+## 0.6
+
+* Support for SQ 5.4+
 
 ## 0.5
 
