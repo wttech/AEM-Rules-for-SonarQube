@@ -74,7 +74,7 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
   - Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.
 
 - **AEM-16** Optional is defined as DefaultInjectionStrategy
-  - Usage of ``@Optional`` annotation is redundant, when defaultInjectionStrategy is ``OPTIONAL``.
+  - Usage of ``@Optional`` annotation is redundant, when ``defaultInjectionStrategy`` is ``OPTIONAL``.
 
 - **AEM-17** No changeable methods invoked on ModifiableValueMap
   - ``ModifiableValueMap`` should be replaced by ``ValueMap`` if no changeable methods invoked.
