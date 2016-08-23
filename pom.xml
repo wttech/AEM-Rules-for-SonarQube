@@ -50,7 +50,18 @@
         <url>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</url>
     </issueManagement>
 
-    <distributionManagement />
+    <distributionManagement>
+        <repository>
+            <id>cognifide-internal-repository</id>
+            <name>Cognifide Internal Repository</name>
+            <url>https://nexus.cognifide.com/content/repositories/cognifide-internal</url>
+        </repository>
+        <snapshotRepository>
+            <id>cognifide-internal-snapshots-repository</id>
+            <name>Cognifide Internal Repository</name>
+            <url>https://nexus.cognifide.com/content/repositories/cognifide-internal-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
