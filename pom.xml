@@ -40,7 +40,7 @@
 
     <scm>
         <connection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</connection>
-        <url>>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</url>
+        <url>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</url>
         <developerConnection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
