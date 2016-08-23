@@ -55,6 +55,7 @@
         <sonar.version>5.6.1</sonar.version>
         <sonar.java.plugin>4.0</sonar.java.plugin>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
+        <tagName>v${project.version}</tagName>
     </properties>
 
     <repositories>
@@ -182,7 +183,7 @@
                     <pluginName>${project.name}</pluginName>
                     <pluginDescription>${project.description}</pluginDescription>
                     <pluginIssueTrackerUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</pluginIssueTrackerUrl>
-                    <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/v${project.version}</pluginSourcesUrl>
+                    <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/${tagName}</pluginSourcesUrl>
                     <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
                     <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
@@ -216,6 +217,24 @@
                 <version>2.5.3</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>de.jutzig</groupId>
+                <artifactId>github-release-plugin</artifactId>
+                <version>1.1.1</version>
+                <configuration>
+                    <description>Release Notes:</description>
+                    <releaseName>${tagName}</releaseName>
+                    <tag>${tagName}</tag>
+                    <fileSets>
+                        <fileSet>
+                            <directory>${project.build.directory}</directory>
+                            <includes>
+                                <include>${project.artifactId}*.jar</include>
+                            </includes>
+                        </fileSet>
+                    </fileSets>
                 </configuration>
             </plugin>
         </plugins>
