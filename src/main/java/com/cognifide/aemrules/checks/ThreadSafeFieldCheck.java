@@ -43,7 +43,17 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 	private static Set<String> nonThreadSafeTypes = Sets.newHashSet(
 			"org.apache.sling.api.resource.ResourceResolver",
 			"javax.jcr.Session",
-			"com.day.cq.wcm.api.PageManager");
+			"com.day.cq.wcm.api.PageManager",
+			"com.day.cq.wcm.api.components.ComponentManager",
+			"com.day.cq.wcm.api.designer.Designer",
+			"com.day.cq.dam.api.AssetManager",
+			"com.day.cq.tagging.TagManager",
+			"com.day.cq.security.UserManager",
+			"org.apache.jackrabbit.api.security.user.Authorizable",
+			"org.apache.jackrabbit.api.security.user.User",
+			"org.apache.jackrabbit.api.security.user.UserManager",
+			"com.day.cq.search.QueryBuilder",
+			"com.day.cq.commons.Externalizer");
 
 	private JavaFileScannerContext context;
 

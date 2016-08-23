@@ -55,7 +55,16 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
   - It is not safe to keep session based object as a field in `Servlet` or `Filter`. Rule checks for the occurrence of any instance or static fields of following types:
     - `org.apache.sling.api.resource.ResourceResolver`
     - `javax.jcr.Session`
-    - `com.day.cq.wcm.api.PageManager`
+    - `com.day.cq.wcm.api.components.ComponentManager`
+    - `com.day.cq.wcm.api.designer.Designer`
+    - `com.day.cq.dam.api.AssetManager`
+    - `com.day.cq.tagging.TagManager`
+    - `com.day.cq.security.UserManager`
+    - `org.apache.jackrabbit.api.security.user.Authorizable`
+    - `org.apache.jackrabbit.api.security.user.User`
+    - `org.apache.jackrabbit.api.security.user.UserManager`
+    - `com.day.cq.search.QueryBuilder`
+    - `com.day.cq.commons.Externalizer`
 
 - **AEM-6** ResourceResolver should be closed in finally block.
   - According to its [Javadoc](https://sling.apache.org/apidocs/sling6/org/apache/sling/api/resource/ResourceResolver.html), Resource Resolver has a life cycle which begins with the creation of the Resource Resolver using any of the factory methods and ends with calling the `close` method. It is very important to call the `close` method once the resource resolver is not used any more to ensure any system resources are properly clean up.
