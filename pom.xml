@@ -4,7 +4,7 @@
 
     <groupId>com.cognifide.aemrules</groupId>
     <artifactId>aemrules</artifactId>
-    <version>0.7</version>
+    <version>0.7-SNAPSHOT</version>
 
     <name>AEM Rules for SonarQube</name>
     <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM development.</description>
@@ -42,7 +42,7 @@
         <connection>scm:git:ssh://github.com/Cognifide/AEM-Rules-for-SonarQube.git</connection>
         <url>scm:git:https://github.com/Cognifide/AEM-Rules-for-SonarQube.git</url>
         <developerConnection>scm:git:ssh://github.com/Cognifide/AEM-Rules-for-SonarQube.git</developerConnection>
-        <tag>aemrules-0.7</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
@@ -182,8 +182,7 @@
                     <pluginName>${project.name}</pluginName>
                     <pluginDescription>${project.description}</pluginDescription>
                     <pluginIssueTrackerUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</pluginIssueTrackerUrl>
-                    <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/v${project.version}</pluginSourcesUrl>
-                    <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
+                    <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginSourcesUrl>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
                     <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
                     <basePlugin>java</basePlugin>
@@ -214,9 +213,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
-                <configuration>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                </configuration>
             </plugin>
         </plugins>
     </build>
