@@ -28,13 +28,13 @@ public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor imp
 
 	public static final String RULE_MESSAGE = "Optional is defined as DefaultInjectionStrategy";
 
-	public static final String OPTIONAL_ANNOTATION_FULL_NAME = "org.apache.sling.models.annotations.Optional";
+	private static final String OPTIONAL_ANNOTATION_FULL_NAME = "org.apache.sling.models.annotations.Optional";
 
-	public static final String MODEL_ANNOTATION_FULL_NAME = "org.apache.sling.models.annotations.Model";
+	private static final String MODEL_ANNOTATION_FULL_NAME = "org.apache.sling.models.annotations.Model";
 
-	public static final String DEFAULT_INJECTION_STRATEGY = "defaultInjectionStrategy";
+	private static final String DEFAULT_INJECTION_STRATEGY = "defaultInjectionStrategy";
 
-	public static final String OPTIONAL = "OPTIONAL";
+	private static final String OPTIONAL = "OPTIONAL";
 
 	private JavaFileScannerContext context;
 
@@ -63,14 +63,20 @@ public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor imp
 		for (ExpressionTree argument : arguments) {
 			if (argument.is(Tree.Kind.ASSIGNMENT)) {
 				AssignmentExpressionTree assignment = (AssignmentExpressionTree) argument;
-				MemberSelectExpressionTree expression = (MemberSelectExpressionTree) assignment.expression();
-				if (DEFAULT_INJECTION_STRATEGY.equals(((IdentifierTree) assignment.variable()).name())
-						&& OPTIONAL.equals(expression.identifier().name())) {
-					optionalIsDefaultValue = true;
+				if (isDefaultInjectionStrategyAssignment(assignment)) {
+					optionalIsDefaultValue = isOptionalStrategyValue(assignment);
 				}
 			}
 		}
 		return optionalIsDefaultValue;
+	}
+
+	private boolean isOptionalStrategyValue(AssignmentExpressionTree assignment) {
+		return OPTIONAL.equals(((MemberSelectExpressionTree) assignment.expression()).identifier().name());
+	}
+
+	private boolean isDefaultInjectionStrategyAssignment(AssignmentExpressionTree assignment) {
+		return DEFAULT_INJECTION_STRATEGY.equals(((IdentifierTree) assignment.variable()).name());
 	}
 
 	private boolean isSearchedAnnotation(AnnotationTree annotationTree, String fullyQualifiedName) {
@@ -81,7 +87,7 @@ public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor imp
 
 		private final JavaFileScanner scanner;
 
-		public CheckIfOptionalAnnotationIsPresent(DefaultInjectionStrategyAnnotationCheck scanner) {
+		CheckIfOptionalAnnotationIsPresent(DefaultInjectionStrategyAnnotationCheck scanner) {
 			this.scanner = scanner;
 		}
 
