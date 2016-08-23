@@ -4,7 +4,7 @@
 
     <groupId>com.cognifide.aemrules</groupId>
     <artifactId>aemrules</artifactId>
-    <version>0.7</version>
+    <version>0.7-SNAPSHOT</version>
 
     <name>AEM Rules for SonarQube</name>
     <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM development.</description>
@@ -208,6 +208,11 @@
                     <maxmem>256m</maxmem>
                     <check>true</check>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
             </plugin>
         </plugins>
     </build>
