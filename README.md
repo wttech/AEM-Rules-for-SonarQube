@@ -13,14 +13,11 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 
 ## Prerequisites
 
-* SonarQube 4.5.7 for AEM Rules 0.5
-* SonarQube 5.4 for AEM Rules 0.6
-* Java 3.13.1 plugin
-* Maven 2.x, 3.x
+Each release has its own prerequisites section, for more information please check [releases page](https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases).
 
 ## Installation
 
-1. Download `aemrules.jar` or build **AEM Rules for SonarQube** plugin.
+1. [Download](https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases) `aemrules-x.y.jar` or build **AEM Rules for SonarQube** plugin.
 2. Paste it into `sonarqube/extensions/plugins` directory.
 3. Restart SonarQube.
 4. Go to rules section and activate AEM rules in your profile.
