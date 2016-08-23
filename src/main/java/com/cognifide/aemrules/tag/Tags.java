@@ -19,6 +19,12 @@ public class Tags {
 
 	public static final String AEM = "aem";
 
+	public static final String BUG = "bug";
+
+	public static final String PERFORMANCE = "performance";
+
+	public static final String MULTI_THREADING = "multi-threading";
+
 	public static final String SLICE = "slice";
 
 	public static final String SLING_MODELS = "sling-models";

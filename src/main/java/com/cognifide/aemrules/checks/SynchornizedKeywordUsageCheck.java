@@ -1,11 +1,12 @@
 package com.cognifide.aemrules.checks;
 
 import static com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck.DESCRIPTION;
+
+import com.cognifide.aemrules.tag.Tags;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.tag.Tag;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodTree;
@@ -19,7 +20,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 	name = SynchornizedKeywordUsageCheck.MESSAGE,
 	description = DESCRIPTION,
 	priority = Priority.INFO,
-	tags = {Tag.MULTI_THREADING, Tag.PERFORMANCE})
+	tags = {Tags.MULTI_THREADING, Tags.PERFORMANCE})
 public class SynchornizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
 	static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";

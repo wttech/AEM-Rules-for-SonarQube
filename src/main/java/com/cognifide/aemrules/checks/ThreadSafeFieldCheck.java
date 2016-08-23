@@ -15,13 +15,12 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 import com.google.common.collect.Sets;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.tag.Tag;
 
 @Rule(
 		key = ThreadSafeFieldCheck.RULE_KEY,
 		name = ThreadSafeFieldCheck.RULE_NAME,
 		priority = Priority.CRITICAL,
-		tags = {Tag.BUG, Tags.AEM}
+		tags = {Tags.BUG, Tags.AEM}
 )
 public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileScanner {
 

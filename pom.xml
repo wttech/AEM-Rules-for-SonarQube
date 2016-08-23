@@ -52,8 +52,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.version>5.4</sonar.version>
-        <sonar.java.plugin>3.13.1</sonar.java.plugin>
+        <sonar.version>5.6.1</sonar.version>
+        <sonar.java.plugin>4.0</sonar.java.plugin>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
     </properties>
 
@@ -96,6 +96,12 @@
             <groupId>org.sonarsource.java</groupId>
             <artifactId>java-checks-testkit</artifactId>
             <version>${sonar.java.plugin}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -159,16 +165,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.5.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.15</version>
+                <version>1.17</version>
                 <extensions>true</extensions>
                 <configuration>
                     <pluginKey>aemrules</pluginKey>
