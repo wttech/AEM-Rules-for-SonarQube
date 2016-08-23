@@ -12,4 +12,11 @@ public class DefaultInjectionStrategyAnnotationCheckTest extends AbstractBaseTes
 		verify();
 	}
 
+	@Test
+	public void checkMultipleAdaptablesAnnotation() {
+		check = new DefaultInjectionStrategyAnnotationCheck();
+		filename = "src/test/files/checks/slingmodels/DefaultInjectionStrategyAnnotationCheckMultipleAdaptables.java";
+		verify();
+	}
+
 }
