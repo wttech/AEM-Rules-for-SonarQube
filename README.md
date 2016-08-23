@@ -55,6 +55,7 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
   - It is not safe to keep session based object as a field in `Servlet` or `Filter`. Rule checks for the occurrence of any instance or static fields of following types:
     - `org.apache.sling.api.resource.ResourceResolver`
     - `javax.jcr.Session`
+    - `com.day.cq.wcm.api.PageManager`
     - `com.day.cq.wcm.api.components.ComponentManager`
     - `com.day.cq.wcm.api.designer.Designer`
     - `com.day.cq.dam.api.AssetManager`
