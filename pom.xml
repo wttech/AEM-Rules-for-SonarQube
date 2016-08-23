@@ -50,6 +50,8 @@
         <url>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</url>
     </issueManagement>
 
+    <distributionManagement></distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.version>5.6.1</sonar.version>
