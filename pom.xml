@@ -39,9 +39,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</connection>
+        <connection>scm:git:ssh://github.com/Cognifide/AEM-Rules-for-SonarQube.git</connection>
         <url>scm:git:https://github.com/Cognifide/AEM-Rules-for-SonarQube.git</url>
-        <developerConnection>scm:git|https://github.com/Cognifide/AEM-Rules-for-SonarQube.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com/Cognifide/AEM-Rules-for-SonarQube.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
