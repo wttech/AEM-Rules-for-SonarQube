@@ -97,6 +97,14 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 # Release notes
 
+## 0.7
+
+* Support for Java 8
+* Support for SonarQube 5.6.1+
+* Support for Java plugin 4.0+
+* Fixed multiple adaptables bug for AEM-16 rule.
+* Added more non-thread-safe classes to AEM-3 rule.
+
 ## 0.6
 
 * Support for SQ 5.4+
