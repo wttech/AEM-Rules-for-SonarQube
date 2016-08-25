@@ -14,7 +14,6 @@ import org.sonar.api.server.rule.RuleParamType;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.AnnotationUtils;
 import org.sonar.api.utils.FieldUtils2;
-import org.sonar.check.Cardinality;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaCheck;
 
@@ -65,7 +64,6 @@ public class RulesLoader {
 		RulesDefinition.NewRule rule = repo.createRule(ruleKey);
 		rule.setName(ruleName).setMarkdownDescription(description);
 		rule.setSeverity(ruleAnnotation.priority().name());
-		rule.setTemplate(ruleAnnotation.cardinality() == Cardinality.MULTIPLE);
 		rule.setStatus(RuleStatus.valueOf(ruleAnnotation.status()));
 		rule.setTags(ruleAnnotation.tags());
 
