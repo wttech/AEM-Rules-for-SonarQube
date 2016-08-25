@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cognifide.aemrules</groupId>
@@ -7,7 +8,9 @@
     <version>0.8-SNAPSHOT</version>
 
     <name>AEM Rules for SonarQube</name>
-    <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM development.</description>
+    <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM
+        development.
+    </description>
 
     <packaging>sonar-plugin</packaging>
 
@@ -195,8 +198,10 @@
                     <pluginClass>com.cognifide.aemrules.AemRulesSonarPlugin</pluginClass>
                     <pluginName>${project.name}</pluginName>
                     <pluginDescription>${project.description}</pluginDescription>
-                    <pluginIssueTrackerUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</pluginIssueTrackerUrl>
-                    <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/${tagName}</pluginSourcesUrl>
+                    <pluginIssueTrackerUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues
+                    </pluginIssueTrackerUrl>
+                    <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/${tagName}
+                    </pluginSourcesUrl>
                     <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
                     <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
@@ -231,6 +236,11 @@
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.sonar</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.6.1</version>
             </plugin>
         </plugins>
     </build>

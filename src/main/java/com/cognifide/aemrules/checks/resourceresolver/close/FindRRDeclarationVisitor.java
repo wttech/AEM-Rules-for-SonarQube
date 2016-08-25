@@ -15,9 +15,9 @@ import java.util.Set;
  */
 class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
-	public static final String RESOURCE_RESOLVER_NAME = "org.apache.sling.api.resource.ResourceResolver";
+	private static final String RESOURCE_RESOLVER_NAME = "org.apache.sling.api.resource.ResourceResolver";
 
-	public static final String RESOURCE_RESOLVER_FACTORY = "org.apache.sling.api.resource.ResourceResolverFactory";
+	private static final String RESOURCE_RESOLVER_FACTORY = "org.apache.sling.api.resource.ResourceResolverFactory";
 
 	private final Set<VariableTree> resourceResolvers;
 

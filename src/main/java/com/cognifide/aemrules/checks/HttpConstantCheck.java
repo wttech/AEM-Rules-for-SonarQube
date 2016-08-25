@@ -1,8 +1,6 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.tag.Tags;
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
@@ -12,6 +10,8 @@ import org.sonar.plugins.java.api.tree.LiteralTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
+import java.util.List;
+
 @Rule(
 		key = HttpConstantCheck.RULE_KEY,
 		name = HttpConstantCheck.RULE_MESSAGE,
@@ -20,11 +20,11 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 )
 public class HttpConstantCheck extends IssuableSubscriptionVisitor {
 
-	public static final String HTTP_LITERAL = "http";
+	protected static final String RULE_KEY = "AEM-14";
+
+	private static final String HTTP_LITERAL = "http";
 
 	public static final String RULE_MESSAGE = "Using http literal hardcoded makes it difficult to switch to https later on.";
-
-	static final String RULE_KEY = "AEM-14";
 
 	@Override
 	public List<Kind> nodesToVisit() {

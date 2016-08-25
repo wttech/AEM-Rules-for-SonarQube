@@ -15,6 +15,7 @@
  */
 package com.cognifide.aemrules.checks.slice.iterator;
 
+import com.cognifide.aemrules.Constants;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
@@ -39,7 +40,7 @@ class DoWhileBinaryExpressionVisitor extends BaseTreeVisitor {
 	}
 
 	private boolean isResource(ExpressionTree operand) {
-		return !operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(IteratingResourcesCheck.RESOURCE_TYPE);
+		return !operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE);
 	}
 
 }

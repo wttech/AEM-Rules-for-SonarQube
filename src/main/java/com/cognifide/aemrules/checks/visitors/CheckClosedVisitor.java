@@ -4,7 +4,7 @@ import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Checks if variable is being closed. Used only in finally blocks.
@@ -13,11 +13,11 @@ public class CheckClosedVisitor extends BaseTreeVisitor {
 
 	private static final String CLOSE_METHOD_NAME = "close";
 
-	private final List<IdentifierTree> usages;
+	private final Set<IdentifierTree> usages;
 
 	private boolean closed;
 
-	public CheckClosedVisitor(List<IdentifierTree> usages) {
+	public CheckClosedVisitor(Set<IdentifierTree> usages) {
 		this.usages = usages;
 		this.closed = false;
 	}

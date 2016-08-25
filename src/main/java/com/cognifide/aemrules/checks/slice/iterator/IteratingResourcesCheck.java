@@ -1,8 +1,6 @@
 package com.cognifide.aemrules.checks.slice.iterator;
 
 import com.cognifide.aemrules.tag.Tags;
-import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
-
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -20,6 +18,8 @@ import org.sonar.plugins.java.api.tree.StatementTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.WhileStatementTree;
 
+import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
+
 @Rule(
 	key = IteratingResourcesCheck.RULE_KEY,
 	name = IteratingResourcesCheck.RULE_MESSAGE,
@@ -31,8 +31,6 @@ public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFile
 	public static final String RULE_KEY = "AEM-10";
 
 	public static final String RULE_MESSAGE = "Use ModelProvider#getListFromResources instead of iteration";
-
-	static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
 
 	private JavaFileScannerContext context;
 

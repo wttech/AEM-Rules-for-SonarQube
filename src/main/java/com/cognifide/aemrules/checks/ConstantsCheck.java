@@ -21,9 +21,9 @@ import java.util.List;
 )
 public class ConstantsCheck extends IssuableSubscriptionVisitor {
 
-	public static final String RULE_MESSAGE = "Use predefined constant instead of hardcoded value.";
+	protected static final String RULE_KEY = "AEM-2";
 
-	static final String RULE_KEY = "AEM-2";
+	public static final String RULE_MESSAGE = "Use predefined constant instead of hardcoded value.";
 
 	@Override
 	public List<Kind> nodesToVisit() {

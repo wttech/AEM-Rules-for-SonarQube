@@ -15,6 +15,7 @@
  */
 package com.cognifide.aemrules.checks.slice.iterator;
 
+import com.cognifide.aemrules.Constants;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
@@ -41,7 +42,7 @@ class TypeTreeVisitor extends BaseTreeVisitor {
 	}
 
 	private void isResourceType(TypeTree typeTree) {
-		if (typeTree.symbolType().isSubtypeOf(IteratingResourcesCheck.RESOURCE_TYPE)) {
+		if (typeTree.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
 			resourceTypeInstance = true;
 		}
 	}

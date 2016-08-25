@@ -15,10 +15,6 @@
  */
 package com.cognifide.aemrules.checks.slice.iterator;
 
-import static com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck.RESOURCE_TYPE;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -26,6 +22,11 @@ import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.cognifide.aemrules.Constants.RESOURCE_TYPE;
 
 class MethodInvocationTreeVisitor extends BaseTreeVisitor {
 

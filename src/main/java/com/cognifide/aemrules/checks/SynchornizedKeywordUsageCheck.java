@@ -1,10 +1,7 @@
 package com.cognifide.aemrules.checks;
 
-import static com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck.DESCRIPTION;
-
 import com.cognifide.aemrules.tag.Tags;
 import com.google.common.collect.ImmutableList;
-import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
@@ -15,6 +12,10 @@ import org.sonar.plugins.java.api.tree.ModifierKeywordTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
+import java.util.List;
+
+import static com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck.DESCRIPTION;
+
 @Rule(
 	key = SynchornizedKeywordUsageCheck.RULE_KEY,
 	name = SynchornizedKeywordUsageCheck.MESSAGE,
@@ -23,11 +24,11 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 	tags = {Tags.MULTI_THREADING, Tags.PERFORMANCE})
 public class SynchornizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
-	static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
+	protected static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
 
-	static final String RULE_KEY = "AEM-15";
+	protected static final String RULE_KEY = "AEM-15";
 
-	static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
+	protected static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
 
 	private static final List<Tree.Kind> ACCEPTED_NODE_KINDS
 		= ImmutableList.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);

@@ -4,7 +4,7 @@ import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Checks if variable is being logged out. Used only in finally blocks.
@@ -13,11 +13,11 @@ public class CheckLoggedOutVisitor extends BaseTreeVisitor {
 
 	private static final String LOG_OUT_METHOD_NAME = "logout";
 
-	private final List<IdentifierTree> usages;
+	private final Set<IdentifierTree> usages;
 
 	private boolean loggedOut;
 
-	public CheckLoggedOutVisitor(List<IdentifierTree> usages) {
+	public CheckLoggedOutVisitor(Set<IdentifierTree> usages) {
 		this.usages = usages;
 		this.loggedOut = false;
 	}

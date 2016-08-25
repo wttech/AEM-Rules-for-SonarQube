@@ -4,6 +4,7 @@ import com.cognifide.aemrules.checks.visitors.CheckClosedVisitor;
 import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
 import com.cognifide.aemrules.checks.visitors.FindVariableDeclarationVisitor;
 import com.cognifide.aemrules.tag.Tags;
+import com.google.common.collect.Sets;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -14,6 +15,7 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 import java.util.List;
+import java.util.Set;
 
 @Rule(
 		key = InjectorShouldBeClosedCheck.RULE_KEY,
@@ -23,11 +25,11 @@ import java.util.List;
 )
 public class InjectorShouldBeClosedCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-	public static final String RULE_KEY = "AEM-4";
+	private static final String CLASS_INJECTOR_NAME = "com.cognifide.slice.api.injector.InjectorWithContext";
 
-	public static final String RULE_MESSAGE = "Injector should be closed in finally block or created as a resource within try block.";
+	protected static final String RULE_KEY = "AEM-4";
 
-	public static final String CLASS_INJECTOR_NAME = "com.cognifide.slice.api.injector.InjectorWithContext";
+	protected static final String RULE_MESSAGE = "Injector should be closed in finally block or created as a resource within try block.";
 
 	protected JavaFileScannerContext context;
 
@@ -50,7 +52,7 @@ public class InjectorShouldBeClosedCheck extends BaseTreeVisitor implements Java
 	}
 
 	protected boolean checkIfInjectorIsClosedInMethod(MethodTree method, VariableTree injector) {
-		List<IdentifierTree> usagesOfInjector = injector.symbol().usages();
+		Set<IdentifierTree> usagesOfInjector = Sets.newHashSet(injector.symbol().usages());
 		CheckClosedVisitor checkClosedVisitor = new CheckClosedVisitor(usagesOfInjector);
 		FinallyBlockVisitor finallyBlockVisitor = new FinallyBlockVisitor(checkClosedVisitor);
 		method.accept(finallyBlockVisitor);

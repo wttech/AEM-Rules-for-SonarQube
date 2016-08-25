@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Set;
 
 @Rule(
-	key = ModifiableValueMapUsageCheck.RULE_KEY,
-	name = ModifiableValueMapUsageCheck.RULE_MESSAGE,
-	priority = Priority.CRITICAL,
-	tags = Tags.AEM)
+		key = ModifiableValueMapUsageCheck.RULE_KEY,
+		name = ModifiableValueMapUsageCheck.RULE_MESSAGE,
+		priority = Priority.CRITICAL,
+		tags = Tags.AEM)
 public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements JavaFileScanner {
 
 	public static final String RULE_KEY = "AEM-17";
@@ -31,7 +31,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 
 	private static final String MODIFIABLE_VALUE_MAP_FULL_NAME = "org.apache.sling.api.resource.ModifiableValueMap";
 
-	private static Set<String> CHANGEABLE_METHODS = ImmutableSet.of("put", "putAll", "remove");
+	private static final Set<String> CHANGEABLE_METHODS = ImmutableSet.of("put", "putAll", "remove");
 
 	private JavaFileScannerContext context;
 
@@ -45,7 +45,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 
 	@Override
 	public void visitVariable(VariableTree tree) {
-		if (tree.type().symbolType().fullyQualifiedName().equals(MODIFIABLE_VALUE_MAP_FULL_NAME)) {
+		if (MODIFIABLE_VALUE_MAP_FULL_NAME.equals(tree.type().symbolType().fullyQualifiedName())) {
 			isModified = false;
 			List<IdentifierTree> usagesOfMVM = tree.symbol().usages();
 			checkIfMapVariableIsModified(usagesOfMVM);
@@ -59,7 +59,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 	private void checkIfMapVariableIsModified(List<IdentifierTree> usagesOfMVM) {
 		for (IdentifierTree MVMUsageIdentifier : usagesOfMVM) {
 			Tree usageOfMVM = MVMUsageIdentifier.parent();
-			if (usageOfMVM != null ) {
+			if (usageOfMVM != null) {
 				if (usageOfMVM.is(Tree.Kind.MEMBER_SELECT)) {
 					MemberSelectExpressionTree expressionOnMVM = (MemberSelectExpressionTree) usageOfMVM;
 					if (CHANGEABLE_METHODS.contains(expressionOnMVM.identifier().name())) {
@@ -73,8 +73,8 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 		}
 	}
 
-	private void visitMethodWithMVM( IdentifierTree MVMUsageIdentifier, Tree usageOfMVM) {
-		int argumentNumber = ((ArgumentListTreeImpl) usageOfMVM).indexOf(MVMUsageIdentifier);
+	private void visitMethodWithMVM(IdentifierTree modifiableValueMapUsageIdentifier, Tree usageOfMVM) {
+		int argumentNumber = ((ArgumentListTreeImpl) usageOfMVM).indexOf(modifiableValueMapUsageIdentifier);
 		MethodInvocationTree methodInvocationWithMVM = ((MethodInvocationTree) (usageOfMVM.parent()));
 		if (methodInvocationWithMVM != null) {
 			MethodTree methodWithMVM = (MethodTree) methodInvocationWithMVM.symbol().declaration();
@@ -100,7 +100,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 		@Override
 		public void visitMethod(MethodTree tree) {
 			List<VariableTree> parameters = tree.parameters();
-			if(argumentIndex>=0 && argumentIndex <= (parameters.size()-1)) {
+			if (argumentIndex >= 0 && argumentIndex <= (parameters.size() - 1)) {
 				VariableTree variableTree = parameters.get(argumentIndex);
 				scanner.checkIfMapVariableIsModified(variableTree.symbol().usages());
 			}
