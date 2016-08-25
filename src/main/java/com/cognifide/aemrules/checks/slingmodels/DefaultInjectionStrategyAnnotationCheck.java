@@ -49,7 +49,7 @@ public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor imp
 		List<AnnotationTree> annotations = tree.modifiers().annotations();
 		for (AnnotationTree annotationTree : annotations) {
 			if (isSearchedAnnotation(annotationTree, MODEL_ANNOTATION_FULL_NAME)
-					&& isOptionalDefaultValue(tree, annotationTree.arguments())) {
+					&& isOptionalDefaultValue(annotationTree.arguments())) {
 				CheckIfOptionalAnnotationIsPresent checkIfOptionalIsPresent = new CheckIfOptionalAnnotationIsPresent(
 						this);
 				tree.accept(checkIfOptionalIsPresent);
@@ -58,7 +58,7 @@ public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor imp
 		super.visitClass(tree);
 	}
 
-	private boolean isOptionalDefaultValue(ClassTree tree, Arguments arguments) {
+	private boolean isOptionalDefaultValue(Arguments arguments) {
 		boolean optionalIsDefaultValue = false;
 		for (ExpressionTree argument : arguments) {
 			if (argument.is(Tree.Kind.ASSIGNMENT)) {
