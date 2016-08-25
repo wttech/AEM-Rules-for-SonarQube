@@ -75,7 +75,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 
 	private void visitMethodWithMVM(IdentifierTree modifiableValueMapUsageIdentifier, Tree usageOfMVM) {
 		int argumentNumber = ((ArgumentListTreeImpl) usageOfMVM).indexOf(modifiableValueMapUsageIdentifier);
-		MethodInvocationTree methodInvocationWithMVM = ((MethodInvocationTree) (usageOfMVM.parent()));
+		MethodInvocationTree methodInvocationWithMVM = (MethodInvocationTree) usageOfMVM.parent();
 		if (methodInvocationWithMVM != null) {
 			MethodTree methodWithMVM = (MethodTree) methodInvocationWithMVM.symbol().declaration();
 			if (methodWithMVM != null && methodWithMVM.is(Tree.Kind.METHOD)) {
