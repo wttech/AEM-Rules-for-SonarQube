@@ -70,6 +70,7 @@ public class SessionLogout {
 
 	public void six() {
 		Session session = null; // Noncompliant
+		String plotTwist = "twist";
 		try {
 			session = repository.loginService(null, null);
 		} catch (RepositoryException e) {
@@ -77,6 +78,7 @@ public class SessionLogout {
 		} finally {
 			if (session != null && session.isLive()) {
 				//	session.logout();
+				plotTwist.toString();
 			}
 		}
 	}

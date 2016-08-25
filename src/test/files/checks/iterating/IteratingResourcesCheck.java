@@ -1,12 +1,13 @@
 package com.example;
 
-import java.util.Iterator;
-import java.util.List;
-import org.apache.sling.api.resource.Resource;
 import com.cognifide.slice.api.provider.ModelProvider;
+import org.apache.sling.api.resource.Resource;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 public class IteratingResourcesCheck {
 
