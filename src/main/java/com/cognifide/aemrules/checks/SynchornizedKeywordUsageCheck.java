@@ -40,14 +40,12 @@ public class SynchornizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
 	@Override
 	public void visitNode(Tree tree) {
-		switch (tree.kind()) {
-			case METHOD:
-				SynchronizedMethodVisitor visitor = new SynchronizedMethodVisitor(this);
-				tree.accept(visitor);
-				break;
-			case SYNCHRONIZED_STATEMENT:
-				reportIssue(tree, MESSAGE);
-				break;
+		Kind i = tree.kind();
+		if (i == Kind.METHOD) {
+			SynchronizedMethodVisitor visitor = new SynchronizedMethodVisitor(this);
+			tree.accept(visitor);
+		} else if (i == Kind.SYNCHRONIZED_STATEMENT) {
+			reportIssue(tree, MESSAGE);
 		}
 		super.visitNode(tree);
 	}
