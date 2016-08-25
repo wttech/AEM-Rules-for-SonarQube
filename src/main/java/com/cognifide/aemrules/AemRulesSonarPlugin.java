@@ -2,17 +2,16 @@ package com.cognifide.aemrules;
 
 import com.cognifide.aemrules.extensions.AemRulesRulesDefinition;
 import com.cognifide.aemrules.extensions.CheckListRegistrar;
-import org.sonar.api.SonarPlugin;
+import org.sonar.api.Plugin;
 
-import java.util.Arrays;
-import java.util.List;
+public class AemRulesSonarPlugin implements Plugin {
 
-public class AemRulesSonarPlugin extends SonarPlugin {
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List getExtensions() {
-		return Arrays.asList(AemRulesRulesDefinition.class, CheckListRegistrar.class);
+	public void define(Context context) {
+		context.addExtension(AemRulesRulesDefinition.class);
+		context.addExtension(CheckListRegistrar.class);
 	}
+
+
 
 }
