@@ -6,6 +6,7 @@ import org.apache.sling.jcr.api.SlingRepository;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import org.apache.commons.lang.StringUtils;
 
 @Component(immediate = true)
 public class SessionLogout {
@@ -71,6 +72,9 @@ public class SessionLogout {
 	public void six() {
 		Session session = null; // Noncompliant
 		String plotTwist = "twist";
+		plotTwist = "anotherTwist";
+		plotTwist = getMeAnotherTwist();
+		plotTwist = StringUtils.capitalize(plotTwist);
 		try {
 			session = repository.loginService(null, null);
 		} catch (RepositoryException e) {
@@ -108,6 +112,10 @@ public class SessionLogout {
 		Session max = createAdminSession();
 		Session result = max;
 		return result;
+	}
+
+	private String getMeAnotherTwist() {
+		return "lastOne";
 	}
 
 }
