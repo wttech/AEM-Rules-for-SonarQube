@@ -25,13 +25,13 @@ import java.util.Set;
 		tags = Tags.AEM)
 public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-	public static final String RULE_KEY = "AEM-17";
-
-	public static final String RULE_MESSAGE = "No changeable methods invoked on ModifiableValueMap";
-
 	private static final String MODIFIABLE_VALUE_MAP_FULL_NAME = "org.apache.sling.api.resource.ModifiableValueMap";
 
-	private static final Set<String> CHANGEABLE_METHODS = ImmutableSet.of("put", "putAll", "remove");
+	private static final Set<String> MUTABLE_METHODS = ImmutableSet.of("put", "putAll", "remove");
+
+	protected static final String RULE_KEY = "AEM-17";
+
+	protected static final String RULE_MESSAGE = "No changeable methods invoked on ModifiableValueMap";
 
 	private JavaFileScannerContext context;
 
@@ -57,20 +57,21 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 	}
 
 	private void checkIfMapVariableIsModified(List<IdentifierTree> usagesOfMVM) {
-		for (IdentifierTree MVMUsageIdentifier : usagesOfMVM) {
-			Tree usageOfMVM = MVMUsageIdentifier.parent();
+		for (IdentifierTree modifiableValueMapUsageIdentifier : usagesOfMVM) {
+			Tree usageOfMVM = modifiableValueMapUsageIdentifier.parent();
 			if (usageOfMVM != null) {
-				if (usageOfMVM.is(Tree.Kind.MEMBER_SELECT)) {
-					MemberSelectExpressionTree expressionOnMVM = (MemberSelectExpressionTree) usageOfMVM;
-					if (CHANGEABLE_METHODS.contains(expressionOnMVM.identifier().name())) {
-						isModified = true;
-						break;
-					}
-				} else if (usageOfMVM.is(Tree.Kind.ARGUMENTS)) {
-					visitMethodWithMVM(MVMUsageIdentifier, usageOfMVM);
+				if (usageOfMVM.is(Tree.Kind.ARGUMENTS)) {
+					visitMethodWithMVM(modifiableValueMapUsageIdentifier, usageOfMVM);
+				} else if (usageOfMVM.is(Tree.Kind.MEMBER_SELECT) && isSomeoneCallingMutableMethodsOnMap((MemberSelectExpressionTree) usageOfMVM)) {
+					isModified = true;
+					break;
 				}
 			}
 		}
+	}
+
+	private boolean isSomeoneCallingMutableMethodsOnMap(MemberSelectExpressionTree usageOfMVM) {
+		return MUTABLE_METHODS.contains(usageOfMVM.identifier().name());
 	}
 
 	private void visitMethodWithMVM(IdentifierTree modifiableValueMapUsageIdentifier, Tree usageOfMVM) {
@@ -91,8 +92,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 
 		private final int argumentIndex;
 
-
-		public MethodWithMVMVisitor(ModifiableValueMapUsageCheck scanner, int argumentIndex) {
+		MethodWithMVMVisitor(ModifiableValueMapUsageCheck scanner, int argumentIndex) {
 			this.scanner = scanner;
 			this.argumentIndex = argumentIndex;
 		}

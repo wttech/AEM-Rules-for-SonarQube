@@ -12,9 +12,9 @@ import java.util.Set;
  */
 public class FindSessionDeclarationVisitor extends BaseTreeVisitor {
 
-	public static final String JCR_SESSION = "javax.jcr.Session";
+	private static final String JCR_SESSION = "javax.jcr.Session";
 
-	public static final String SLING_REPOSITORY = "org.apache.sling.jcr.api.SlingRepository";
+	private static final String SLING_REPOSITORY = "org.apache.sling.jcr.api.SlingRepository";
 
 	private final Set<VariableTree> sessions;
 
@@ -34,21 +34,25 @@ public class FindSessionDeclarationVisitor extends BaseTreeVisitor {
 				IdentifierTree variable = (IdentifierTree) tree.variable();
 				sessions.add((VariableTree) getDeclaration(variable));
 			} else if (isSession(methodInvocation) && methodInvocation.methodSelect().is(Kind.IDENTIFIER)) {
-				MethodTree methodDeclaration = getMethodTree(methodInvocation);
-				if (isManuallyCreatedSession(methodDeclaration)) {
-					IdentifierTree identifierTree = null;
-					if (tree.variable().is(Kind.IDENTIFIER)) {
-						identifierTree = (IdentifierTree) tree.variable();
-					}   else if(tree.variable().is(Kind.MEMBER_SELECT)) {
-						identifierTree = ((MemberSelectExpressionTree)tree.variable()).identifier();
-					}
-					if (identifierTree != null) {
-						sessions.add((VariableTree) getDeclaration(identifierTree));
-					}
-				}
+				findSessionsCreatedInMethods(tree, methodInvocation);
 			}
 		}
 		super.visitAssignmentExpression(tree);
+	}
+
+	private void findSessionsCreatedInMethods(AssignmentExpressionTree tree, MethodInvocationTree methodInvocation) {
+		MethodTree methodDeclaration = getMethodTree(methodInvocation);
+		if (isManuallyCreatedSession(methodDeclaration)) {
+			IdentifierTree identifierTree = null;
+			if (tree.variable().is(Kind.IDENTIFIER)) {
+				identifierTree = (IdentifierTree) tree.variable();
+			}   else if(tree.variable().is(Kind.MEMBER_SELECT)) {
+				identifierTree = ((MemberSelectExpressionTree)tree.variable()).identifier();
+			}
+			if (identifierTree != null) {
+				sessions.add((VariableTree) getDeclaration(identifierTree));
+			}
+		}
 	}
 
 	private boolean isManuallyCreatedSession(MethodTree methodDeclaration) {

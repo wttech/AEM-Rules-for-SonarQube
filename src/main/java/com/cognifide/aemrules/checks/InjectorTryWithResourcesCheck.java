@@ -16,9 +16,9 @@ import java.util.List;
 )
 public class InjectorTryWithResourcesCheck extends InjectorShouldBeClosedCheck {
 
-	public static final String RULE_KEY = "AEM-5";
+	protected static final String RULE_KEY = "AEM-5";
 
-	public static final String RULE_MESSAGE = "Injector can be closed using try-with-resources Java 7 feature.";
+	protected static final String RULE_MESSAGE = "Injector can be closed using try-with-resources Java 7 feature.";
 
 	@Override
 	public void visitMethod(MethodTree method) {
