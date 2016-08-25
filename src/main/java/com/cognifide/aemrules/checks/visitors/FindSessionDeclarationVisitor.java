@@ -1,8 +1,17 @@
 package com.cognifide.aemrules.checks.visitors;
 
 import com.google.common.collect.Sets;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
+import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.ReturnStatementTree;
+import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
+import org.sonar.plugins.java.api.tree.TryStatementTree;
+import org.sonar.plugins.java.api.tree.VariableTree;
 
 import java.util.Collection;
 import java.util.Set;
@@ -46,7 +55,7 @@ public class FindSessionDeclarationVisitor extends BaseTreeVisitor {
 			IdentifierTree identifierTree = null;
 			if (tree.variable().is(Kind.IDENTIFIER)) {
 				identifierTree = (IdentifierTree) tree.variable();
-			}   else if(tree.variable().is(Kind.MEMBER_SELECT)) {
+			}	else if(tree.variable().is(Kind.MEMBER_SELECT)) {
 				identifierTree = ((MemberSelectExpressionTree)tree.variable()).identifier();
 			}
 			if (identifierTree != null) {
