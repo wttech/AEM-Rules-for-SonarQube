@@ -26,7 +26,7 @@ public class InjectorTryWithResourcesCheck extends InjectorShouldBeClosedCheck {
 		for (VariableTree injector : injectors) {
 			boolean closed = checkIfInjectorIsClosedInMethod(method, injector);
 			if (closed) {
-				context.reportIssue(this, method, RULE_MESSAGE);
+				context.reportIssue(this, injector, RULE_MESSAGE);
 			}
 		}
 		super.visitMethod(method);

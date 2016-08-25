@@ -51,6 +51,18 @@ public class IteratingResourcesCheck {
 		return models;
 	}
 
+	public List<SimpleModel> iteratingDoWhileRightOperand(Iterator<Resource> resources, ModelProvider modelProvider) {
+		List<SimpleModel> models = new ArrayList<>();
+		Resource resource = null;
+		do { // Noncompliant
+			resource = resources.hasNext() ? resources.next() : null;
+			if (null != resource) {
+				addModel(models, modelProvider, SimpleModel.class, resource);
+			}
+		} while (resource != null);
+		return models;
+	}
+
 	public List<SimpleModel> iteratingFor(Iterator<Resource> resources, ModelProvider modelProvider) {
 		List<SimpleModel> models = new ArrayList<>();
 		for (Iterator<Resource> iterator = resources; iterator.hasNext();) { // Noncompliant
