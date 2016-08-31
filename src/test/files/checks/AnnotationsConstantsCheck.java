@@ -1,14 +1,14 @@
 package com.example;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 @SlingServlet(
         resourceTypes = { "some/resource/path" },
