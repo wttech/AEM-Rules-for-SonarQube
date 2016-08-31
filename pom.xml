@@ -241,6 +241,33 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>5.6.1</version>
             </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.11</version>
+                <configuration>
+                    <skipExistingHeaders>false</skipExistingHeaders>
+                    <header>${basedir}/assets/license-template.txt</header>
+                    <headerDefinitions>
+                        <header>${basedir}/assets/license-header-definition.xml</header>
+                    </headerDefinitions>
+                    <excludes>
+                        <exclude>**/README</exclude>
+                        <exclude>src/main/resources/**</exclude>
+                        <exclude>**/LICENSE.txt</exclude>
+                        <exclude>**/pom.xml</exclude>
+                        <exclude>assets/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

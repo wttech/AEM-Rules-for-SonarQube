@@ -116,6 +116,12 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 * Constants reviewed - removed too common literals
 * Number of new AEM Rules
 
+# License
+
+Copyright 2015-2016 Cognifide Ltd.
+
+Licensed under the Apache License, Version 2.0
+
 # Commercial Support
 
 Technical support can be made available if needed. Please [contact us](mailto:labs-support@cognifide.com) for more details.
