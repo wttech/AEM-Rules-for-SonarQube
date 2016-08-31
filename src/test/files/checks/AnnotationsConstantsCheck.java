@@ -14,11 +14,11 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
         resourceTypes = { "some/resource/path" },
         selectors = { "inspect", "install" },
         extensions = { "json" },
-        methods = { "POST" } // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. (class org.apache.sling.api.servlets.HttpConstants.METHOD_POST)}}
+        methods = { "POST" } // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant METHOD_POST from class org.apache.sling.api.servlets.HttpConstants.}}
 )
 @Properties({
-        @Property(name = "service.vendor", value = ZenGardenConstants.VENDOR_NAME), // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. (interface org.osgi.framework.Constants.SERVICE_VENDOR)}}
-        @Property(name = "service.description", value = "Provides import process.") // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. (interface org.osgi.framework.Constants.SERVICE_DESCRIPTION)}}
+        @Property(name = "service.vendor", value = ZenGardenConstants.VENDOR_NAME), // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant SERVICE_VENDOR from interface org.osgi.framework.Constants.}}
+        @Property(name = "service.description", value = "Provides import process.") // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants.}}
 })
 public class AnnotationsConstantsCheck extends SlingAllMethodsServlet {
 
@@ -29,7 +29,7 @@ public class AnnotationsConstantsCheck extends SlingAllMethodsServlet {
             throws ServletException, IOException {
     }
 
-    @Override("service.description") // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. (interface org.osgi.framework.Constants.SERVICE_DESCRIPTION)}}
+    @Override("service.description") // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants.}}
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
             throws ServletException, IOException {
     }

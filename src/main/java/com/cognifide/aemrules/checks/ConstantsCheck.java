@@ -34,8 +34,8 @@ public class ConstantsCheck extends IssuableSubscriptionVisitor {
 	public void visitNode(Tree stringLiteral) {
 		String literalValue = removeQuotes(((LiteralTree) stringLiteral).value());
 		if (ConstantsChecker.isConstant(literalValue)) {
-			String constantFieldName = ConstantsChecker.getConstantFieldName(literalValue);
-			reportIssue(stringLiteral, String.format("%s (%s)", RULE_MESSAGE, constantFieldName));
+			String message = ConstantsChecker.getMessageForConstant(literalValue);
+			reportIssue(stringLiteral, String.format("%s %s.", RULE_MESSAGE, message));
 		}
 		super.visitNode(stringLiteral);
 	}
