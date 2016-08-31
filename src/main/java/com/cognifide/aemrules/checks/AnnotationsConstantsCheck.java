@@ -65,7 +65,7 @@ public class AnnotationsConstantsCheck extends BaseTreeVisitor implements JavaFi
 		if (inAnnotation && tree.is(Kind.STRING_LITERAL)) {
 			String literalValue = removeQuotes(tree.value());
 			if (ConstantsChecker.isAnnotationConstant(literalValue)) {
-				context.reportIssue(this, tree, String.format("%s %s.", RULE_MESSAGE, ConstantsChecker.getAnnotationConstantFieldName(literalValue)));
+				context.reportIssue(this, tree, String.format("Use constant %s instead of hardcoded value.", ConstantsChecker.getAnnotationMessageForConstant(literalValue)));
 			}
 		}
 		super.visitLiteral(tree);

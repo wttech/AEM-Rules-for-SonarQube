@@ -33,11 +33,11 @@ import java.io.IOException;
         resourceTypes = { "some/resource/path" },
         selectors = { "inspect", "install" },
         extensions = { "json" },
-        methods = { "POST" } // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant METHOD_POST from class org.apache.sling.api.servlets.HttpConstants.}}
+        methods = { "POST" } // Noncompliant {{Use constant METHOD_POST from class org.apache.sling.api.servlets.HttpConstants instead of hardcoded value.}}
 )
 @Properties({
-        @Property(name = "service.vendor", value = ZenGardenConstants.VENDOR_NAME), // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant SERVICE_VENDOR from interface org.osgi.framework.Constants.}}
-        @Property(name = "service.description", value = "Provides import process.") // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants.}}
+        @Property(name = "service.vendor", value = ZenGardenConstants.VENDOR_NAME), // Noncompliant {{Use constant SERVICE_VENDOR from interface org.osgi.framework.Constants instead of hardcoded value.}}
+        @Property(name = "service.description", value = "Provides import process.") // Noncompliant {{Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants instead of hardcoded value.}}
 })
 public class AnnotationsConstantsCheck extends SlingAllMethodsServlet {
 
@@ -48,7 +48,7 @@ public class AnnotationsConstantsCheck extends SlingAllMethodsServlet {
             throws ServletException, IOException {
     }
 
-    @Override("service.description") // Noncompliant {{Use predefined constant in annotation instead of hardcoded value. Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants.}}
+    @Override("service.description") // Noncompliant {{Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants instead of hardcoded value.}}
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
             throws ServletException, IOException {
     }
