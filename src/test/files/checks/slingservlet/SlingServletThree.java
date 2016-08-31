@@ -19,14 +19,12 @@
  */
 package com.example;
 
-import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
-import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.servlets.resolver.internal.ServletResolverConstants;
 
 import javax.servlet.ServletException;

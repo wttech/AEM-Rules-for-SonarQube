@@ -19,9 +19,10 @@
  */
 package com.example;
 
-import java.util.Iterator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.Resource;
+
+import java.util.Iterator;
 
 public class RecursionCheck {
 

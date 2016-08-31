@@ -19,12 +19,6 @@
  */
 package com.example;
 
-import java.util.Map;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
@@ -36,6 +30,13 @@ import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Component
 public class LongSessionService implements EventListener {

@@ -18,16 +18,15 @@
  * #L%
  */
 
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.jcr.api.SlingRepository;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import java.util.Map;
 
 class A {
 

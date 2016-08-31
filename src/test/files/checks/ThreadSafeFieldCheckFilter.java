@@ -19,7 +19,10 @@
  */
 package com.example;
 
-import java.io.IOException;
+import com.day.cq.tagging.TagManager;
+import com.day.cq.wcm.api.PageManager;
+import org.apache.felix.scr.annotations.sling.SlingFilter;
+import org.apache.felix.scr.annotations.sling.SlingFilterScope;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,12 +30,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import org.apache.felix.scr.annotations.sling.SlingFilter;
-import org.apache.felix.scr.annotations.sling.SlingFilterScope;
-
-import com.day.cq.wcm.api.PageManager;
-import com.day.cq.tagging.TagManager;
+import java.io.IOException;
 
 @SlingFilter(scope = SlingFilterScope.COMPONENT, order = Integer.MAX_VALUE, metatype = true, label =
         "label", description = "description")

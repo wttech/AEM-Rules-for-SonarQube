@@ -19,12 +19,10 @@
  */
 package com.example;
 
-import java.lang.Object;
-import java.lang.String;
-import java.util.Map;
-
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
+
+import java.util.Map;
 
 public class ModifiableValueMapUsageCheck {
 

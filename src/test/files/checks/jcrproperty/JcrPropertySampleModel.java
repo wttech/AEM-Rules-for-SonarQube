@@ -19,12 +19,12 @@
  */
 package com.example;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
-import java.util.Properties;
+import org.apache.commons.lang.StringUtils;
+
 import javax.inject.Inject;
+import java.util.Properties;
 
 /**
  * @author Krzysztof Watral
