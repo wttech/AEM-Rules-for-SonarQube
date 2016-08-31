@@ -97,6 +97,13 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 # Release notes
 
+## 0.8
+
+* Improved AEM-1 & AEM-2 issues messages to be more verbose.
+* Increased unit test branch coverage.
+* Plugin adapted to meet requirements to be listed in [SonarQube Update Center](http://docs.sonarqube.org/display/PLUG/Plugin+Library)
+* Updated licensing info.
+
 ## 0.7
 
 * Support for Java 8
