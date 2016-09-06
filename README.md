@@ -17,6 +17,12 @@ Each release has its own prerequisites section, for more information please chec
 
 ## Installation
 
+### Update Center
+
+Go to your SonarQube instance administration console and open Update Center. Find AEM Rules for SonarQube plugin and click install!
+
+### Manual
+
 1. [Download](https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases) `aemrules-x.y.jar` or build **AEM Rules for SonarQube** plugin.
 2. Paste it into `sonarqube/extensions/plugins` directory.
 3. Restart SonarQube.
