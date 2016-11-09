@@ -50,7 +50,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 
 	protected static final String RULE_KEY = "AEM-17";
 
-	protected static final String RULE_MESSAGE = "No changeable methods invoked on ModifiableValueMap";
+	protected static final String RULE_MESSAGE = "No mutator methods invoked on ModifiableValueMap";
 
 	private JavaFileScannerContext context;
 
