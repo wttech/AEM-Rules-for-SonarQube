@@ -12,17 +12,17 @@ If none of the above methods is called, `ValueMap` should be used instead.
 == Noncompliant Code Example
 
 ```
-	public Object getProperty(Resource resource) {
-		ModifiableValueMap createdResourceProperties = resource.adaptTo(ModifiableValueMap.class); // Noncompliant ValueMap should be used
-		return createdResourceProperties.get("propertyName");
-	}
+public Object getProperty(Resource resource) {
+	ModifiableValueMap createdResourceProperties = resource.adaptTo(ModifiableValueMap.class); // Noncompliant ValueMap should be used
+	return createdResourceProperties.get("propertyName");
+}
 ```
 
 == Compliant Solution
 
 ```
-	public Object getProperty(Resource resource) {
-		ValueMap createdResourceProperties = resource.getValueMap();
-		return createdResourceProperties.get("propertyName");
-	}
+public Object getProperty(Resource resource) {
+	ValueMap createdResourceProperties = resource.getValueMap();
+	return createdResourceProperties.get("propertyName");
+}
 ```
