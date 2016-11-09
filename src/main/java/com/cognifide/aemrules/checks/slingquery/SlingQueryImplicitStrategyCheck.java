@@ -19,11 +19,11 @@
  */
 package com.cognifide.aemrules.checks.slingquery;
 
-import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.tag.Tags;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.JavaFileScanner;
+import org.sonar.plugins.java.api.JavaFileScannerContext;
 
 @Rule(
 	key = SlingQueryImplicitStrategyCheck.RULE_KEY,
@@ -31,15 +31,14 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 	priority = Priority.INFO,
 	tags = {Tags.AEM}
 )
-public class SlingQueryImplicitStrategyCheck extends InjectorShouldBeClosedCheck {
+public class SlingQueryImplicitStrategyCheck implements JavaFileScanner {
 
 	protected static final String RULE_KEY = "AEM-18";
 
 	protected static final String RULE_MESSAGE = "Implicit search strategy used in Sling Query";
 
 	@Override
-	public void visitMethod(MethodTree method) {
-		super.visitMethod(method);
-	}
+	public void scanFile(JavaFileScannerContext javaFileScannerContext) {
 
+	}
 }

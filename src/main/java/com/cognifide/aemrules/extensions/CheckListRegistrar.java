@@ -35,6 +35,7 @@ import com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck;
 import com.cognifide.aemrules.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
+import com.cognifide.aemrules.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import com.google.common.collect.ImmutableList;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -64,6 +65,7 @@ public class CheckListRegistrar implements CheckRegistrar {
 		.add(ThreadSafeFieldCheck.class)
 		.add(DefaultInjectionStrategyAnnotationCheck.class)
 		.add(ModifiableValueMapUsageCheck.class)
+		.add(SlingQueryImplicitStrategyCheck.class)
 		.build();
 
 	@Override
