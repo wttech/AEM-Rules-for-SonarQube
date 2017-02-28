@@ -67,8 +67,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
     - `org.apache.jackrabbit.api.security.user.Authorizable`
     - `org.apache.jackrabbit.api.security.user.User`
     - `org.apache.jackrabbit.api.security.user.UserManager`
-    - `com.day.cq.search.QueryBuilder`
-    - `com.day.cq.commons.Externalizer`
 
 - **AEM-6** ResourceResolver should be closed in finally block.
   - According to its [Javadoc](https://sling.apache.org/apidocs/sling6/org/apache/sling/api/resource/ResourceResolver.html), Resource Resolver has a life cycle which begins with the creation of the Resource Resolver using any of the factory methods and ends with calling the `close` method. It is very important to call the `close` method once the resource resolver is not used any more to ensure any system resources are properly clean up.
