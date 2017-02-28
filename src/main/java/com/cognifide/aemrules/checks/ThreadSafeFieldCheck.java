@@ -69,9 +69,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 			"com.day.cq.security.UserManager",
 			"org.apache.jackrabbit.api.security.user.Authorizable",
 			"org.apache.jackrabbit.api.security.user.User",
-			"org.apache.jackrabbit.api.security.user.UserManager",
-			"com.day.cq.search.QueryBuilder",
-			"com.day.cq.commons.Externalizer");
+			"org.apache.jackrabbit.api.security.user.UserManager");
 
 	private JavaFileScannerContext context;
 
