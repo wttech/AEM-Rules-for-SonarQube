@@ -82,14 +82,25 @@ public class SampleServlet extends SlingAllMethodsServlet {
 		} else {
 			resolver = factory.getServiceResourceResolver(null);
 		}
-
 		return resolver;
 	}
 
 	public static ResourceResolver getResourceResolverForUserNested(ResourceResolverFactory factory, String userId)
 			throws LoginException {
 		ResourceResolver resolver;
-		resolver = getResourceResolverForUser(resourceResolverFactory, null);
+		resolver = getResourceResolverForUser(resourceResolverFactory, userId);
+		return resolver;
+	}
+
+	public static ResourceResolver getResourceResolverForUserInit(ResourceResolverFactory factory)
+			throws LoginException {
+		ResourceResolver resolver = factory.getServiceResourceResolver(null);
+		return resolver;
+	}
+
+	public static ResourceResolver getResourceResolverForUserNestedInit(ResourceResolverFactory factory)
+			throws LoginException {
+		ResourceResolver resolver = getResourceResolverForUserInit(resourceResolverFactory);
 		return resolver;
 	}
 
@@ -109,7 +120,7 @@ public class SampleServlet extends SlingAllMethodsServlet {
 	public void checkWrongJumpMethod() {
 		ResourceResolver resourceResolver = null; // Noncompliant
 		try {
-			resourceResolver = getResourceResolverForUser(resourceResolverFactory, null);
+			resourceResolver = getResourceResolverForUserNestedInit(resourceResolverFactory, null);
 		} catch (LoginException e) {
 			e.printStackTrace();
 		} finally {
