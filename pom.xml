@@ -68,7 +68,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.version>5.6.1</sonar.version>
-        <sonar.java.plugin>4.0</sonar.java.plugin>
+        <sonar.java.plugin>4.6.0.8784</sonar.java.plugin>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
         <tagName>v${project.version}</tagName>
     </properties>
@@ -101,7 +101,11 @@
         </dependency>
 
         <!-- Unit Test dependencies -->
-
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.6.2</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -283,6 +287,27 @@
                         <goals>
                             <goal>format</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeScope>provided</excludeScope>
+                            <outputDirectory>${project.build.directory}/test-jars</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
