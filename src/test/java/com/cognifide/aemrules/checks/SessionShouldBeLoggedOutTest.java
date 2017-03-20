@@ -19,12 +19,12 @@
  */
 package com.cognifide.aemrules.checks;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 @RunWith(Parameterized.class)
 public class SessionShouldBeLoggedOutTest extends AbstractBaseTest {
@@ -40,7 +40,9 @@ public class SessionShouldBeLoggedOutTest extends AbstractBaseTest {
 				{ "src/test/files/checks/SessionLogoutFive.java", true},
 				{ "src/test/files/checks/SessionLogoutSix.java", true},
 				{ "src/test/files/checks/SessionLogoutSeven.java", true},
-				{ "src/test/files/checks/SessionLogoutEight.java", false}
+				{ "src/test/files/checks/SessionLogoutEight.java", false},
+				{ "src/test/files/checks/LongSessionEventListener.java", false},
+				{ "src/test/files/checks/LongSessionEventListenerError.java", true}
 		});
 	}
 

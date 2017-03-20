@@ -19,21 +19,25 @@
  */
 package com.cognifide.aemrules.checks.resourceresolver.close;
 
-import com.cognifide.aemrules.checks.visitors.CheckClosedVisitor;
-import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
-import com.cognifide.aemrules.tag.Tags;
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.tree.AnnotationTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import java.util.Collection;
-import java.util.Set;
+import com.cognifide.aemrules.checks.visitors.CheckClosedVisitor;
+import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
+import com.cognifide.aemrules.tag.Tags;
+import com.google.common.collect.Sets;
 
 @Rule(
 	key = ResourceResolverShouldBeClosed.RULE_KEY,
@@ -47,7 +51,13 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
 
 	public static final String RULE_MESSAGE = "ResourceResolver should be closed in finally block.";
 
+	private static final String ACTIVATE = "Activate";
+
+	private static final String DEACTIVATE = "Deactivate";
+
 	protected JavaFileScannerContext context;
+
+	private Collection<VariableTree> longResourceResolvers;
 
 	@Override
 	public void scanFile(JavaFileScannerContext javaFileScannerContext) {
@@ -57,14 +67,49 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
 
 	@Override
 	public void visitMethod(MethodTree method) {
-		Collection<VariableTree> resolvers = findResolversInMethod(method);
-		for (VariableTree injector : resolvers) {
-			boolean closed = checkIfResourceResolverIsClosed(method, injector);
-			if (!closed) {
-				context.reportIssue(this, injector, RULE_MESSAGE);
+		if (!checkIfLongResourceResolver(method)) {
+			Collection<VariableTree> resolvers = findResolversInMethod(method);
+			for (VariableTree injector : resolvers) {
+				boolean closed = checkIfResourceResolverIsClosed(method, injector);
+				if (!closed) {
+					context.reportIssue(this, injector, RULE_MESSAGE);
+				}
 			}
 		}
 		super.visitMethod(method);
+	}
+
+	protected boolean checkIfLongResourceResolver(MethodTree method) {
+		List<AnnotationTree> annotations = method.modifiers().annotations();
+		for (AnnotationTree annotationTree : annotations) {
+			if (annotationTree.annotationType().is(Tree.Kind.IDENTIFIER)) {
+				IdentifierTree idf = (IdentifierTree) annotationTree.annotationType();
+				if (idf.name().equals(ACTIVATE)) {
+					checkIfLongResourceResolverOpened(method);
+					return true;
+				}
+				else if (idf.name().equals(DEACTIVATE)) {
+					checkIfLongResourceResolverClosed(method);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private void checkIfLongResourceResolverOpened(MethodTree method) {
+		longResourceResolvers = findResolversInMethod(method);
+	}
+
+	private void checkIfLongResourceResolverClosed(MethodTree method) {
+		if (longResourceResolvers != null) {
+			for (VariableTree longResourceResolver : longResourceResolvers) {
+				boolean closed = checkIfResourceResolverIsClosed(method, longResourceResolver);
+				if (!closed) {
+					context.reportIssue(this, longResourceResolver, RULE_MESSAGE);
+				}
+			}
+		}
 	}
 
 	protected boolean checkIfResourceResolverIsClosed(MethodTree method, VariableTree injector) {
