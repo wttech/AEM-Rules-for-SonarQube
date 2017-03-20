@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.felix.scr.annotations.Activate;
+import org.apache.felix.scr.annotations.Deactivate;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -51,10 +53,6 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 	public static final String RULE_KEY = "AEM-7";
 
 	public static final String RULE_MESSAGE = "Session should be logged out in finally block.";
-
-	private static final String ACTIVATE = "Activate";
-
-	private static final String DEACTIVATE = "Deactivate";
 
 	protected JavaFileScannerContext context;
 
@@ -85,12 +83,12 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 		for (AnnotationTree annotationTree : annotations) {
 			if (annotationTree.annotationType().is(Tree.Kind.IDENTIFIER)) {
 				IdentifierTree idf = (IdentifierTree) annotationTree.annotationType();
-				if (idf.name().equals(ACTIVATE)) {
-					checkIfLongSessionOpened(method);
+				if (idf.name().equals(Activate.class.getSimpleName())) {
+					collectLongSessionOpened(method);
 					return true;
 				}
-				else if (idf.name().equals(DEACTIVATE)) {
-					checkIfLongSessionClosed(method);
+				else if (idf.name().equals(Deactivate.class.getSimpleName())) {
+					collectLongSessionClosed(method);
 					return true;
 				}
 			}
@@ -98,15 +96,14 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 		return false;
 	}
 
-	private void checkIfLongSessionOpened(MethodTree method) {
+	private void collectLongSessionOpened(MethodTree method) {
 		longSessions = findSessionsInMethod(method);
 	}
 
-	private void checkIfLongSessionClosed(MethodTree method) {
+	private void collectLongSessionClosed(MethodTree method) {
 		if (longSessions != null) {
 			for (VariableTree longSession : longSessions) {
-				boolean closed = checkIfLoggedOut(method, longSession);
-				if (!closed) {
+				if (!checkIfLoggedOut(method, longSession)) {
 					context.reportIssue(this, longSession, RULE_MESSAGE);
 				}
 			}

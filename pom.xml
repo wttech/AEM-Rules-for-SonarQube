@@ -196,6 +196,11 @@
             <version>1.3.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+            <version>1.12.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -290,6 +295,12 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
+                Maven dependency plugin is necessary for JavaCheckVerifier.verifyNoIssue to work properly. It copies
+                dependencies other than "provided" to test-jars folder.
+                Warning! If you remove it, tests which call JavaCheckVerifier.verifyNoIssue will
+                always pass, even if they are incorrect.
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
