@@ -4,7 +4,7 @@
 
     <groupId>com.cognifide.aemrules</groupId>
     <artifactId>aemrules</artifactId>
-    <version>0.9-RC2</version>
+    <version>0.9-SNAPSHOT</version>
 
     <name>AEM Rules for SonarQube</name>
     <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM
@@ -44,7 +44,7 @@
         <connection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</connection>
         <url>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</url>
         <developerConnection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</developerConnection>
-        <tag>v0.9-RC2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
