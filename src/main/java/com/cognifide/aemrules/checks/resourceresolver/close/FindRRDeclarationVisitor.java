@@ -88,14 +88,6 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 		return tree.expression().is(Kind.METHOD_INVOCATION);
 	}
 
-	private boolean isExpressionAMethodInvocation(VariableTree tree) {
-		boolean returnVal = false;
-		if (tree.initializer() != null) {
-			returnVal = tree.initializer().is(Kind.METHOD_INVOCATION);
-		}
-		return returnVal;
-	}
-
 	private boolean isVariableAnIdentifier(AssignmentExpressionTree tree) {
 		return tree.variable().is(Kind.IDENTIFIER);
 	}
@@ -113,10 +105,6 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 	 * analyzed file.
 	 */
 	private Tree getDeclaration(IdentifierTree variable) {
-		return variable.symbol().declaration();
-	}
-
-	private Tree getDeclaration(VariableTree variable) {
 		return variable.symbol().declaration();
 	}
 
@@ -164,7 +152,7 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 		@Override
 		public void visitVariable(VariableTree tree) {
-			if (isExpressionAMethodInvocation(tree) && variableIsEqualToReturnedVariableIn(tree)) {
+			if (isAMethodInvocation(tree) && variableIsEqualToReturnedVariableIn(tree)) {
 				MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.initializer();
 				if (isManuallyCreatedResourceResolver(methodInvocation)) {
 					this.createdManually = true;
@@ -192,6 +180,14 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 			super.visitAssignmentExpression(tree);
 		}
 
+		private boolean isAMethodInvocation(VariableTree tree) {
+			boolean returnVal = false;
+			if (tree.initializer() != null) {
+				returnVal = tree.initializer().is(Kind.METHOD_INVOCATION);
+			}
+			return returnVal;
+		}
+
 		private boolean variableIsEqualToReturnedVariableIn(AssignmentExpressionTree tree) {
 			return tree.variable().is(Kind.IDENTIFIER)
 				&& getDeclaration((IdentifierTree) tree.variable()).equals(declarationOfReturnedVariable);
@@ -199,10 +195,14 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 		private boolean variableIsEqualToReturnedVariableIn(VariableTree tree) {
 			return tree.is(Kind.VARIABLE)
-					&& getDeclaration(tree).equals(declarationOfReturnedVariable);
+					&& getDeclarationFromVariable(tree).equals(declarationOfReturnedVariable);
 		}
 
-		public boolean isCreatedManually() {
+		private Tree getDeclarationFromVariable(VariableTree variable) {
+			return variable.symbol().declaration();
+		}
+
+		boolean isCreatedManually() {
 			return createdManually;
 		}
 
@@ -221,7 +221,7 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 			super.visitReturnStatement(tree);
 		}
 
-		public Tree getDeclarationOfReturnedVariable() {
+		Tree getDeclarationOfReturnedVariable() {
 			return declarationOfReturnedVariable;
 		}
 
