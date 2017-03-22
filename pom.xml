@@ -196,11 +196,6 @@
             <version>1.3.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <version>1.12.0</version>
-        </dependency>
     </dependencies>
 
     <build>

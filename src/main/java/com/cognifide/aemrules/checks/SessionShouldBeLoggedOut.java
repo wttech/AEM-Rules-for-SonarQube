@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Deactivate;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -54,6 +52,10 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 
 	public static final String RULE_MESSAGE = "Session should be logged out in finally block.";
 
+	private static final String ACTIVATE = "Activate";
+
+	private static final String DEACTIVATE = "Deactivate";
+
 	protected JavaFileScannerContext context;
 
 	private Collection<VariableTree> longSessions;
@@ -69,8 +71,7 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 		if (!checkIfLongSession(method)) {
 			Collection<VariableTree> sessions = findSessionsInMethod(method);
 			for (VariableTree session : sessions) {
-				boolean closed = checkIfLoggedOut(method, session);
-				if (!closed) {
+				if (!checkIfLoggedOut(method, session)) {
 					context.reportIssue(this, session, RULE_MESSAGE);
 				}
 			}
@@ -83,11 +84,11 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
 		for (AnnotationTree annotationTree : annotations) {
 			if (annotationTree.annotationType().is(Tree.Kind.IDENTIFIER)) {
 				IdentifierTree idf = (IdentifierTree) annotationTree.annotationType();
-				if (idf.name().equals(Activate.class.getSimpleName())) {
+				if (idf.name().equals(ACTIVATE)) {
 					collectLongSessionOpened(method);
 					return true;
 				}
-				else if (idf.name().equals(Deactivate.class.getSimpleName())) {
+				else if (idf.name().equals(DEACTIVATE)) {
 					collectLongSessionClosed(method);
 					return true;
 				}
