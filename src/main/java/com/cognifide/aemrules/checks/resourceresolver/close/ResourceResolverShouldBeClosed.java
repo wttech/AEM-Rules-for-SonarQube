@@ -70,8 +70,7 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
 		if (!checkIfLongResourceResolver(method)) {
 			Collection<VariableTree> resolvers = findResolversInMethod(method);
 			for (VariableTree injector : resolvers) {
-				boolean closed = checkIfResourceResolverIsClosed(method, injector);
-				if (!closed) {
+				if (!checkIfResourceResolverIsClosed(method, injector)) {
 					context.reportIssue(this, injector, RULE_MESSAGE);
 				}
 			}
@@ -85,11 +84,11 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
 			if (annotationTree.annotationType().is(Tree.Kind.IDENTIFIER)) {
 				IdentifierTree idf = (IdentifierTree) annotationTree.annotationType();
 				if (idf.name().equals(ACTIVATE)) {
-					checkIfLongResourceResolverOpened(method);
+					collectLongResourceResolverOpened(method);
 					return true;
 				}
 				else if (idf.name().equals(DEACTIVATE)) {
-					checkIfLongResourceResolverClosed(method);
+					collectLongResourceResolverClosed(method);
 					return true;
 				}
 			}
@@ -97,15 +96,14 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
 		return false;
 	}
 
-	private void checkIfLongResourceResolverOpened(MethodTree method) {
+	private void collectLongResourceResolverOpened(MethodTree method) {
 		longResourceResolvers = findResolversInMethod(method);
 	}
 
-	private void checkIfLongResourceResolverClosed(MethodTree method) {
+	private void collectLongResourceResolverClosed(MethodTree method) {
 		if (longResourceResolvers != null) {
 			for (VariableTree longResourceResolver : longResourceResolvers) {
-				boolean closed = checkIfResourceResolverIsClosed(method, longResourceResolver);
-				if (!closed) {
+				if (!checkIfResourceResolverIsClosed(method, longResourceResolver)) {
 					context.reportIssue(this, longResourceResolver, RULE_MESSAGE);
 				}
 			}
