@@ -67,8 +67,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.version>5.6.1</sonar.version>
-        <sonar.java.plugin>4.6.0.8784</sonar.java.plugin>
+        <sonar.version>6.4</sonar.version>
+        <sonar.java.plugin>4.10.0.10260</sonar.java.plugin>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
         <tagName>v${project.version}</tagName>
     </properties>
@@ -77,6 +77,10 @@
         <repository>
             <id>adobe-releases</id>
             <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>http://central.maven.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -94,10 +98,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.sonarsource.java</groupId>
-            <artifactId>java-checks</artifactId>
-            <version>${sonar.java.plugin}</version>
-            <scope>provided</scope>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
         </dependency>
 
         <!-- Unit Test dependencies -->
@@ -105,6 +108,7 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.6.2</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -212,7 +216,7 @@
             <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.17</version>
+                <version>1.18.0.372</version>
                 <extensions>true</extensions>
                 <configuration>
                     <pluginKey>aemrules</pluginKey>
@@ -224,9 +228,10 @@
                     <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/${tagName}
                     </pluginSourcesUrl>
                     <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
-                    <skipDependenciesPackaging>true</skipDependenciesPackaging>
+                    <skipDependenciesPackaging>false</skipDependenciesPackaging>
                     <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
                     <basePlugin>java</basePlugin>
+                    <sonarQubeMinVersion>5.6.6</sonarQubeMinVersion>
                 </configuration>
             </plugin>
             <plugin>
