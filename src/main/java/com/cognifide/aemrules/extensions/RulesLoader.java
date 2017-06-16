@@ -19,13 +19,14 @@
  */
 package com.cognifide.aemrules.extensions;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Resources;
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.List;
+
+import javax.annotation.CheckForNull;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.rule.RuleStatus;
@@ -36,11 +37,12 @@ import org.sonar.api.utils.FieldUtils2;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaCheck;
 
-import javax.annotation.CheckForNull;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.List;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Resources;
 
 public class RulesLoader {
 

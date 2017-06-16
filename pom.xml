@@ -96,11 +96,28 @@
             <artifactId>sonar-java-plugin</artifactId>
             <version>${sonar.java.plugin}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Unit Test dependencies -->
@@ -229,8 +246,6 @@
                     </pluginSourcesUrl>
                     <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
                     <skipDependenciesPackaging>false</skipDependenciesPackaging>
-                    <requirePlugins>java:4.10</requirePlugins>
-                    <basePlugin>java</basePlugin>
                     <sonarQubeMinVersion>5.6.6</sonarQubeMinVersion>
                 </configuration>
             </plugin>

@@ -19,10 +19,9 @@
  */
 package com.cognifide.aemrules.checks;
 
-import com.cognifide.aemrules.tag.Tags;
-import com.cognifide.aemrules.util.ConstantsChecker;
-import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
@@ -30,7 +29,9 @@ import org.sonar.plugins.java.api.tree.LiteralTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
-import java.util.List;
+import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.util.ConstantsChecker;
+import com.google.common.collect.Lists;
 
 @Rule(
 		key = ConstantsCheck.RULE_KEY,

@@ -19,18 +19,14 @@
  */
 package com.cognifide.aemrules.checks;
 
-import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
-import org.junit.Rule;
 import org.junit.Test;
-import org.sonar.squidbridge.checks.CheckMessagesVerifierRule;
+
+import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
 
 /**
  * @author Krzysztof Watral
  */
 public class ModelsShouldNotUseSessionTest extends AbstractBaseTest {
-
-	@Rule
-	public CheckMessagesVerifierRule checkMessagesVerifier = new CheckMessagesVerifierRule();
 
 	@Test
 	public void check() {

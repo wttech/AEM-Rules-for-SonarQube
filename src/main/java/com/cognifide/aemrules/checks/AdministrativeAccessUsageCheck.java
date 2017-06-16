@@ -19,19 +19,20 @@
  */
 package com.cognifide.aemrules.checks;
 
-import com.cognifide.aemrules.tag.Tags;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import java.util.List;
+import java.util.Map;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.checks.methods.AbstractMethodDetection;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.List;
-import java.util.Map;
+import com.cognifide.aemrules.checks.methods.AbstractMethodDetection;
+import com.cognifide.aemrules.tag.Tags;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 @Rule(
 	key = AdministrativeAccessUsageCheck.RULE_KEY,

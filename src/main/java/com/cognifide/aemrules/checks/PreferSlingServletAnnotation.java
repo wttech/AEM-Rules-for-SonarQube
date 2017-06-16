@@ -19,19 +19,30 @@
  */
 package com.cognifide.aemrules.checks;
 
-import com.cognifide.aemrules.tag.Tags;
-import com.google.common.collect.Sets;
-import org.apache.commons.lang.StringUtils;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.MEMBER_SELECT;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.STRING_LITERAL;
+
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Type;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.AnnotationTree;
+import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
+import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.LiteralTree;
+import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
+import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.Set;
-
-import static org.sonar.plugins.java.api.tree.Tree.Kind.*;
+import com.cognifide.aemrules.tag.Tags;
+import com.google.common.collect.Sets;
 
 @Rule(
 		key = PreferSlingServletAnnotation.RULE_KEY,
