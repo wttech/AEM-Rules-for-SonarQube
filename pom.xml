@@ -229,7 +229,7 @@
                     </pluginSourcesUrl>
                     <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
                     <skipDependenciesPackaging>false</skipDependenciesPackaging>
-                    <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
+                    <requirePlugins>java:4.10</requirePlugins>
                     <basePlugin>java</basePlugin>
                     <sonarQubeMinVersion>5.6.6</sonarQubeMinVersion>
                 </configuration>
