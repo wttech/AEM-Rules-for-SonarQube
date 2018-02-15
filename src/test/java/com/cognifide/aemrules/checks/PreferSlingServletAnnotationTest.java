@@ -44,4 +44,10 @@ public class PreferSlingServletAnnotationTest extends AbstractBaseTest {
 		verify();
 	}
 
+	@Test
+	public void checkStandardAnnotations() {
+		check = new PreferSlingServletAnnotation();
+		filename = "src/test/files/checks/slingservlet/SlingServletWithStandardAnnotations.java";
+		verifyNoIssues();
+	}
 }
