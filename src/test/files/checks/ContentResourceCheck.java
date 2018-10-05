@@ -5,17 +5,28 @@ import org.apache.sling.api.resource.Resource;
 
 public class ContentResourceCheck {
 
-  private Page page;
+  private Page pageA;
+
+  private Page pageB;
 
   private void noNullCheck() {
-    Resource contentResource = page.getContentResource();
-    Iterable<Resource> children = contentResource.getChildren(); // Noncompliant
+    Resource contentResourceA = pageA.getContentResource();
+    Resource contentResourceB = pageB.getContentResource();
+    Iterable<Resource> children = contentResourceA.getChildren(); // Noncompliant
+    if (contentResourceA != null) {
+      Iterable<Resource> childrenB = contentResourceB.getChildren(); // Noncompliant
+    }
   }
 
   private void withNullCheck() {
-    Resource contentResource = page.getContentResource();
-    if (contentResource != null) {
-      Iterable<Resource> children = contentResource.getChildren();
+    Resource contentResourceA = pageA.getContentResource();
+    Resource contentResourceB = pageB.getContentResource();
+    Iterable<Resource> children = null;
+    if (contentResourceA != null) {
+      children = contentResourceA.getChildren();
+      children = contentResourceB.getChildren(); // Noncompliant
+    } else if (contentResourceB != null){
+      children = contentResourceB.getChildren();
     }
   }
 }
