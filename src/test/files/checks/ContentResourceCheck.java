@@ -7,12 +7,12 @@ public class ContentResourceCheck {
 
   private Page page;
 
-  private void test() {
+  private void noNullCheck() {
     Resource contentResource = page.getContentResource();
     Iterable<Resource> children = contentResource.getChildren(); // Noncompliant
   }
 
-  private void test2() {
+  private void withNullCheck() {
     Resource contentResource = page.getContentResource();
     if (contentResource != null) {
       Iterable<Resource> children = contentResource.getChildren();

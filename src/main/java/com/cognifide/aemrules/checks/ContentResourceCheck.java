@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.Constants;
 import com.cognifide.aemrules.tag.Tags;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -26,24 +27,15 @@ import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
-import org.sonar.plugins.java.api.tree.DoWhileStatementTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
-import org.sonar.plugins.java.api.tree.ForEachStatement;
-import org.sonar.plugins.java.api.tree.ForStatementTree;
-import org.sonar.plugins.java.api.tree.IdentifierTree;
-import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
-import org.sonar.plugins.java.api.tree.StatementTree;
 import org.sonar.plugins.java.api.tree.Tree;
-import org.sonar.plugins.java.api.tree.WhileStatementTree;
-
-import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
 
 @Rule(
     key = ContentResourceCheck.RULE_KEY,
     name = ContentResourceCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
-    tags = {Tags.AEM, Tags.SLICE}
+    tags = Tags.AEM
 )
 public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -53,9 +45,35 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   private JavaFileScannerContext context;
 
+  private boolean isNullChecked = false;
+
   @Override
   public void scanFile(JavaFileScannerContext context) {
     this.context = context;
     scan(context.getTree());
+  }
+
+  @Override
+  public void visitMethodInvocation(MethodInvocationTree tree) {
+    if (tree.symbol().owner().name().equals("Resource") && !isNullChecked) {
+      context.reportIssue(this, tree, RULE_MESSAGE);
+    }
+    super.visitMethodInvocation(tree);
+  }
+
+  @Override
+  public void visitBinaryExpression(BinaryExpressionTree tree) {
+    isNullChecked = false;
+    isNullChecked = hasResourceComparison(tree);
+    super.visitBinaryExpression(tree);
+  }
+
+  private boolean hasResourceComparison(BinaryExpressionTree tree) {
+    return isResourceNullCheck(tree.leftOperand()) || isResourceNullCheck(tree.rightOperand());
+  }
+
+  private boolean isResourceNullCheck(ExpressionTree operand) {
+    return operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType()
+        .isSubtypeOf(Constants.RESOURCE_TYPE);
   }
 }

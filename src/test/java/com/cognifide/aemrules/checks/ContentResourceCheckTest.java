@@ -7,7 +7,7 @@ public class ContentResourceCheckTest extends AbstractBaseTest  {
 
   @Test
   public void checkIfContentResourceIsNotNull() {
-    check = new IteratingResourcesCheck();
+    check = new ContentResourceCheck();
     filename = "src/test/files/checks/ContentResourceCheck.java";
     verify();
   }
