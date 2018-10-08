@@ -16,6 +16,10 @@ public class ContentResourceCheck {
     if (contentResourceA != null) {
       Iterable<Resource> childrenB = contentResourceB.getChildren(); // Noncompliant
     }
+    if (contentResourceA != null) {
+      contentResourceA = pageB.getContentResource();
+      Iterable<Resource> childrenB = contentResourceA.getChildren(); // Noncompliant
+    }
   }
 
   private void withNullCheck() {

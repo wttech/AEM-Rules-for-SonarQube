@@ -21,15 +21,19 @@ package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.Constants;
 import com.cognifide.aemrules.tag.Tags;
+import java.util.HashMap;
+import java.util.Map;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
-import org.sonar.plugins.java.api.tree.Tree;
+import org.sonar.plugins.java.api.tree.Tree.Kind;
+import org.sonar.plugins.java.api.tree.VariableTree;
 
 @Rule(
     key = ContentResourceCheck.RULE_KEY,
@@ -43,9 +47,11 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   public static final String RULE_MESSAGE = "Always null check the returned value of Page.getContentResource() method";
 
+  public static final String METHOD_NAME = "getContentResource";
+
   private JavaFileScannerContext context;
 
-  private boolean isNullChecked = false;
+  private Map<String, Boolean> resources = new HashMap();
 
   @Override
   public void scanFile(JavaFileScannerContext context) {
@@ -54,26 +60,62 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   }
 
   @Override
+  public void visitBinaryExpression(BinaryExpressionTree tree) {
+    isResourceNullChecked(tree.leftOperand(), tree.rightOperand());
+    super.visitBinaryExpression(tree);
+  }
+
+  @Override
+  public void visitAssignmentExpression(AssignmentExpressionTree tree) {
+    if (tree.variable().symbolType().fullyQualifiedName().equals(Constants.RESOURCE_TYPE)) {
+      resources.put(tree.variable().firstToken().text(), false);
+    }
+    super.visitAssignmentExpression(tree);
+  }
+
+
+  @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
-    if (tree.symbol().owner().name().equals("Resource") && !isNullChecked) {
-      context.reportIssue(this, tree, RULE_MESSAGE);
+    if (resources.containsKey(tree.firstToken().text())) {
+      if (!resources.getOrDefault(tree.firstToken().text(), false)) {
+        context.reportIssue(this, tree, RULE_MESSAGE);
+      }
     }
     super.visitMethodInvocation(tree);
   }
 
+  private boolean isPage(String name) {
+    return name.equals("Page");
+  }
+
   @Override
-  public void visitBinaryExpression(BinaryExpressionTree tree) {
-    isNullChecked = false;
-    isNullChecked = hasResourceComparison(tree);
-    super.visitBinaryExpression(tree);
+  public void visitVariable(VariableTree tree) {
+    if (tree.initializer() != null && tree.initializer().kind() != Kind.NULL_LITERAL) {
+      if (shouldItBeNullChecked(tree)) {
+        resources.put(tree.simpleName().name(), false);
+      }
+    }
+    super.visitVariable(tree);
   }
 
-  private boolean hasResourceComparison(BinaryExpressionTree tree) {
-    return isResourceNullCheck(tree.leftOperand()) || isResourceNullCheck(tree.rightOperand());
+  private boolean shouldItBeNullChecked(VariableTree tree) {
+    if (isPage(((MethodInvocationTree) tree.initializer()).symbol().owner().name())
+        && ((MethodInvocationTree) tree.initializer()).symbol().name().equals(METHOD_NAME)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  private boolean isResourceNullCheck(ExpressionTree operand) {
-    return operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType()
-        .isSubtypeOf(Constants.RESOURCE_TYPE);
+  private void isResourceNullChecked(ExpressionTree leftOperand, ExpressionTree rightOperand) {
+    if (leftOperand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
+      if (rightOperand.is(Kind.NULL_LITERAL)) {
+        resources.replace(leftOperand.firstToken().text(), true);
+      }
+    } else if (rightOperand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
+      if (leftOperand.is(Kind.NULL_LITERAL)) {
+        resources.replace(rightOperand.firstToken().text(), true);
+      }
+    }
   }
 }
