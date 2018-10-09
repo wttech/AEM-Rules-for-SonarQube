@@ -9,9 +9,12 @@ public class ContentResourceCheck {
 
   private Page pageB;
 
+  private Page pageC;
+
   private void noNullCheck() {
     Resource contentResourceA = pageA.getContentResource();
     Resource contentResourceB = pageB.getContentResource();
+    ValueMap map = pageC.getContentResource().getValueMap(); // Noncompliant
     Iterable<Resource> children = contentResourceA.getChildren(); // Noncompliant
     if (contentResourceA != null) {
       Iterable<Resource> childrenB = contentResourceB.getChildren(); // Noncompliant
@@ -32,5 +35,10 @@ public class ContentResourceCheck {
     } else if (contentResourceB != null){
       children = contentResourceB.getChildren();
     }
+  }
+
+  private void noNullCheckNeeded() {
+    Optional<Resource> contentResourceO = Optional.ofNullable(page.getContentResource());
+    Iterable<Resource> children = contentResourceO.get().getChildren();
   }
 }

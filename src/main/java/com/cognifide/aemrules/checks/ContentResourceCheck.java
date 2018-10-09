@@ -31,6 +31,7 @@ import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.VariableTree;
@@ -51,7 +52,7 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   private JavaFileScannerContext context;
 
-  private Map<String, Boolean> resources = new HashMap();
+  private Map<String, Boolean> contentResources = new HashMap();
 
   @Override
   public void scanFile(JavaFileScannerContext context) {
@@ -61,14 +62,18 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   @Override
   public void visitBinaryExpression(BinaryExpressionTree tree) {
-    isResourceNullChecked(tree.leftOperand(), tree.rightOperand());
+    if (isResourceNullChecked(tree.leftOperand(), tree.rightOperand())) {
+      contentResources.replace(tree.leftOperand().firstToken().text(), true);
+    } else if (isResourceNullChecked(tree.rightOperand(), tree.leftOperand())) {
+      contentResources.replace(tree.rightOperand().firstToken().text(), true);
+    }
     super.visitBinaryExpression(tree);
   }
 
   @Override
   public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-    if (tree.variable().symbolType().fullyQualifiedName().equals(Constants.RESOURCE_TYPE)) {
-      resources.put(tree.variable().firstToken().text(), false);
+    if (Constants.RESOURCE_TYPE.equals(tree.variable().symbolType().fullyQualifiedName())) {
+      contentResources.put(tree.variable().firstToken().text(), false);
     }
     super.visitAssignmentExpression(tree);
   }
@@ -76,46 +81,58 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
-    if (resources.containsKey(tree.firstToken().text())) {
-      if (!resources.getOrDefault(tree.firstToken().text(), false)) {
+    if (contentResources.containsKey(tree.firstToken().text())) {
+      if (!contentResources.getOrDefault(tree.firstToken().text(), false)) {
         context.reportIssue(this, tree, RULE_MESSAGE);
       }
     }
+    chainedMethodsNullCheck(tree);
     super.visitMethodInvocation(tree);
-  }
-
-  private boolean isPage(String name) {
-    return name.equals("Page");
   }
 
   @Override
   public void visitVariable(VariableTree tree) {
-    if (tree.initializer() != null && tree.initializer().kind() != Kind.NULL_LITERAL) {
-      if (shouldItBeNullChecked(tree)) {
-        resources.put(tree.simpleName().name(), false);
-      }
+    if (isResourceInitialized(tree)) {
+      shouldBeNullChecked(tree);
     }
     super.visitVariable(tree);
   }
 
-  private boolean shouldItBeNullChecked(VariableTree tree) {
-    if (isPage(((MethodInvocationTree) tree.initializer()).symbol().owner().name())
-        && ((MethodInvocationTree) tree.initializer()).symbol().name().equals(METHOD_NAME)) {
-      return true;
-    } else {
-      return false;
+  private void shouldBeNullChecked(VariableTree tree) {
+    if (isPage(
+        ((MethodInvocationTree) tree.initializer()).symbol().owner().type().fullyQualifiedName())
+        && METHOD_NAME.equals(((MethodInvocationTree) tree.initializer()).symbol().name())) {
+      contentResources.put(tree.simpleName().name(), false);
     }
   }
 
-  private void isResourceNullChecked(ExpressionTree leftOperand, ExpressionTree rightOperand) {
-    if (leftOperand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
-      if (rightOperand.is(Kind.NULL_LITERAL)) {
-        resources.replace(leftOperand.firstToken().text(), true);
-      }
-    } else if (rightOperand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
-      if (leftOperand.is(Kind.NULL_LITERAL)) {
-        resources.replace(rightOperand.firstToken().text(), true);
+  private void chainedMethodsNullCheck(MethodInvocationTree tree) {
+    if (tree.methodSelect() instanceof MemberSelectExpressionTree) {
+      MemberSelectExpressionTree expressionTree = (MemberSelectExpressionTree) tree.methodSelect();
+      if (expressionTree.expression() instanceof MethodInvocationTree) {
+        MethodInvocationTree invocationTree = (MethodInvocationTree) expressionTree.expression();
+        if (isPage(invocationTree.symbol().owner().type().fullyQualifiedName())
+            && isGetContentResourceUsed(invocationTree)) {
+          context.reportIssue(this, tree, RULE_MESSAGE);
+        }
       }
     }
+  }
+
+  private boolean isResourceNullChecked(ExpressionTree leftOperand, ExpressionTree rightOperand) {
+    return leftOperand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE) && rightOperand
+        .is(Kind.NULL_LITERAL);
+  }
+
+  private boolean isResourceInitialized(VariableTree tree) {
+    return tree.initializer() != null && tree.initializer().kind() != Kind.NULL_LITERAL;
+  }
+
+  private boolean isGetContentResourceUsed(MethodInvocationTree tree) {
+    return METHOD_NAME.equals(tree.methodSelect().lastToken().text());
+  }
+
+  private boolean isPage(String name) {
+    return Constants.PAGE.equals(name);
   }
 }

@@ -23,6 +23,8 @@ public final class Constants {
 
 	public static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
 
+	public static final String PAGE = "com.day.cq.wcm.api.Page";
+
 	private Constants() {
 		// private constructor to hide public one
 	}
