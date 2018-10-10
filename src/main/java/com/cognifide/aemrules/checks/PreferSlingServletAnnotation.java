@@ -19,25 +19,39 @@
  */
 package com.cognifide.aemrules.checks;
 
+import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.MEMBER_SELECT;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.STRING_LITERAL;
+
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Type;
-import org.sonar.plugins.java.api.tree.*;
-
-import java.util.Set;
-
-import static org.sonar.plugins.java.api.tree.Tree.Kind.*;
+import org.sonar.plugins.java.api.tree.AnnotationTree;
+import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
+import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.LiteralTree;
+import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
+import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(
 		key = PreferSlingServletAnnotation.RULE_KEY,
 		name = PreferSlingServletAnnotation.RULE_MESSAGE,
 		priority = Priority.MINOR,
 		tags = Tags.AEM
+)
+@AemVersion(
+		from = "6.0",
+		to = "6.2"
 )
 public class PreferSlingServletAnnotation extends BaseTreeVisitor implements JavaFileScanner {
 
