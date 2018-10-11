@@ -30,7 +30,10 @@ import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
+import org.sonar.plugins.java.api.tree.ClassTree;
 import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.IfStatementTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
@@ -50,6 +53,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   public static final String METHOD_NAME = "getContentResource";
 
+  public static final String NOT_EQUAL = "NOT_EQUAL_TO";
+
   private JavaFileScannerContext context;
 
   private Map<String, Boolean> contentResources = new HashMap();
@@ -62,29 +67,43 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   @Override
   public void visitBinaryExpression(BinaryExpressionTree tree) {
-    if (isResourceNullChecked(tree.leftOperand(), tree.rightOperand())) {
-      contentResources.replace(tree.leftOperand().firstToken().text(), true);
-    } else if (isResourceNullChecked(tree.rightOperand(), tree.leftOperand())) {
-      contentResources.replace(tree.rightOperand().firstToken().text(), true);
+    if (NOT_EQUAL.equals(tree.kind().name())) {
+      if (isResourceNullChecked(tree.leftOperand(), tree.rightOperand())) {
+        contentResources.replace(tree.leftOperand().firstToken().text(), true);
+      } else if (isResourceNullChecked(tree.rightOperand(), tree.leftOperand())) {
+        contentResources.replace(tree.rightOperand().firstToken().text(), true);
+      }
     }
     super.visitBinaryExpression(tree);
   }
 
   @Override
+  public void visitIfStatement(IfStatementTree tree) {
+    if (NOT_EQUAL.equals(tree.condition().kind().name())) {
+      if (isThisANullCheck(tree)) {
+        contentResources.replace(tree.condition().firstToken().text(), true);
+        contentResources.replace(tree.condition().lastToken().text(), true);
+      }
+    }
+    super.visitIfStatement(tree);
+    contentResources.replaceAll((k, v) -> Boolean.FALSE);
+  }
+
+  @Override
   public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-    if (Constants.RESOURCE_TYPE.equals(tree.variable().symbolType().fullyQualifiedName())) {
+    if (Constants.RESOURCE_TYPE.equals(tree.variable().symbolType().fullyQualifiedName()) && tree
+        .expression() instanceof MethodInvocationTree && METHOD_NAME
+        .equals(((MethodInvocationTree) tree.expression()).symbol().name())) {
       contentResources.put(tree.variable().firstToken().text(), false);
     }
     super.visitAssignmentExpression(tree);
   }
 
-
   @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
-    if (contentResources.containsKey(tree.firstToken().text())) {
-      if (!contentResources.getOrDefault(tree.firstToken().text(), false)) {
-        context.reportIssue(this, tree, RULE_MESSAGE);
-      }
+    if (contentResources.containsKey(tree.firstToken().text()) && !contentResources
+        .getOrDefault(tree.firstToken().text(), false)) {
+      context.reportIssue(this, tree, RULE_MESSAGE);
     }
     chainedMethodsNullCheck(tree);
     super.visitMethodInvocation(tree);
@@ -98,9 +117,17 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
     super.visitVariable(tree);
   }
 
+  @Override
+  public void visitClass(ClassTree tree) {
+    contentResources.clear();
+    super.visitClass(tree);
+  }
+
   private void shouldBeNullChecked(VariableTree tree) {
-    if (isPage(
-        ((MethodInvocationTree) tree.initializer()).symbol().owner().type().fullyQualifiedName())
+    if (tree.initializer() instanceof MethodInvocationTree && !((MethodInvocationTree) tree
+        .initializer()).symbol().isUnknown() && isPage(
+        ((MethodInvocationTree) tree.initializer()).symbol().owner().type()
+            .fullyQualifiedName())
         && METHOD_NAME.equals(((MethodInvocationTree) tree.initializer()).symbol().name())) {
       contentResources.put(tree.simpleName().name(), false);
     }
@@ -111,7 +138,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
       MemberSelectExpressionTree expressionTree = (MemberSelectExpressionTree) tree.methodSelect();
       if (expressionTree.expression() instanceof MethodInvocationTree) {
         MethodInvocationTree invocationTree = (MethodInvocationTree) expressionTree.expression();
-        if (isPage(invocationTree.symbol().owner().type().fullyQualifiedName())
+        if (!invocationTree.symbol().isUnknown() && isPage(
+            invocationTree.symbol().owner().type().fullyQualifiedName())
             && isGetContentResourceUsed(invocationTree)) {
           context.reportIssue(this, tree, RULE_MESSAGE);
         }
@@ -134,5 +162,24 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   private boolean isPage(String name) {
     return Constants.PAGE.equals(name);
+  }
+
+  private boolean isThisANullCheck(IfStatementTree tree) {
+    if (NOT_EQUAL.equals(tree.condition().kind().name())) {
+      if (tree.condition().firstToken().parent() instanceof IdentifierTree
+          && Constants.RESOURCE_TYPE.equals(
+          ((IdentifierTree) tree.condition().firstToken().parent()).symbolType()
+              .fullyQualifiedName()) && Kind.NULL_LITERAL
+          .equals(tree.condition().lastToken().parent().kind())) {
+        return true;
+      } else if (tree.condition().lastToken().parent() instanceof IdentifierTree
+          && Constants.RESOURCE_TYPE.equals(
+          ((IdentifierTree) tree.condition().lastToken().parent()).symbolType()
+              .fullyQualifiedName()) && Kind.NULL_LITERAL
+          .equals(tree.condition().firstToken().parent().kind())) {
+        return true;
+      }
+    }
+    return false;
   }
 }
