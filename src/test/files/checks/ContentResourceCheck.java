@@ -53,6 +53,10 @@ public class ContentResourceCheckB {
     if (contentResourceA != null) {
       children = contentResourceA.getChildren();
       children = contentResourceB.getChildren(); // Noncompliant
+      if(contentResourceB != null) {
+        children = contentResourceA.getChildren();
+      }
+      children = contentResourceA.getChildren();
     } else if (contentResourceB != null) {
       children = contentResourceB.getChildren();
     }
@@ -61,5 +65,14 @@ public class ContentResourceCheckB {
   private void noNullCheckNeeded() {
     Optional<Resource> contentResourceO = Optional.ofNullable(page.getContentResource());
     Iterable<Resource> children = contentResourceO.get().getChildren();
+  }
+
+  private boolean theOtherNullCheck() {
+    Resource contentResource = pageA.getContentResource();
+    if (contentResource == null) {
+      return false;
+    }
+    contentResource.getValueMap();
+    return true;
   }
 }

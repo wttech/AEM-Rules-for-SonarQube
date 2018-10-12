@@ -22,7 +22,9 @@ package com.cognifide.aemrules.checks;
 import com.cognifide.aemrules.Constants;
 import com.cognifide.aemrules.tag.Tags;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -36,6 +38,7 @@ import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.IfStatementTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
@@ -55,9 +58,13 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   public static final String NOT_EQUAL = "NOT_EQUAL_TO";
 
+  public static final String EQUAL = "EQUAL_TO";
+
   private JavaFileScannerContext context;
 
   private Map<String, Boolean> contentResources = new HashMap();
+
+  private Set<String> resourcesToIgnore = new HashSet<>();
 
   @Override
   public void scanFile(JavaFileScannerContext context) {
@@ -79,14 +86,31 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   @Override
   public void visitIfStatement(IfStatementTree tree) {
-    if (NOT_EQUAL.equals(tree.condition().kind().name())) {
-      if (isThisANullCheck(tree)) {
+    if (NOT_EQUAL.equals(tree.condition().kind().name()) && isThisAResourceNullCheck(tree)) {
+      // Resource name can be either on left or right side of the if statement
+      if (isRightSideNullCheck(tree)) {
         contentResources.replace(tree.condition().firstToken().text(), true);
+      } else {
         contentResources.replace(tree.condition().lastToken().text(), true);
+      }
+    } else if (EQUAL.equals(tree.condition().kind().name())) {
+      ReturnOccurrenceCheck returnOccurrenceCheck = new ReturnOccurrenceCheck(tree);
+      if (returnOccurrenceCheck.returnOccurred()) {
+        if (isRightSideNullCheck(tree)) {
+          resourcesToIgnore.add(tree.condition().firstToken().text());
+        } else {
+          resourcesToIgnore.add(tree.condition().lastToken().text());
+        }
       }
     }
     super.visitIfStatement(tree);
-    contentResources.replaceAll((k, v) -> Boolean.FALSE);
+    if (isRightSideNullCheck(tree)) {
+      contentResources.replace(tree.condition().firstToken().text(), false);
+
+    } else {
+      contentResources.replace(tree.condition().lastToken().text(), false);
+
+    }
   }
 
   @Override
@@ -102,7 +126,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
     if (contentResources.containsKey(tree.firstToken().text()) && !contentResources
-        .getOrDefault(tree.firstToken().text(), false)) {
+        .getOrDefault(tree.firstToken().text(), false) && !resourcesToIgnore
+        .contains(tree.firstToken().text())) {
       context.reportIssue(this, tree, RULE_MESSAGE);
     }
     chainedMethodsNullCheck(tree);
@@ -123,6 +148,12 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
     super.visitClass(tree);
   }
 
+  @Override
+  public void visitMethod(MethodTree tree) {
+    super.visitMethod(tree);
+    resourcesToIgnore.clear();
+  }
+
   private void shouldBeNullChecked(VariableTree tree) {
     if (tree.initializer() instanceof MethodInvocationTree && !((MethodInvocationTree) tree
         .initializer()).symbol().isUnknown() && isPage(
@@ -140,7 +171,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
         MethodInvocationTree invocationTree = (MethodInvocationTree) expressionTree.expression();
         if (!invocationTree.symbol().isUnknown() && isPage(
             invocationTree.symbol().owner().type().fullyQualifiedName())
-            && isGetContentResourceUsed(invocationTree)) {
+            && isGetContentResourceUsed(invocationTree) && !resourcesToIgnore
+            .contains(tree.firstToken().text())) {
           context.reportIssue(this, tree, RULE_MESSAGE);
         }
       }
@@ -164,7 +196,7 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
     return Constants.PAGE.equals(name);
   }
 
-  private boolean isThisANullCheck(IfStatementTree tree) {
+  public boolean isThisAResourceNullCheck(IfStatementTree tree) {
     if (NOT_EQUAL.equals(tree.condition().kind().name())) {
       if (tree.condition().firstToken().parent() instanceof IdentifierTree
           && Constants.RESOURCE_TYPE.equals(
@@ -181,5 +213,10 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
       }
     }
     return false;
+  }
+
+  private boolean isRightSideNullCheck(IfStatementTree tree) {
+    return Kind.NULL_LITERAL
+        .equals(tree.condition().lastToken().parent().kind());
   }
 }
