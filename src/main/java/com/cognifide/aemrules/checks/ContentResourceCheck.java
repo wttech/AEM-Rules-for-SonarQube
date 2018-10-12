@@ -39,6 +39,7 @@ import org.sonar.plugins.java.api.tree.IfStatementTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.ReturnStatementTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
@@ -59,6 +60,10 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   public static final String NOT_EQUAL = "NOT_EQUAL_TO";
 
   public static final String EQUAL = "EQUAL_TO";
+
+  private boolean returnOccurredInsideEqualNullCheck = false;
+
+  private boolean insideEqualNullCheck = false;
 
   private JavaFileScannerContext context;
 
@@ -86,31 +91,32 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   @Override
   public void visitIfStatement(IfStatementTree tree) {
-    if (NOT_EQUAL.equals(tree.condition().kind().name()) && isThisAResourceNullCheck(tree)) {
+    if (isThisAResourceNullCheck(tree, NOT_EQUAL)) {
       // Resource name can be either on left or right side of the if statement
       if (isRightSideNullCheck(tree)) {
         contentResources.replace(tree.condition().firstToken().text(), true);
       } else {
         contentResources.replace(tree.condition().lastToken().text(), true);
       }
-    } else if (EQUAL.equals(tree.condition().kind().name())) {
-      ReturnOccurrenceCheck returnOccurrenceCheck = new ReturnOccurrenceCheck(tree);
-      if (returnOccurrenceCheck.returnOccurred()) {
-        if (isRightSideNullCheck(tree)) {
-          resourcesToIgnore.add(tree.condition().firstToken().text());
-        } else {
-          resourcesToIgnore.add(tree.condition().lastToken().text());
-        }
-      }
+    } else if (isThisAResourceNullCheck(tree, EQUAL)) {
+      insideEqualNullCheck = true;
     }
     super.visitIfStatement(tree);
+    if (returnOccurredInsideEqualNullCheck) {
+      if (isRightSideNullCheck(tree)) {
+        resourcesToIgnore.add(tree.condition().firstToken().text());
+      } else {
+        resourcesToIgnore.add(tree.condition().lastToken().text());
+      }
+    }
+    // cleaning flags after if statement
     if (isRightSideNullCheck(tree)) {
       contentResources.replace(tree.condition().firstToken().text(), false);
 
     } else {
       contentResources.replace(tree.condition().lastToken().text(), false);
-
     }
+    insideEqualNullCheck = false;
   }
 
   @Override
@@ -126,8 +132,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
     if (contentResources.containsKey(tree.firstToken().text()) && !contentResources
-        .getOrDefault(tree.firstToken().text(), false) && !resourcesToIgnore
-        .contains(tree.firstToken().text())) {
+        .getOrDefault(tree.firstToken().text(), false) && !returnOccurredInsideEqualNullCheck
+    ) {
       context.reportIssue(this, tree, RULE_MESSAGE);
     }
     chainedMethodsNullCheck(tree);
@@ -152,6 +158,15 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   public void visitMethod(MethodTree tree) {
     super.visitMethod(tree);
     resourcesToIgnore.clear();
+    returnOccurredInsideEqualNullCheck = false;
+  }
+
+  @Override
+  public void visitReturnStatement(ReturnStatementTree tree) {
+    if (insideEqualNullCheck) {
+      returnOccurredInsideEqualNullCheck = true;
+    }
+    super.visitReturnStatement(tree);
   }
 
   private void shouldBeNullChecked(VariableTree tree) {
@@ -171,8 +186,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
         MethodInvocationTree invocationTree = (MethodInvocationTree) expressionTree.expression();
         if (!invocationTree.symbol().isUnknown() && isPage(
             invocationTree.symbol().owner().type().fullyQualifiedName())
-            && isGetContentResourceUsed(invocationTree) && !resourcesToIgnore
-            .contains(tree.firstToken().text())) {
+            && isGetContentResourceUsed(invocationTree) && !returnOccurredInsideEqualNullCheck
+        ) {
           context.reportIssue(this, tree, RULE_MESSAGE);
         }
       }
@@ -196,8 +211,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
     return Constants.PAGE.equals(name);
   }
 
-  public boolean isThisAResourceNullCheck(IfStatementTree tree) {
-    if (NOT_EQUAL.equals(tree.condition().kind().name())) {
+  public boolean isThisAResourceNullCheck(IfStatementTree tree, String ifType) {
+    if (ifType.equals(tree.condition().kind().name())) {
       if (tree.condition().firstToken().parent() instanceof IdentifierTree
           && Constants.RESOURCE_TYPE.equals(
           ((IdentifierTree) tree.condition().firstToken().parent()).symbolType()
