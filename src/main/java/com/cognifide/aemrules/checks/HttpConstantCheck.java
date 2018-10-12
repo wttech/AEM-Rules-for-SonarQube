@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
@@ -36,6 +37,9 @@ import java.util.List;
 		name = HttpConstantCheck.RULE_MESSAGE,
 		priority = Priority.MINOR,
 		tags = Tags.AEM
+)
+@AemVersion(
+		all = true
 )
 public class HttpConstantCheck extends IssuableSubscriptionVisitor {
 

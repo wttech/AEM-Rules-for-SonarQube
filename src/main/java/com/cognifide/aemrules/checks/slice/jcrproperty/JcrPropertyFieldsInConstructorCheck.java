@@ -21,10 +21,12 @@ package com.cognifide.aemrules.checks.slice.jcrproperty;
 
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.TypeUtils;
+import com.cognifide.aemrules.version.AemVersion;
+import com.google.common.collect.Sets;
 import java.util.Set;
-
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
+import org.sonar.plugins.java.api.JavaCheck;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.AnnotationTree;
@@ -35,14 +37,14 @@ import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import com.google.common.collect.Sets;
-import org.sonar.plugins.java.api.JavaCheck;
-
 @Rule(
-	key = JcrPropertyFieldsInConstructorCheck.RULE_KEY,
-	name = JcrPropertyFieldsInConstructorCheck.RULE_MESSAGE,
-	priority = Priority.MAJOR,
-	tags = {Tags.AEM, Tags.SLICE}
+		key = JcrPropertyFieldsInConstructorCheck.RULE_KEY,
+		name = JcrPropertyFieldsInConstructorCheck.RULE_MESSAGE,
+		priority = Priority.MAJOR,
+		tags = {Tags.AEM, Tags.SLICE}
+)
+@AemVersion(
+		all = true
 )
 public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor implements JavaFileScanner {
 

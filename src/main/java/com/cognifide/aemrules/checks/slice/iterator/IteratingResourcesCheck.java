@@ -19,7 +19,10 @@
  */
 package com.cognifide.aemrules.checks.slice.iterator;
 
+import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
+
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -37,13 +40,14 @@ import org.sonar.plugins.java.api.tree.StatementTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.WhileStatementTree;
 
-import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
-
 @Rule(
-	key = IteratingResourcesCheck.RULE_KEY,
-	name = IteratingResourcesCheck.RULE_MESSAGE,
-	priority = Priority.MINOR,
-	tags = {Tags.AEM, Tags.SLICE}
+		key = IteratingResourcesCheck.RULE_KEY,
+		name = IteratingResourcesCheck.RULE_MESSAGE,
+		priority = Priority.MINOR,
+		tags = {Tags.AEM, Tags.SLICE}
+)
+@AemVersion(
+		all = true
 )
 public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFileScanner {
 

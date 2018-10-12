@@ -27,7 +27,27 @@ Go to your SonarQube instance administration console and open Update Center. Fin
 2. Paste it into `sonarqube/extensions/plugins` directory.
 3. Restart SonarQube.
 4. Go to rules section and activate AEM rules in your profile.
- 
+
+## Rule AEM version support
+
+Each rule is configured to be executed by Sonar Runner only for the AEM version which is supporting. By providing AEM version for the parameter `sonarRunner.aemVersion` we are informing Sonar Runner to use only set of rules supporting current AEM version. When the parameter is not provided then a default AEM version is used (currently 6.4)
+
+### Running Sonar Runner
+
+When running Sonar Runner please add property `sonarRunner.aemVersion` with AEM version for which sonar analyzes should be run.
+
+`sonarRunner.aemVersion=<MAJOR_VERSION>.<MINOR_VERSION>`
+
+- Example using maven
+```
+mvn sonar:sonar -DsonarRunner.aemVersion=6.4
+```
+
+- Example using [Gradle AEM Plugin](https://github.com/Cognifide/gradle-aem-plugin)
+```
+gradlew sonarQube -DsonarRunner.aemVersion=6.4
+```
+
 # Rule set
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.

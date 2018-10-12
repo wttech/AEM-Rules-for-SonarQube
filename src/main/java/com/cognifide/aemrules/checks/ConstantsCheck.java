@@ -21,6 +21,7 @@ package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.ConstantsChecker;
+import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
@@ -37,6 +38,9 @@ import java.util.List;
 		name = ConstantsCheck.RULE_MESSAGE,
 		priority = Priority.MINOR,
 		tags = Tags.AEM
+)
+@AemVersion(
+		all = true
 )
 public class ConstantsCheck extends IssuableSubscriptionVisitor {
 

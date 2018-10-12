@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.ImmutableSet;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -41,7 +42,11 @@ import java.util.Set;
 		key = ModifiableValueMapUsageCheck.RULE_KEY,
 		name = ModifiableValueMapUsageCheck.RULE_MESSAGE,
 		priority = Priority.CRITICAL,
-		tags = Tags.AEM)
+		tags = Tags.AEM
+)
+@AemVersion(
+		all = true
+)
 public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements JavaFileScanner {
 
 	private static final String MODIFIABLE_VALUE_MAP_FULL_NAME = "org.apache.sling.api.resource.ModifiableValueMap";

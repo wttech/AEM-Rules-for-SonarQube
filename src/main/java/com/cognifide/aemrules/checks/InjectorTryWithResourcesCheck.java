@@ -20,18 +20,21 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
+import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import java.util.List;
-
 @Rule(
-	key = InjectorTryWithResourcesCheck.RULE_KEY,
-	name = InjectorTryWithResourcesCheck.RULE_MESSAGE,
-	priority = Priority.INFO,
-	tags = {Tags.AEM}
+		key = InjectorTryWithResourcesCheck.RULE_KEY,
+		name = InjectorTryWithResourcesCheck.RULE_MESSAGE,
+		priority = Priority.INFO,
+		tags = {Tags.AEM}
+)
+@AemVersion(
+		all = true
 )
 public class InjectorTryWithResourcesCheck extends InjectorShouldBeClosedCheck {
 
