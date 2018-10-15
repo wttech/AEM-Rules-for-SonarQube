@@ -19,60 +19,124 @@
  */
 package com.example;
 
+import com.adobe.cq.commerce.common.ValueMapDecorator;
 import com.day.cq.wcm.api.Page;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 
-public class ContentResourceCheckB {
+public class ContentResourceShouldBeNullCheckedCheck {
 
-  private Page pageA;
-
-  private Page pageB;
-
-  private Page pageC;
-
-  private void noNullCheck() {
-    Resource contentResourceA = pageA.getContentResource();
-    Resource contentResourceB = pageB.getContentResource();
-    ValueMap map = pageC.getContentResource().getValueMap(); // Noncompliant
+  private void contentResourceNotNullCheckedBeforeUsage(Resource resource) {
+    Page page = resource.adaptTo(Page.class);
+    Resource contentResourceA = page.getContentResource();
     Iterable<Resource> children = contentResourceA.getChildren(); // Noncompliant
-    Resource pageContentResource = pageA.getContentResource();
-    ModifiableValueMap pageProperties = pageContentResource.adaptTo(ModifiableValueMap.class); // Noncompliant
-    if (contentResourceA != null) {
-      Iterable<Resource> childrenB = contentResourceB.getChildren(); // Noncompliant
-    }
-    Iterable<Resource> childrenB = contentResourceA.getChildren(); // Noncompliant
   }
 
-  private void withNullCheck() {
-    Resource contentResourceA = pageA.getContentResource();
-    Resource contentResourceB = pageB.getContentResource();
+  private void notSafeUseOfResourceAfterIfWithNullCheck(Resource resource) {
+    Page page = resource.adaptTo(Page.class);
+    Resource contentResource1 = page.getContentResource("test");
+    if (contentResource1 != null) {
+      // do something
+    }
+    Iterable<Resource> childrenB = contentResource1.getChildren(); // Noncompliant
+  }
+
+  private void nullCheckUsedOnDifferentResourceThanUsedInIfStatement(Resource resource1,
+      Resource resource2) {
+    Page page1 = resource1.adaptTo(Page.class);
+    Page page2 = resource2.adaptTo(Page.class);
+    Resource contentResource1 = page1.getContentResource();
+    Resource contentResource2 = page2.getContentResource("test");
+    if (contentResource1 != null) {
+      Iterable<Resource> childrenB = contentResource2.getChildren(); // Noncompliant
+    }
+  }
+
+  private void correctlyNullCheckedContentResource(Resource resource1, Resource resource2) {
+    Page page1 = resource1.adaptTo(Page.class);
+    Page page2 = resource2.adaptTo(Page.class);
+    Resource contentResource1 = page1.getContentResource();
+    Resource contentResource2 = page2.getContentResource();
     Iterable<Resource> children = null;
-    if (contentResourceA != null) {
-      children = contentResourceA.getChildren();
-      children = contentResourceB.getChildren(); // Noncompliant
-      if(contentResourceB != null) {
-        children = contentResourceA.getChildren();
+    if (contentResource1 != null) {
+      children = contentResource1.getChildren();
+      if (contentResource2 != null) {
+        children = contentResource1.getChildren();
       }
-      children = contentResourceA.getChildren();
-    } else if (contentResourceB != null) {
-      children = contentResourceB.getChildren();
+      children = contentResource1.getChildren();
+    } else if (contentResource2 != null) {
+      children = contentResource2.getChildren();
     }
   }
 
-  private void noNullCheckNeeded() {
-    Optional<Resource> contentResourceO = Optional.ofNullable(page.getContentResource());
-    Iterable<Resource> children = contentResourceO.get().getChildren();
+  private void directlyCallMethodOnGetConentResourceReturn(Resource resource) {
+    Page page = resource.adaptTo(Page.class);
+    ValueMap map = page.getContentResource().getValueMap(); // Noncompliant
+    ModifiableValueMap modifiableValueMap = page.getContentResource().adaptTo(ModifiableValueMap.class); // Noncompliant
   }
 
-  private boolean theOtherNullCheck() {
-    Resource contentResource = pageA.getContentResource();
+  private void directlyCallMethodInNewLineOnGetConentResourceReturn(Resource resource) {
+    Page page = resource.adaptTo(Page.class);
+    ModifiableValueMap modifiableValueMap = page.getContentResource()
+        .adaptTo(ModifiableValueMap.class); // Noncompliant
+  }
+
+  private void useOfOptionalInCaseOfNullContentResource(Resource resource) {
+    Page page = resource.adaptTo(Page.class);
+    Optional<Resource> contentResourceOptional = Optional.ofNullable(page.getContentResource());
+    Iterable<Resource> children = contentResourceOptional.get().getChildren();
+  }
+
+  private boolean contentResourceNullCheckWithImidiateReturn(Resource resource) {
+    Page page = resource.adaptTo(Page.class);
+    Resource contentResource = page.getContentResource();
     if (contentResource == null) {
       return false;
     }
     contentResource.getValueMap();
     return true;
   }
+
+  private void directlyCallMethodOnGetConentResourceReturn(Resource resource) {
+    Page page = resource.adaptTo(Page.class);
+    ValueMap map = page.getContentResource().getValueMap(); // Noncompliant
+    ModifiableValueMap modifiableValueMap = page.getContentResource().adaptTo(ModifiableValueMap.class); // Noncompliant
+  }
+
+  private ValueMap checkForNullWithObjectsNonNull(Resource resource) {
+    ValueMap result = new ValueMapDecorator(new HashMap<>());
+    Page page = resource.adaptTo(Page.class);
+    Resource pageResource = page.getContentResource("test");
+    if (Objects.nonNull(pageResource)) {
+      result = pageResource.getValueMap();
+    }
+    return result;
+  }
+
+  private ValueMap checkForNullWithObjectsIsNull(Resource resource) {
+    ValueMap result = new ValueMapDecorator(new HashMap<>());
+    Page page = resource.adaptTo(Page.class);
+    Resource pageResource = page.getContentResource("test");
+    if (Objects.isNull(pageResource)) {
+      return result;
+    } else {
+      return pageResource.getValueMap();
+    }
+  }
+
+  private ValueMap checkForNonNullWithCommonsObjectUtilsAllNotNull(Resource resource) {
+    ValueMap result = new ValueMapDecorator(new HashMap<>());
+    Page page = resource.adaptTo(Page.class);
+    Resource pageResource = page.getContentResource("test");
+    if (ObjectUtils.allNotNull(pageResource)) {
+      result = pageResource.getValueMap();
+    }
+    return result;
+  }
+
 }
