@@ -27,24 +27,24 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 class DoWhileBinaryExpressionVisitor extends BaseTreeVisitor {
 
-	private boolean containsResourceComparison;
+    private boolean containsResourceComparison;
 
-	public boolean containsResourceComparison() {
-		return containsResourceComparison;
-	}
+    public boolean containsResourceComparison() {
+        return containsResourceComparison;
+    }
 
-	@Override
-	public void visitBinaryExpression(BinaryExpressionTree tree) {
-		containsResourceComparison = hasResourceComparison(tree);
-		super.visitBinaryExpression(tree);
-	}
+    @Override
+    public void visitBinaryExpression(BinaryExpressionTree tree) {
+        containsResourceComparison = hasResourceComparison(tree);
+        super.visitBinaryExpression(tree);
+    }
 
-	private boolean hasResourceComparison(BinaryExpressionTree tree) {
-		return isResource(tree.leftOperand()) || isResource(tree.rightOperand());
-	}
+    private boolean hasResourceComparison(BinaryExpressionTree tree) {
+        return isResource(tree.leftOperand()) || isResource(tree.rightOperand());
+    }
 
-	private boolean isResource(ExpressionTree operand) {
-		return !operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE);
-	}
+    private boolean isResource(ExpressionTree operand) {
+        return !operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE);
+    }
 
 }

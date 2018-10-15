@@ -30,29 +30,29 @@ import javax.jcr.Session;
 @Component(immediate = true)
 public class SessionLogout {
 
-	@Reference
-	private SlingRepository repository;
+    @Reference
+    private SlingRepository repository;
 
-	public void six() {
-		Session session = null; // Noncompliant
-		String plotTwist = "twist";
-		plotTwist = "anotherTwist";
-		plotTwist = getMeAnotherTwist();
-		plotTwist = StringUtils.capitalize(plotTwist);
-		try {
-			session = repository.loginService(null, null);
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-		} finally {
-			if (session != null && session.isLive()) {
-				//	session.logout();
-				plotTwist.toString();
-			}
-		}
-	}
+    public void six() {
+        Session session = null; // Noncompliant
+        String plotTwist = "twist";
+        plotTwist = "anotherTwist";
+        plotTwist = getMeAnotherTwist();
+        plotTwist = StringUtils.capitalize(plotTwist);
+        try {
+            session = repository.loginService(null, null);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isLive()) {
+                //	session.logout();
+                plotTwist.toString();
+            }
+        }
+    }
 
-	private String getMeAnotherTwist() {
-		return "lastOne";
-	}
+    private String getMeAnotherTwist() {
+        return "lastOne";
+    }
 
 }

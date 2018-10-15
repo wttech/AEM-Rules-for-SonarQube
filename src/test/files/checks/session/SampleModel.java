@@ -31,41 +31,42 @@ import org.apache.sling.api.resource.ResourceResolver;
 @SliceResource
 public class SampleModel implements InitializableModel {
 
-	private final ResourceResolver resolver;
+    private final ResourceResolver resolver;
 
-	private ResourceResolver resolver2;
+    private ResourceResolver resolver2;
 
-	@JcrProperty
-	private String prop;
+    @JcrProperty
+    private String prop;
 
-	public SampleModel(ResourceResolver resolver) {
-		this.resolver = resolver;
-	}
+    public SampleModel(ResourceResolver resolver) {
+        this.resolver = resolver;
+    }
 
-	public String getProp() {
-		return prop;
-	}
+    public String getProp() {
+        return prop;
+    }
 
-	public String getLowerCaseProp() {
-		return prop.toLowerCase();
-	}
+    public String getLowerCaseProp() {
+        return prop.toLowerCase();
+    }
 
-	public String getPropRR() {
-		resolver.getAttribute("TEST"); // Noncompliant {{Objects annotated by @SliceResource should not use or return any session based object, except in constructor or com.cognifide.slice.api.model.InitializableModel.afterCreated().}}
-		StringUtils.isBlank((String) resolver2.getAttribute("TEST")); // Noncompliant
-		return "null";
-	}
+    public String getPropRR() {
+        resolver.getAttribute(
+            "TEST"); // Noncompliant {{Objects annotated by @SliceResource should not use or return any session based object, except in constructor or com.cognifide.slice.api.model.InitializableModel.afterCreated().}}
+        StringUtils.isBlank((String) resolver2.getAttribute("TEST")); // Noncompliant
+        return "null";
+    }
 
-	public ResourceResolver getResolver() {
-		return resolver; // Noncompliant
-	}
+    public ResourceResolver getResolver() {
+        return resolver; // Noncompliant
+    }
 
-	public String getNothing() {
-		return null;
-	}
+    public String getNothing() {
+        return null;
+    }
 
-	@Override
-	public void afterCreated() {
-		resolver.getAttribute("TEST");
-	}
+    @Override
+    public void afterCreated() {
+        resolver.getAttribute("TEST");
+    }
 }

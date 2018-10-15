@@ -30,16 +30,16 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 @Component(property = { // Compliant {{ OSGi standard annotations are OK}}
-		"sling.servlet.resourceTypes=sling/servlet/default",
-		"sling.servlet.selectors=selector",
-		"sling.servlet.extensions=tab",
-		"sling.servlet.methods=" + HttpConstants.METHOD_GET
+    "sling.servlet.resourceTypes=sling/servlet/default",
+    "sling.servlet.selectors=selector",
+    "sling.servlet.extensions=tab",
+    "sling.servlet.methods=" + HttpConstants.METHOD_GET
 }, service = Servlet.class)
 public class SlingServletWithStandardAnnotations extends SlingSafeMethodsServlet {
 
-	@Override
-	protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
-			throws ServletException, IOException {
-		//do sth
-	}
+    @Override
+    protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
+        throws ServletException, IOException {
+        //do sth
+    }
 }

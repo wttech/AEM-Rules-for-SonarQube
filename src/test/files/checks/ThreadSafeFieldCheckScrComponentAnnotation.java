@@ -23,7 +23,7 @@ import javax.jcr.Session;
 import org.apache.felix.scr.annotations.Component;
 
 @Component
-public class ThreadSafeFieldCheckComponentAnnotationExample  {
+public class ThreadSafeFieldCheckComponentAnnotationExample {
 
     private Session session; // Noncompliant
 

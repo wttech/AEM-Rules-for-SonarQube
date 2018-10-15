@@ -35,27 +35,27 @@ import java.util.Map;
 @Component
 public class LongSessionEventListenerError implements EventListener {
 
-	private Session observationSession; // Noncompliant {{Session should be logged out in finally block.}}
+    private Session observationSession; // Noncompliant {{Session should be logged out in finally block.}}
 
-	@Reference
-	private SlingRepository repository;
+    @Reference
+    private SlingRepository repository;
 
-	@Activate
-	public void activate(final Map<String, String> config) throws RepositoryException {
-		observationSession = repository.loginAdministrative(null);
-		final ObservationManager observationManager = observationSession.getWorkspace().getObservationManager();
-	}
+    @Activate
+    public void activate(final Map<String, String> config) throws RepositoryException {
+        observationSession = repository.loginAdministrative(null);
+        final ObservationManager observationManager = observationSession.getWorkspace().getObservationManager();
+    }
 
-	@Deactivate
-	public void deactivate(final Map<String, String> config) throws RepositoryException {
-		final ObservationManager observationManager = observationSession.getWorkspace().getObservationManager();
+    @Deactivate
+    public void deactivate(final Map<String, String> config) throws RepositoryException {
+        final ObservationManager observationManager = observationSession.getWorkspace().getObservationManager();
 
-		if (observationManager != null) {
-			observationManager.removeEventListener(this);
-		}
-	}
+        if (observationManager != null) {
+            observationManager.removeEventListener(this);
+        }
+    }
 
-	@Override
-	public void onEvent(final EventIterator events) {
-	}
+    @Override
+    public void onEvent(final EventIterator events) {
+    }
 }

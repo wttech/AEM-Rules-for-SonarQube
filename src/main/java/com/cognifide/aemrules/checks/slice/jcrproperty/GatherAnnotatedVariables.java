@@ -29,28 +29,28 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 
 class GatherAnnotatedVariables extends BaseTreeVisitor {
 
-	private static final String JCR_PROPERTY_ANNOTATION = "com.cognifide.slice.mapper.annotation.JcrProperty";
+    private static final String JCR_PROPERTY_ANNOTATION = "com.cognifide.slice.mapper.annotation.JcrProperty";
 
-	private final Set<String> annotatedVariables = new HashSet<>();
+    private final Set<String> annotatedVariables = new HashSet<>();
 
-	public Set<String> getAnnotatedVariables() {
-		return Collections.unmodifiableSet(annotatedVariables);
-	}
+    public Set<String> getAnnotatedVariables() {
+        return Collections.unmodifiableSet(annotatedVariables);
+    }
 
-	@Override
-	public void visitVariable(VariableTree tree) {
-		if (hasJcrPropertyAnnotation(tree)) {
-			annotatedVariables.add(tree.symbol().name());
-		}
-		super.visitVariable(tree);
-	}
+    @Override
+    public void visitVariable(VariableTree tree) {
+        if (hasJcrPropertyAnnotation(tree)) {
+            annotatedVariables.add(tree.symbol().name());
+        }
+        super.visitVariable(tree);
+    }
 
-	private boolean hasJcrPropertyAnnotation(VariableTree tree) {
-		boolean jcrPropertyAnnotationPresent = false;
-		for (AnnotationTree annotation : tree.modifiers().annotations()) {
-			jcrPropertyAnnotationPresent |= TypeUtils.isOfType(annotation.annotationType(), JCR_PROPERTY_ANNOTATION);
-		}
-		return jcrPropertyAnnotationPresent;
-	}
+    private boolean hasJcrPropertyAnnotation(VariableTree tree) {
+        boolean jcrPropertyAnnotationPresent = false;
+        for (AnnotationTree annotation : tree.modifiers().annotations()) {
+            jcrPropertyAnnotationPresent |= TypeUtils.isOfType(annotation.annotationType(), JCR_PROPERTY_ANNOTATION);
+        }
+        return jcrPropertyAnnotationPresent;
+    }
 
 }

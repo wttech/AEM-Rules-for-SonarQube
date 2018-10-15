@@ -27,28 +27,28 @@ import org.sonar.plugins.java.api.tree.TypeTree;
 
 class TypeTreeVisitor extends BaseTreeVisitor {
 
-	private boolean resourceTypeInstance;
+    private boolean resourceTypeInstance;
 
-	public boolean isResourceTypeInstance() {
-		return resourceTypeInstance;
-	}
+    public boolean isResourceTypeInstance() {
+        return resourceTypeInstance;
+    }
 
-	@Override
-	public void visitIdentifier(IdentifierTree tree) {
-		isResourceType(tree);
-		super.visitIdentifier(tree);
-	}
+    @Override
+    public void visitIdentifier(IdentifierTree tree) {
+        isResourceType(tree);
+        super.visitIdentifier(tree);
+    }
 
-	@Override
-	public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
-		isResourceType(tree);
-		super.visitMemberSelectExpression(tree);
-	}
+    @Override
+    public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
+        isResourceType(tree);
+        super.visitMemberSelectExpression(tree);
+    }
 
-	private void isResourceType(TypeTree typeTree) {
-		if (typeTree.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
-			resourceTypeInstance = true;
-		}
-	}
+    private void isResourceType(TypeTree typeTree) {
+        if (typeTree.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
+            resourceTypeInstance = true;
+        }
+    }
 
 }

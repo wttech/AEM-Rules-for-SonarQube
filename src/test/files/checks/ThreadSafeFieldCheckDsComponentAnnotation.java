@@ -23,7 +23,7 @@ import javax.jcr.Session;
 import org.osgi.service.component.annotations.Component;
 
 @Component
-public class ThreadSafeFieldCheckDsComponentAnnotationExample  {
+public class ThreadSafeFieldCheckDsComponentAnnotationExample {
 
     private Session session; // Noncompliant
 

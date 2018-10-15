@@ -27,29 +27,30 @@ import org.apache.sling.models.annotations.Optional;
 import javax.inject.Inject;
 
 
-@Model(adaptables = Resource.class , defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+@Model(adaptables = Resource.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class DefaultInjectionStrategyAnnotationCheck {
 
-	@Inject
-	@Optional // Noncompliant
-	private String str1;
+    @Inject
+    @Optional // Noncompliant
+    private String str1;
 
-	@Inject
-	private String str2;
+    @Inject
+    private String str2;
 
-	@Inject
-	@Optional // Noncompliant
-	private String str3;
+    @Inject
+    @Optional // Noncompliant
+    private String str3;
 
-	public String getStr1() {
-		return str1;
-	}
+    public String getStr1() {
+        return str1;
+    }
 
-	public String getStr2() {
-		return str2;
-	}
-	public String getStr3() {
-		return str3;
-	}
+    public String getStr2() {
+        return str2;
+    }
+
+    public String getStr3() {
+        return str3;
+    }
 
 }

@@ -30,30 +30,31 @@ import java.util.Map;
 
 class A {
 
-	@Reference
-	private ResourceResolverFactory resolverFactory;
+    @Reference
+    private ResourceResolverFactory resolverFactory;
 
-	@Reference
-	private SlingRepository repository;
+    @Reference
+    private SlingRepository repository;
 
-	public ResourceResolver getResourceResolver(Map<String, Object> credentials) {
-		ResourceResolver resolver = null;
-		try {
-			resolver = resolverFactory.getAdministrativeResourceResolver(credentials); // Noncompliant {{Method 'getAdministrativeResourceResolver' is deprecated. Use 'getServiceResourceResolver' instead.}}
-		} catch (LoginException e) {
-			//
-		}
-		return resolver;
-	}
+    public ResourceResolver getResourceResolver(Map<String, Object> credentials) {
+        ResourceResolver resolver = null;
+        try {
+            resolver = resolverFactory.getAdministrativeResourceResolver(
+                credentials); // Noncompliant {{Method 'getAdministrativeResourceResolver' is deprecated. Use 'getServiceResourceResolver' instead.}}
+        } catch (LoginException e) {
+            //
+        }
+        return resolver;
+    }
 
-	public Session getSession(String workspace) {
-		Session session = null;
-		try {
-			session = repository.loginAdministrative(workspace); // Noncompliant {{Method 'loginAdministrative' is deprecated. Use 'loginService' instead.}}
-		} catch (RepositoryException e) {
-			//
-		}
-		return session;
-	}
+    public Session getSession(String workspace) {
+        Session session = null;
+        try {
+            session = repository.loginAdministrative(workspace); // Noncompliant {{Method 'loginAdministrative' is deprecated. Use 'loginService' instead.}}
+        } catch (RepositoryException e) {
+            //
+        }
+        return session;
+    }
 
 }

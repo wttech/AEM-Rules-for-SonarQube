@@ -30,20 +30,20 @@ import javax.jcr.Session;
 @Component(immediate = true)
 public class SessionLogout {
 
-	@Reference
-	private SlingRepository repository;
+    @Reference
+    private SlingRepository repository;
 
-	public void three() {
-		Session session = null;
-		try {
-			session = repository.loginService(null, null);
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-		} finally {
-			if (session != null && session.isLive()) {
-				session.logout();
-			}
-		}
-	}
+    public void three() {
+        Session session = null;
+        try {
+            session = repository.loginService(null, null);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isLive()) {
+                session.logout();
+            }
+        }
+    }
 
 }
