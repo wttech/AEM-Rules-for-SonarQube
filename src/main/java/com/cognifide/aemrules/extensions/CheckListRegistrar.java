@@ -22,6 +22,7 @@ package com.cognifide.aemrules.extensions;
 import com.cognifide.aemrules.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.checks.ConstantsCheck;
+import com.cognifide.aemrules.checks.ContentResourceShouldBeNullCheckedCheck;
 import com.cognifide.aemrules.checks.HttpConstantCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
@@ -64,6 +65,7 @@ public class CheckListRegistrar implements CheckRegistrar {
 		.add(ThreadSafeFieldCheck.class)
 		.add(DefaultInjectionStrategyAnnotationCheck.class)
 		.add(ModifiableValueMapUsageCheck.class)
+		.add(ContentResourceShouldBeNullCheckedCheck.class)
 		.build();
 
 	@Override

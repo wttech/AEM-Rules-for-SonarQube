@@ -17,16 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules;
+package com.cognifide.aemrules.checks;
 
-public final class Constants {
+import org.junit.Test;
 
-	public static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
+public class ContentResourceShouldBeNullCheckedCheckTest extends AbstractBaseTest  {
 
-	public static final String PAGE = "com.day.cq.wcm.api.Page";
-
-	private Constants() {
-		// private constructor to hide public one
-	}
-
+  @Test
+  public void checkIfContentResourceIsNotNull() {
+    check = new ContentResourceShouldBeNullCheckedCheck();
+    filename = "src/test/files/checks/ContentResourceShouldBeNullCheckedCheck.java";
+    verify();
+  }
 }
