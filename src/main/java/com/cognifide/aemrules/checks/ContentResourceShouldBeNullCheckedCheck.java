@@ -22,18 +22,14 @@ package com.cognifide.aemrules.checks;
 import com.cognifide.aemrules.Constants;
 import com.cognifide.aemrules.tag.Tags;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
-import org.sonar.plugins.java.api.tree.BinaryExpressionTree;
 import org.sonar.plugins.java.api.tree.ClassTree;
-import org.sonar.plugins.java.api.tree.ExpressionTree;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.IfStatementTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
@@ -44,12 +40,13 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 @Rule(
-    key = ContentResourceCheck.RULE_KEY,
-    name = ContentResourceCheck.RULE_MESSAGE,
+    key = ContentResourceShouldBeNullCheckedCheck.RULE_KEY,
+    name = ContentResourceShouldBeNullCheckedCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
 )
-public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileScanner {
+public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor implements
+    JavaFileScanner {
 
   public static final String RULE_KEY = "AEM-18";
 
@@ -69,8 +66,6 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   private Map<String, Boolean> contentResources = new HashMap();
 
-  private Set<String> resourcesToIgnore = new HashSet<>();
-
   @Override
   public void scanFile(JavaFileScannerContext context) {
     this.context = context;
@@ -78,52 +73,22 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   }
 
   @Override
-  public void visitBinaryExpression(BinaryExpressionTree tree) {
-    if (NOT_EQUAL.equals(tree.kind().name())) {
-      if (isResourceNullChecked(tree.leftOperand(), tree.rightOperand())) {
-        contentResources.replace(tree.leftOperand().firstToken().text(), true);
-      } else if (isResourceNullChecked(tree.rightOperand(), tree.leftOperand())) {
-        contentResources.replace(tree.rightOperand().firstToken().text(), true);
-      }
-    }
-    super.visitBinaryExpression(tree);
-  }
-
-  @Override
   public void visitIfStatement(IfStatementTree tree) {
     if (isThisAResourceNullCheck(tree, NOT_EQUAL)) {
-      // Resource name can be either on left or right side of the if statement
-      if (isRightSideNullCheck(tree)) {
-        contentResources.replace(tree.condition().firstToken().text(), true);
-      } else {
-        contentResources.replace(tree.condition().lastToken().text(), true);
-      }
+      updateNullCheckedResources(tree, true);
     } else if (isThisAResourceNullCheck(tree, EQUAL)) {
       insideEqualNullCheck = true;
     }
     super.visitIfStatement(tree);
     if (returnOccurredInsideEqualNullCheck) {
-      if (isRightSideNullCheck(tree)) {
-        resourcesToIgnore.add(tree.condition().firstToken().text());
-      } else {
-        resourcesToIgnore.add(tree.condition().lastToken().text());
-      }
+      updateNullCheckedResources(tree, true);
     }
-    // cleaning flags after if statement
-    if (isRightSideNullCheck(tree)) {
-      contentResources.replace(tree.condition().firstToken().text(), false);
-
-    } else {
-      contentResources.replace(tree.condition().lastToken().text(), false);
-    }
-    insideEqualNullCheck = false;
+    cleanFlagsAfterIfStatement(tree);
   }
 
   @Override
   public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-    if (Constants.RESOURCE_TYPE.equals(tree.variable().symbolType().fullyQualifiedName()) && tree
-        .expression() instanceof MethodInvocationTree && METHOD_NAME
-        .equals(((MethodInvocationTree) tree.expression()).symbol().name())) {
+    if (isGetContentResourceUsedOnResource(tree)) {
       contentResources.put(tree.variable().firstToken().text(), false);
     }
     super.visitAssignmentExpression(tree);
@@ -131,8 +96,8 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
 
   @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
-    if (contentResources.containsKey(tree.firstToken().text()) && !contentResources
-        .getOrDefault(tree.firstToken().text(), false) && !returnOccurredInsideEqualNullCheck
+    if (!contentResources.getOrDefault(tree.firstToken().text(), true)
+        && !returnOccurredInsideEqualNullCheck
     ) {
       context.reportIssue(this, tree, RULE_MESSAGE);
     }
@@ -157,7 +122,6 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   @Override
   public void visitMethod(MethodTree tree) {
     super.visitMethod(tree);
-    resourcesToIgnore.clear();
     returnOccurredInsideEqualNullCheck = false;
   }
 
@@ -170,11 +134,11 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
   }
 
   private void shouldBeNullChecked(VariableTree tree) {
-    if (tree.initializer() instanceof MethodInvocationTree && !((MethodInvocationTree) tree
-        .initializer()).symbol().isUnknown() && isPage(
-        ((MethodInvocationTree) tree.initializer()).symbol().owner().type()
-            .fullyQualifiedName())
-        && METHOD_NAME.equals(((MethodInvocationTree) tree.initializer()).symbol().name())) {
+    if (tree.initializer() instanceof MethodInvocationTree &&
+        !((MethodInvocationTree) tree.initializer()).symbol().isUnknown() &&
+        isPage(((MethodInvocationTree) tree.initializer()).symbol().owner().type()
+            .fullyQualifiedName()) &&
+        METHOD_NAME.equals(((MethodInvocationTree) tree.initializer()).symbol().name())) {
       contentResources.put(tree.simpleName().name(), false);
     }
   }
@@ -184,9 +148,9 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
       MemberSelectExpressionTree expressionTree = (MemberSelectExpressionTree) tree.methodSelect();
       if (expressionTree.expression() instanceof MethodInvocationTree) {
         MethodInvocationTree invocationTree = (MethodInvocationTree) expressionTree.expression();
-        if (!invocationTree.symbol().isUnknown() && isPage(
-            invocationTree.symbol().owner().type().fullyQualifiedName())
-            && isGetContentResourceUsed(invocationTree) && !returnOccurredInsideEqualNullCheck
+        if (!invocationTree.symbol().isUnknown() &&
+            isPage(invocationTree.symbol().owner().type().fullyQualifiedName()) &&
+            isGetContentResourceUsedOnPage(invocationTree) && !returnOccurredInsideEqualNullCheck
         ) {
           context.reportIssue(this, tree, RULE_MESSAGE);
         }
@@ -194,17 +158,35 @@ public class ContentResourceCheck extends BaseTreeVisitor implements JavaFileSca
     }
   }
 
-  private boolean isResourceNullChecked(ExpressionTree leftOperand, ExpressionTree rightOperand) {
-    return leftOperand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE) && rightOperand
-        .is(Kind.NULL_LITERAL);
+  private void cleanFlagsAfterIfStatement(IfStatementTree tree) {
+    updateNullCheckedResources(tree, false);
+    insideEqualNullCheck = false;
+  }
+
+  private void updateNullCheckedResources(IfStatementTree tree, boolean value) {
+    if (isRightSideNullCheck(tree)) {
+      contentResources.replace(tree.condition().firstToken().text(), value);
+    } else {
+      contentResources.replace(tree.condition().lastToken().text(), value);
+    }
+  }
+
+  private boolean isResource(AssignmentExpressionTree tree) {
+    return Constants.RESOURCE_TYPE.equals(tree.variable().symbolType().fullyQualifiedName());
   }
 
   private boolean isResourceInitialized(VariableTree tree) {
     return tree.initializer() != null && tree.initializer().kind() != Kind.NULL_LITERAL;
   }
 
-  private boolean isGetContentResourceUsed(MethodInvocationTree tree) {
+  private boolean isGetContentResourceUsedOnPage(MethodInvocationTree tree) {
     return METHOD_NAME.equals(tree.methodSelect().lastToken().text());
+  }
+
+  private boolean isGetContentResourceUsedOnResource(AssignmentExpressionTree tree) {
+    return isResource(tree) &&
+        tree.expression() instanceof MethodInvocationTree &&
+        METHOD_NAME.equals(((MethodInvocationTree) tree.expression()).symbol().name());
   }
 
   private boolean isPage(String name) {
