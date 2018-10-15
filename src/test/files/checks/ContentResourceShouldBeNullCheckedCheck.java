@@ -39,14 +39,14 @@ public class ContentResourceShouldBeNullCheckedCheck {
 
   private void notSafeUseOfResourceAfterIfWithNullCheck(Resource resource) {
     Page page = resource.adaptTo(Page.class);
-    Resource contentResource1 = page.getContentResource("test");
-    if (contentResource1 != null) {
+    Resource contentResource = page.getContentResource("test");
+    if (contentResource != null) {
       // do something
     }
-    Iterable<Resource> childrenB = contentResource1.getChildren(); // Noncompliant
+    Iterable<Resource> children = contentResource.getChildren(); // Noncompliant
   }
 
-  private void nullCheckUsedOnDifferentResourceThanUsedInIfStatement(Resource resource1,
+  private void nullCheckUsedOnDifferentResourceThanCheckedInIfStatement(Resource resource1,
       Resource resource2) {
     Page page1 = resource1.adaptTo(Page.class);
     Page page2 = resource2.adaptTo(Page.class);
@@ -74,19 +74,11 @@ public class ContentResourceShouldBeNullCheckedCheck {
     }
   }
 
-  private void directlyCallMethodOnGetConentResourceReturn(Resource resource) {
+  private void directlyCallMethodOnGetContentResourceReturn(Resource resource) {
     Page page = resource.adaptTo(Page.class);
     ValueMap map = page.getContentResource().getValueMap(); // Noncompliant
     ModifiableValueMap modifiableValueMap = page.getContentResource().adaptTo(ModifiableValueMap.class); // Noncompliant
   }
-
-
-  // This will work in an actual project
-//  private void directlyCallMethodInNewLineOnGetConentResourceReturn(Resource resource) {
-//    Page page = resource.adaptTo(Page.class);
-//    ModifiableValueMap modifiableValueMap = page.getContentResource().
-//        adaptTo(ModifiableValueMap.class); // Noncompliant
-//  }
 
   private void useOfOptionalInCaseOfNullContentResource(Resource resource) {
     Page page = resource.adaptTo(Page.class);
@@ -94,7 +86,7 @@ public class ContentResourceShouldBeNullCheckedCheck {
     Iterable<Resource> children = contentResourceOptional.get().getChildren();
   }
 
-  private boolean contentResourceNullCheckWithImidiateReturn(Resource resource) {
+  private boolean contentResourceNullCheckWithImmediateReturn(Resource resource) {
     Page page = resource.adaptTo(Page.class);
     Resource contentResource = page.getContentResource();
     if (contentResource == null) {
@@ -102,12 +94,6 @@ public class ContentResourceShouldBeNullCheckedCheck {
     }
     contentResource.getValueMap();
     return true;
-  }
-
-  private void directlyCallMethodOnGetConentResourceReturn(Resource resource) {
-    Page page = resource.adaptTo(Page.class);
-    ValueMap map = page.getContentResource().getValueMap(); // Noncompliant
-    ModifiableValueMap modifiableValueMap = page.getContentResource().adaptTo(ModifiableValueMap.class); // Noncompliant
   }
 
   private ValueMap checkForNullWithObjectsNonNull(Resource resource) {
@@ -131,7 +117,7 @@ public class ContentResourceShouldBeNullCheckedCheck {
     }
   }
 
-  private ValueMap checkForNonNullWithCommonsObjectUtilsAllNotNull(Resource resource) {
+  private ValueMap checkForNullWithCommonsObjectUtilsAllNotNull(Resource resource) {
     ValueMap result = new ValueMapDecorator(new HashMap<>());
     Page page = resource.adaptTo(Page.class);
     Resource pageResource = page.getContentResource("test");
