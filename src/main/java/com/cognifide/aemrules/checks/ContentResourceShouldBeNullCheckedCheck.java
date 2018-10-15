@@ -22,6 +22,7 @@ package com.cognifide.aemrules.checks;
 import com.cognifide.aemrules.Constants;
 import com.cognifide.aemrules.tag.Tags;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -58,9 +59,17 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
   public static final String EQUAL = "EQUAL_TO";
 
+  public static final String NON_NULL_METHOD = "nonNull";
+
+  public static final String ALL_NON_NULL_METHOD = "allNotNull";
+
+  public static final String IS_NULL_METHOD = "isNull";
+
   private boolean returnOccurredInsideEqualNullCheck = false;
 
   private boolean insideEqualNullCheck = false;
+
+  private boolean insideIfStatement = false;
 
   private JavaFileScannerContext context;
 
@@ -74,6 +83,8 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
   @Override
   public void visitIfStatement(IfStatementTree tree) {
+    insideIfStatement = true;
+
     if (isThisAResourceNullCheck(tree, NOT_EQUAL)) {
       updateNullCheckedResources(tree, true);
     } else if (isThisAResourceNullCheck(tree, EQUAL)) {
@@ -96,11 +107,8 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
   @Override
   public void visitMethodInvocation(MethodInvocationTree tree) {
-    if (!contentResources.getOrDefault(tree.firstToken().text(), true)
-        && !returnOccurredInsideEqualNullCheck
-    ) {
-      context.reportIssue(this, tree, RULE_MESSAGE);
-    }
+    externalLibraryNullChecks(tree);
+    equalsNullCheck(tree);
     chainedMethodsNullCheck(tree);
     super.visitMethodInvocation(tree);
   }
@@ -134,33 +142,23 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
   }
 
   private void shouldBeNullChecked(VariableTree tree) {
-    if (tree.initializer() instanceof MethodInvocationTree &&
-        !((MethodInvocationTree) tree.initializer()).symbol().isUnknown() &&
-        isPage(((MethodInvocationTree) tree.initializer()).symbol().owner().type()
-            .fullyQualifiedName()) &&
-        METHOD_NAME.equals(((MethodInvocationTree) tree.initializer()).symbol().name())) {
+    if (isGetContentResourceUsedOnPage(tree)) {
       contentResources.put(tree.simpleName().name(), false);
     }
   }
 
-  private void chainedMethodsNullCheck(MethodInvocationTree tree) {
-    if (tree.methodSelect() instanceof MemberSelectExpressionTree) {
-      MemberSelectExpressionTree expressionTree = (MemberSelectExpressionTree) tree.methodSelect();
-      if (expressionTree.expression() instanceof MethodInvocationTree) {
-        MethodInvocationTree invocationTree = (MethodInvocationTree) expressionTree.expression();
-        if (!invocationTree.symbol().isUnknown() &&
-            isPage(invocationTree.symbol().owner().type().fullyQualifiedName()) &&
-            isGetContentResourceUsedOnPage(invocationTree) && !returnOccurredInsideEqualNullCheck
-        ) {
-          context.reportIssue(this, tree, RULE_MESSAGE);
-        }
-      }
-    }
-  }
-
   private void cleanFlagsAfterIfStatement(IfStatementTree tree) {
+    insideIfStatement = false;
     updateNullCheckedResources(tree, false);
     insideEqualNullCheck = false;
+  }
+
+  private void equalsNullCheck(MethodInvocationTree tree) {
+    if (!contentResources.getOrDefault(tree.firstToken().text(), true) &&
+        !returnOccurredInsideEqualNullCheck
+    ) {
+      context.reportIssue(this, tree, RULE_MESSAGE);
+    }
   }
 
   private void updateNullCheckedResources(IfStatementTree tree, boolean value) {
@@ -168,6 +166,34 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
       contentResources.replace(tree.condition().firstToken().text(), value);
     } else {
       contentResources.replace(tree.condition().lastToken().text(), value);
+    }
+  }
+
+  private void externalLibraryNullChecks(MethodInvocationTree tree) {
+    if (isNonNullUsed(tree)) {
+      contentResources.replace(tree.arguments().get(0).toString(), true);
+    } else if (isAllNonNullUsed(tree)) {
+      Iterator resourcesIterator = tree.arguments().iterator();
+      while (resourcesIterator.hasNext()) {
+        contentResources.replace(resourcesIterator.next().toString(), true);
+      }
+    } else if (insideIfStatement && isThisIsNullMethod(tree)) {
+      insideEqualNullCheck = true;
+    }
+  }
+
+  private void chainedMethodsNullCheck(MethodInvocationTree tree) {
+    if (tree.methodSelect() instanceof MemberSelectExpressionTree) {
+      MemberSelectExpressionTree method = (MemberSelectExpressionTree) tree.methodSelect();
+      if (method.expression() instanceof MethodInvocationTree) {
+        MethodInvocationTree invocation = (MethodInvocationTree) method.expression();
+        if (!invocation.symbol().isUnknown() &&
+            isPage(invocation.symbol().owner().type().fullyQualifiedName()) &&
+            isGetContentResourceUsedOnPage(invocation) && !returnOccurredInsideEqualNullCheck
+        ) {
+          context.reportIssue(this, tree, RULE_MESSAGE);
+        }
+      }
     }
   }
 
@@ -183,6 +209,14 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     return METHOD_NAME.equals(tree.methodSelect().lastToken().text());
   }
 
+  private boolean isGetContentResourceUsedOnPage(VariableTree tree) {
+    return tree.initializer() instanceof MethodInvocationTree &&
+        !((MethodInvocationTree) tree.initializer()).symbol().isUnknown() &&
+        isPage(((MethodInvocationTree) tree.initializer()).symbol().owner().type()
+            .fullyQualifiedName()) &&
+        METHOD_NAME.equals(((MethodInvocationTree) tree.initializer()).symbol().name());
+  }
+
   private boolean isGetContentResourceUsedOnResource(AssignmentExpressionTree tree) {
     return isResource(tree) &&
         tree.expression() instanceof MethodInvocationTree &&
@@ -193,21 +227,9 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     return Constants.PAGE.equals(name);
   }
 
-  public boolean isThisAResourceNullCheck(IfStatementTree tree, String ifType) {
+  private boolean isThisAResourceNullCheck(IfStatementTree tree, String ifType) {
     if (ifType.equals(tree.condition().kind().name())) {
-      if (tree.condition().firstToken().parent() instanceof IdentifierTree
-          && Constants.RESOURCE_TYPE.equals(
-          ((IdentifierTree) tree.condition().firstToken().parent()).symbolType()
-              .fullyQualifiedName()) && Kind.NULL_LITERAL
-          .equals(tree.condition().lastToken().parent().kind())) {
-        return true;
-      } else if (tree.condition().lastToken().parent() instanceof IdentifierTree
-          && Constants.RESOURCE_TYPE.equals(
-          ((IdentifierTree) tree.condition().lastToken().parent()).symbolType()
-              .fullyQualifiedName()) && Kind.NULL_LITERAL
-          .equals(tree.condition().firstToken().parent().kind())) {
-        return true;
-      }
+      return isThisANullCheck(tree);
     }
     return false;
   }
@@ -215,5 +237,34 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
   private boolean isRightSideNullCheck(IfStatementTree tree) {
     return Kind.NULL_LITERAL
         .equals(tree.condition().lastToken().parent().kind());
+  }
+
+  private boolean isThisANullCheck(IfStatementTree tree) {
+    if (tree.condition().firstToken().parent() instanceof IdentifierTree &&
+        Constants.RESOURCE_TYPE
+            .equals(((IdentifierTree) tree.condition().firstToken().parent()).symbolType()
+                .fullyQualifiedName()) &&
+        Kind.NULL_LITERAL.equals(tree.condition().lastToken().parent().kind())) {
+      return true;
+    } else if (tree.condition().lastToken().parent() instanceof IdentifierTree &&
+        Constants.RESOURCE_TYPE
+            .equals(((IdentifierTree) tree.condition().lastToken().parent()).symbolType()
+                .fullyQualifiedName()) &&
+        Kind.NULL_LITERAL.equals(tree.condition().firstToken().parent().kind())) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isNonNullUsed(MethodInvocationTree tree) {
+    return NON_NULL_METHOD.equals(tree.methodSelect().lastToken().text());
+  }
+
+  private boolean isAllNonNullUsed(MethodInvocationTree tree) {
+    return ALL_NON_NULL_METHOD.equals(tree.methodSelect().lastToken().text());
+  }
+
+  private boolean isThisIsNullMethod(MethodInvocationTree tree) {
+    return IS_NULL_METHOD.equals(tree.methodSelect().lastToken().text());
   }
 }
