@@ -1,5 +1,5 @@
 {
   "remediation": {
-    "constantCost": "5min"
+    "constantCost": "10min"
   }
 }
