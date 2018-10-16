@@ -53,7 +53,7 @@ public class ContentResourceShouldBeNullCheckedCheck {
     Resource contentResource1 = page1.getContentResource();
     Resource contentResource2 = page2.getContentResource("test");
     if (contentResource1 != null) {
-      Iterable<Resource> childrenB = contentResource2.getChildren(); // Noncompliant
+      Iterable<Resource> children = contentResource2.getChildren(); // Noncompliant
     }
   }
 
