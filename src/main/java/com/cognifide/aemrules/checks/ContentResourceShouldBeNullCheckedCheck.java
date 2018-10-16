@@ -52,7 +52,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
     public static final String RULE_MESSAGE = "Always null check the returned value of Page.getContentResource() method";
 
-    public static final String METHOD_NAME = "getContentResource";
+    public static final String GET_CONTENT_RESOURCE_METHOD = "getContentResource";
 
     public static final String NOT_EQUAL = "NOT_EQUAL_TO";
 
@@ -63,6 +63,8 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     public static final String ALL_NON_NULL_METHOD = "allNotNull";
 
     public static final String IS_NULL_METHOD = "isNull";
+
+    public static final int FIRST_ARGUMENT = 0;
 
     private boolean returnOccurredInsideEqualNullCheck = false;
 
@@ -83,7 +85,6 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     @Override
     public void visitIfStatement(IfStatementTree tree) {
         insideIfStatement = true;
-
         if (isThisAResourceNullCheck(tree, NOT_EQUAL)) {
             updateNullCheckedResources(tree, true);
         } else if (isThisAResourceNullCheck(tree, EQUAL)) {
@@ -115,7 +116,9 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     @Override
     public void visitVariable(VariableTree tree) {
         if (isResourceInitialized(tree)) {
-            shouldBeNullChecked(tree);
+            if (isGetContentResourceUsedOnPage(tree)) {
+                contentResources.put(tree.simpleName().name(), false);
+            }
         }
         super.visitVariable(tree);
     }
@@ -140,12 +143,6 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
         super.visitReturnStatement(tree);
     }
 
-    private void shouldBeNullChecked(VariableTree tree) {
-        if (isGetContentResourceUsedOnPage(tree)) {
-            contentResources.put(tree.simpleName().name(), false);
-        }
-    }
-
     private void cleanFlagsAfterIfStatement(IfStatementTree tree) {
         insideIfStatement = false;
         updateNullCheckedResources(tree, false);
@@ -154,8 +151,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
     private void equalsNullCheck(MethodInvocationTree tree) {
         if (!contentResources.getOrDefault(tree.firstToken().text(), true) &&
-            !returnOccurredInsideEqualNullCheck
-        ) {
+            !returnOccurredInsideEqualNullCheck) {
             context.reportIssue(this, tree, RULE_MESSAGE);
         }
     }
@@ -170,7 +166,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
     private void externalLibraryNullChecks(MethodInvocationTree tree) {
         if (isNonNullUsed(tree)) {
-            contentResources.replace(tree.arguments().get(0).toString(), true);
+            contentResources.replace(tree.arguments().get(FIRST_ARGUMENT).toString(), true);
         } else if (isAllNonNullUsed(tree)) {
             tree.arguments().forEach(contentResource -> contentResources.replace(contentResource.toString(), true));
         } else if (insideIfStatement && isThisIsNullMethod(tree)) {
@@ -185,8 +181,8 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
                 MethodInvocationTree invocation = (MethodInvocationTree) method.expression();
                 if (!invocation.symbol().isUnknown() &&
                     isPage(invocation.symbol().owner().type().fullyQualifiedName()) &&
-                    isGetContentResourceUsedOnPage(invocation) && !returnOccurredInsideEqualNullCheck
-                ) {
+                    isGetContentResourceUsedOnPage(invocation) &&
+                    !returnOccurredInsideEqualNullCheck) {
                     context.reportIssue(this, tree, RULE_MESSAGE);
                 }
             }
@@ -202,7 +198,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     }
 
     private boolean isGetContentResourceUsedOnPage(MethodInvocationTree tree) {
-        return METHOD_NAME.equals(tree.methodSelect().lastToken().text());
+        return GET_CONTENT_RESOURCE_METHOD.equals(tree.methodSelect().lastToken().text());
     }
 
     private boolean isGetContentResourceUsedOnPage(VariableTree tree) {
@@ -210,13 +206,13 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
             !((MethodInvocationTree) tree.initializer()).symbol().isUnknown() &&
             isPage(((MethodInvocationTree) tree.initializer()).symbol().owner().type()
                 .fullyQualifiedName()) &&
-            METHOD_NAME.equals(((MethodInvocationTree) tree.initializer()).symbol().name());
+            GET_CONTENT_RESOURCE_METHOD.equals(((MethodInvocationTree) tree.initializer()).symbol().name());
     }
 
     private boolean isGetContentResourceUsedOnResource(AssignmentExpressionTree tree) {
         return isResource(tree) &&
             tree.expression() instanceof MethodInvocationTree &&
-            METHOD_NAME.equals(((MethodInvocationTree) tree.expression()).symbol().name());
+            GET_CONTENT_RESOURCE_METHOD.equals(((MethodInvocationTree) tree.expression()).symbol().name());
     }
 
     private boolean isPage(String name) {
@@ -224,32 +220,33 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     }
 
     private boolean isThisAResourceNullCheck(IfStatementTree tree, String ifType) {
+        boolean result = false;
         if (ifType.equals(tree.condition().kind().name())) {
-            return isThisANullCheck(tree);
+            result = isThisANullCheck(tree);
         }
-        return false;
+        return result;
     }
 
     private boolean isRightSideNullCheck(IfStatementTree tree) {
-        return Kind.NULL_LITERAL
-            .equals(tree.condition().lastToken().parent().kind());
+        return Kind.NULL_LITERAL.equals(tree.condition().lastToken().parent().kind());
     }
 
     private boolean isThisANullCheck(IfStatementTree tree) {
+        boolean result = false;
         if (tree.condition().firstToken().parent() instanceof IdentifierTree &&
             Constants.RESOURCE_TYPE
                 .equals(((IdentifierTree) tree.condition().firstToken().parent()).symbolType()
                     .fullyQualifiedName()) &&
             Kind.NULL_LITERAL.equals(tree.condition().lastToken().parent().kind())) {
-            return true;
+            result = true;
         } else if (tree.condition().lastToken().parent() instanceof IdentifierTree &&
             Constants.RESOURCE_TYPE
                 .equals(((IdentifierTree) tree.condition().lastToken().parent()).symbolType()
                     .fullyQualifiedName()) &&
             Kind.NULL_LITERAL.equals(tree.condition().firstToken().parent().kind())) {
-            return true;
+            result = true;
         }
-        return false;
+        return result;
     }
 
     private boolean isNonNullUsed(MethodInvocationTree tree) {

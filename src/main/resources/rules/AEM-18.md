@@ -1,7 +1,7 @@
 The [`page.getContentResource()`](https://helpx.adobe.com/experience-manager/6-3/sites/developing/using/reference-materials/javadoc/com/day/cq/wcm/api/Page.html#getContentResource())
 is a method of the [`Page`](https://helpx.adobe.com/experience-manager/6-3/sites/developing/using/reference-materials/diff-previous/changes/com.day.cq.wcm.api.Page.html)
 which allows you to get a Resource from the page.
-It is possible to get a `null` if there is not jcr:content.
+It is possible to get a `null` if jcr:content does not exist.
 
 Lack of jrc:content can be caused by not publishing the parent page.
 
