@@ -64,7 +64,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
     public static final String IS_NULL_METHOD = "isNull";
 
-    public static final int FIRST_ARGUMENT = 0;
+    public static final int METHOD_FIRST_ARGUMENT = 0;
 
     private boolean returnOccurredInsideEqualNullCheck = false;
 
@@ -164,7 +164,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
     private void externalLibraryNullChecks(MethodInvocationTree tree) {
         if (isNonNullUsed(tree)) {
-            contentResources.replace(tree.arguments().get(FIRST_ARGUMENT).toString(), true);
+            contentResources.replace(tree.arguments().get(METHOD_FIRST_ARGUMENT).toString(), true);
         } else if (isAllNonNullUsed(tree)) {
             tree.arguments().forEach(contentResource -> contentResources.replace(contentResource.toString(), true));
         } else if (insideIfStatement && isThisIsNullMethod(tree)) {
