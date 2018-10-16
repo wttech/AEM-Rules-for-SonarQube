@@ -115,10 +115,8 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
     @Override
     public void visitVariable(VariableTree tree) {
-        if (isResourceInitialized(tree)) {
-            if (isGetContentResourceUsedOnPage(tree)) {
-                contentResources.put(tree.simpleName().name(), false);
-            }
+        if (isResourceInitialized(tree) && isGetContentResourceUsedOnPage(tree)) {
+            contentResources.put(tree.simpleName().name(), false);
         }
         super.visitVariable(tree);
     }
