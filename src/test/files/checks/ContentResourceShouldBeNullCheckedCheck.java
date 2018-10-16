@@ -127,4 +127,17 @@ public class ContentResourceShouldBeNullCheckedCheck {
     return result;
   }
 
+  private ValueMap checkForNonNullWithCommonsObjectUtilsAllNotNullMultipleResources(Resource resource) {
+    ValueMap result = new ValueMapDecorator(new HashMap<>());
+    Page page = resource.adaptTo(Page.class);
+    Resource pageResource = page.getContentResource("test");
+    Resource pageResource2 = page.getContentResource("test");
+    Resource pageResource3 = page.getContentResource("test");
+    if (ObjectUtils.allNotNull(pageResource, pageResource2)) {
+      result = pageResource.getValueMap();
+      result = pageResource2.getValueMap();
+      result = pageResource3.getValueMap(); // Noncompliant
+    }
+    return result;
+  }
 }
