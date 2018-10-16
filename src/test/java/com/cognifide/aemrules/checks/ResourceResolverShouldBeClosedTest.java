@@ -19,8 +19,9 @@
  */
 package com.cognifide.aemrules.checks;
 
-import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
 import org.junit.Test;
+
+import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
 
 public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
 
@@ -43,6 +44,20 @@ public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
 		check = new ResourceResolverShouldBeClosed();
 		filename = "src/test/files/checks/LongSessionService.java";
 		verifyNoIssues();
+	}
+
+	@Test
+	public void checkResourceResolverClosedInDeactivateMethod() {
+		check = new ResourceResolverShouldBeClosed();
+		filename = "src/test/files/checks/LongSessionEventListener.java";
+		verifyNoIssues();
+	}
+
+	@Test
+	public void checkResourceResolverClosedInDeactivateMethodError() {
+		check = new ResourceResolverShouldBeClosed();
+		filename = "src/test/files/checks/LongResourceResolverEvenListenerError.java";
+		verify();
 	}
 
 }

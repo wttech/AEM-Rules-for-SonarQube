@@ -77,10 +77,14 @@ public class LongSessionService implements EventListener {
 			registration.unregister();
 			registration = null;
 		}
-		unregisterObservation();
-		if (resolver != null) {
-			resolver.close();
-			resolver = null;
+		try {
+			unregisterObservation();
+		}
+		finally {
+			if (resolver != null) {
+				resolver.close();
+				resolver = null;
+			}
 		}
 	}
 

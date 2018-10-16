@@ -1,5 +1,5 @@
-It is not safe to keep session based object as a field in ``Servlet`` or ``Filter``.
-Rule checks for the occurrence of any instance or static fields of following types:
+It is not safe to keep session based object as a field in ``Servlet``, ``Filter``, or ``EventHandler``.
+As well as any Declarative Services component. Rule checks for the occurrence of any instance or static fields of following types:
 * org.apache.sling.api.resource.ResourceResolver
 * javax.jcr.Session
 * com.day.cq.wcm.api.PageManager

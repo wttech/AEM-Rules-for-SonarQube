@@ -4,7 +4,7 @@
 
     <groupId>com.cognifide.aemrules</groupId>
     <artifactId>aemrules</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.10-RC2-SNAPSHOT</version>
 
     <name>AEM Rules for SonarQube</name>
     <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM
@@ -67,8 +67,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.version>5.6.1</sonar.version>
-        <sonar.java.plugin>4.0</sonar.java.plugin>
+        <sonar.version>6.4</sonar.version>
+        <sonar.java.plugin>4.10.0.10260</sonar.java.plugin>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
         <tagName>v${project.version}</tagName>
     </properties>
@@ -77,6 +77,10 @@
         <repository>
             <id>adobe-releases</id>
             <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>http://central.maven.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -94,14 +98,18 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.sonarsource.java</groupId>
-            <artifactId>java-checks</artifactId>
-            <version>${sonar.java.plugin}</version>
-            <scope>provided</scope>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
         </dependency>
 
         <!-- Unit Test dependencies -->
-
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.6.2</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -174,6 +182,24 @@
             <version>1.1.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <version>4.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.component.annotations</artifactId>
+            <version>1.3.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -190,7 +216,7 @@
             <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.17</version>
+                <version>1.18.0.372</version>
                 <extensions>true</extensions>
                 <configuration>
                     <pluginKey>aemrules</pluginKey>
@@ -202,9 +228,10 @@
                     <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/${tagName}
                     </pluginSourcesUrl>
                     <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
-                    <skipDependenciesPackaging>true</skipDependenciesPackaging>
-                    <requirePlugins>java:${sonar.java.plugin}</requirePlugins>
+                    <skipDependenciesPackaging>false</skipDependenciesPackaging>
+                    <requirePlugins>java:4.10</requirePlugins>
                     <basePlugin>java</basePlugin>
+                    <sonarQubeMinVersion>5.6.6</sonarQubeMinVersion>
                 </configuration>
             </plugin>
             <plugin>
@@ -265,6 +292,33 @@
                         <goals>
                             <goal>format</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--
+                Maven dependency plugin is necessary for JavaCheckVerifier.verifyNoIssue to work properly. It copies
+                dependencies other than "provided" to test-jars folder.
+                Warning! If you remove it, tests which call JavaCheckVerifier.verifyNoIssue will
+                always pass, even if they are incorrect.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeScope>provided</excludeScope>
+                            <outputDirectory>${project.build.directory}/test-jars</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

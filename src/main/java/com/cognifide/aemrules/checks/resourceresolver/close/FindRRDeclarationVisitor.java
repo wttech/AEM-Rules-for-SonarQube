@@ -19,14 +19,22 @@
  */
 package com.cognifide.aemrules.checks.resourceresolver.close;
 
-import com.google.common.collect.Sets;
-
-import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.tree.*;
-import org.sonar.plugins.java.api.tree.Tree.Kind;
-
 import java.util.Collection;
 import java.util.Set;
+
+import org.sonar.plugins.java.api.semantic.Symbol;
+import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
+import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.ReturnStatementTree;
+import org.sonar.plugins.java.api.tree.Tree;
+import org.sonar.plugins.java.api.tree.Tree.Kind;
+import org.sonar.plugins.java.api.tree.TryStatementTree;
+import org.sonar.plugins.java.api.tree.VariableTree;
+
+import com.google.common.collect.Sets;
 
 /**
  * Finds all injector variable declarations. Used in method's bodies only. Works only for declaration within the same
@@ -50,7 +58,7 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 
 	@Override
 	public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-		if (isExpressionAMethodInvocation(tree) && isVaraibleAnIdentifier(tree)) {
+		if (isExpressionAMethodInvocation(tree) && isVariableAnIdentifier(tree)) {
 			final MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.expression();
 			final IdentifierTree identifier = (IdentifierTree) tree.variable();
 			if (isManuallyCreatedResourceResolver(methodInvocation)) {
@@ -80,7 +88,7 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 		return tree.expression().is(Kind.METHOD_INVOCATION);
 	}
 
-	private boolean isVaraibleAnIdentifier(AssignmentExpressionTree tree) {
+	private boolean isVariableAnIdentifier(AssignmentExpressionTree tree) {
 		return tree.variable().is(Kind.IDENTIFIER);
 	}
 
@@ -143,6 +151,21 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 		}
 
 		@Override
+		public void visitVariable(VariableTree tree) {
+			if (isAMethodInvocation(tree) && variableIsEqualToReturnedVariableIn(tree)) {
+				MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.initializer();
+				if (isManuallyCreatedResourceResolver(methodInvocation)) {
+					this.createdManually = true;
+				} else {
+					CheckIfRRCreatedManually rrCreatedManually = new CheckIfRRCreatedManually();
+					getMethodTree(methodInvocation).accept(rrCreatedManually);
+					this.createdManually = rrCreatedManually.isCreatedManually();
+				}
+			}
+			super.visitVariable(tree);
+		}
+
+		@Override
 		public void visitAssignmentExpression(AssignmentExpressionTree tree) {
 			if (isExpressionAMethodInvocation(tree) && variableIsEqualToReturnedVariableIn(tree)) {
 				MethodInvocationTree methodInvocation = (MethodInvocationTree) tree.expression();
@@ -157,12 +180,29 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 			super.visitAssignmentExpression(tree);
 		}
 
+		private boolean isAMethodInvocation(VariableTree tree) {
+			boolean returnVal = false;
+			if (tree.initializer() != null) {
+				returnVal = tree.initializer().is(Kind.METHOD_INVOCATION);
+			}
+			return returnVal;
+		}
+
 		private boolean variableIsEqualToReturnedVariableIn(AssignmentExpressionTree tree) {
 			return tree.variable().is(Kind.IDENTIFIER)
 				&& getDeclaration((IdentifierTree) tree.variable()).equals(declarationOfReturnedVariable);
 		}
 
-		public boolean isCreatedManually() {
+		private boolean variableIsEqualToReturnedVariableIn(VariableTree tree) {
+			return tree.is(Kind.VARIABLE)
+					&& getDeclarationFromVariable(tree).equals(declarationOfReturnedVariable);
+		}
+
+		private Tree getDeclarationFromVariable(VariableTree variable) {
+			return variable.symbol().declaration();
+		}
+
+		boolean isCreatedManually() {
 			return createdManually;
 		}
 
@@ -181,7 +221,7 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
 			super.visitReturnStatement(tree);
 		}
 
-		public Tree getDeclarationOfReturnedVariable() {
+		Tree getDeclarationOfReturnedVariable() {
 			return declarationOfReturnedVariable;
 		}
 

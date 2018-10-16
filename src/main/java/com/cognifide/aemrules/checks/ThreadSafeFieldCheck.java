@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.tree.AnnotationTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.ClassTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -50,12 +51,20 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 	public static final String RULE_MESSAGE = "Usage of %s as a field is not thread safe.";
 
 	private static Set<String> vulnerableClasses = Sets.newHashSet(
-			"org.apache.sling.api.servlets.SlingSafeMethodsServlet",
-			"org.apache.sling.api.servlets.SlingAllMethodsServlet"
+			// empty for now
 	);
 
 	private static Set<String> vulnerableInterfaces = Sets.newHashSet(
-			"javax.servlet.Filter"
+			"javax.servlet.Servlet",
+			"javax.servlet.Filter",
+			"org.osgi.service.event.EventHandler"
+	);
+
+	private static Set<String> vulnerableAnnotations = Sets.newHashSet(
+			"org.apache.felix.scr.annotations.Component",
+			"org.osgi.service.component.annotations.Component",
+			"org.apache.felix.scr.annotations.sling.SlingServlet", // this is possibly duplicative, but that shouldn't be a problem.
+			"org.apache.felix.scr.annotations.sling.SlingFilter" // this is possibly duplicative, but that shouldn't be a problem.
 	);
 
 	private static Set<String> nonThreadSafeTypes = Sets.newHashSet(
@@ -69,9 +78,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 			"com.day.cq.security.UserManager",
 			"org.apache.jackrabbit.api.security.user.Authorizable",
 			"org.apache.jackrabbit.api.security.user.User",
-			"org.apache.jackrabbit.api.security.user.UserManager",
-			"com.day.cq.search.QueryBuilder",
-			"com.day.cq.commons.Externalizer");
+			"org.apache.jackrabbit.api.security.user.UserManager");
 
 	private JavaFileScannerContext context;
 
@@ -85,7 +92,8 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 	public void visitClass(ClassTree classTree) {
 		boolean extendsClass = extendsVulnerableClass(classTree);
 		boolean implementsInterface = implementsVulnerableInterface(classTree);
-		boolean vulnerable = extendsClass || implementsInterface;
+		boolean hasAnnotation = hasAnnotation(classTree);
+		boolean vulnerable = extendsClass || implementsInterface || hasAnnotation;
 		if (vulnerable) {
 			checkMembers(classTree);
 		}
@@ -109,13 +117,13 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 		}
 	}
 
-	private boolean implementsVulnerableInterface(ClassTree clazz) {
-		boolean implementsInterface = false;
-		for (TypeTree typeTree : clazz.superInterfaces()) {
-			String name = typeTree.symbolType().fullyQualifiedName();
-			implementsInterface |= vulnerableInterfaces.contains(name);
+	private boolean hasAnnotation(ClassTree clazz) {
+		boolean hasAnnotation = false;
+		for (AnnotationTree annotationTree : clazz.modifiers().annotations()) {
+			String name = annotationTree.annotationType().symbolType().fullyQualifiedName();
+			hasAnnotation |= vulnerableAnnotations.contains(name);
 		}
-		return implementsInterface;
+		return hasAnnotation;
 	}
 
 	private boolean extendsVulnerableClass(ClassTree clazz) {
@@ -126,6 +134,15 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 			extendsClass = vulnerableClasses.contains(name);
 		}
 		return extendsClass;
+	}
+
+	private boolean implementsVulnerableInterface(ClassTree clazz) {
+		boolean implementsInterface = false;
+		for (TypeTree typeTree : clazz.superInterfaces()) {
+			String name = typeTree.symbolType().fullyQualifiedName();
+			implementsInterface |= vulnerableInterfaces.contains(name);
+		}
+		return implementsInterface;
 	}
 
 }

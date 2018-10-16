@@ -19,7 +19,11 @@
  */
 package com.example;
 
-import com.google.common.collect.Maps;
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -32,11 +36,9 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.Map;
+import com.google.common.collect.Maps;
 
-@SlingServlet(paths = "somePath", methods = { HttpConstants.METHOD_GET })
+@SlingServlet(paths = "somePath", methods = {HttpConstants.METHOD_GET})
 public class SampleServlet extends SlingAllMethodsServlet {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServlet.class);
@@ -80,14 +82,32 @@ public class SampleServlet extends SlingAllMethodsServlet {
 		} else {
 			resolver = factory.getServiceResourceResolver(null);
 		}
+		return resolver;
+	}
 
+	public static ResourceResolver getResourceResolverForUserNested(ResourceResolverFactory factory, String userId)
+			throws LoginException {
+		ResourceResolver resolver;
+		resolver = getResourceResolverForUser(resourceResolverFactory, userId);
+		return resolver;
+	}
+
+	public static ResourceResolver getResourceResolverForUserInit(ResourceResolverFactory factory)
+			throws LoginException {
+		ResourceResolver resolver = factory.getServiceResourceResolver(null);
+		return resolver;
+	}
+
+	public static ResourceResolver getResourceResolverForUserNestedInit(ResourceResolverFactory factory)
+			throws LoginException {
+		ResourceResolver resolver = getResourceResolverForUserInit(resourceResolverFactory);
 		return resolver;
 	}
 
 	public void checkCorrectJumpMethod() {
 		ResourceResolver resourceResolver = null;
 		try {
-			resourceResolver = getResourceResolverForUser(resourceResolverFactory, null);
+			resourceResolver = getResourceResolverForUserNested(resourceResolverFactory, null);
 		} catch (LoginException e) {
 			e.printStackTrace();
 		} finally {
@@ -100,7 +120,7 @@ public class SampleServlet extends SlingAllMethodsServlet {
 	public void checkWrongJumpMethod() {
 		ResourceResolver resourceResolver = null; // Noncompliant
 		try {
-			resourceResolver = getResourceResolverForUser(resourceResolverFactory, null);
+			resourceResolver = getResourceResolverForUserNestedInit(resourceResolverFactory);
 		} catch (LoginException e) {
 			e.printStackTrace();
 		} finally {

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube.svg?branch=master)](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube)
 [![Coverage Status](https://coveralls.io/repos/github/Cognifide/AEM-Rules-for-SonarQube/badge.svg?branch=master)](https://coveralls.io/github/Cognifide/AEM-Rules-for-SonarQube?branch=master)
-[![Quality Gate](https://sonarqube.com/api/badges/gate?key=com.cognifide.aemrules%3Aaemrules)](https://sonarqube.com/overview?id=com.cognifide.aemrules%3Aaemrules)
+[![Quality Gate](https://sonarqube.com/api/badges/gate?key=com.cognifide.aemrules%3Aaemrules)](https://sonarqube.com/dashboard?id=com.cognifide.aemrules%3Aaemrules)
 # About AEM Rules for SonarQube
 
 ![AEM Rules for SonarQube](https://raw.githubusercontent.com/Cognifide/AEM-Rules-for-SonarQube/master/assets/logo.png)
@@ -49,8 +49,8 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **AEM-15** Usage of ``synchronized`` keyword should be avoided if possible.
   - Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.
 
-- **AEM-17** No changeable methods invoked on ``ModifiableValueMap``
-  - ``ModifiableValueMap`` should be replaced by ``ValueMap`` if no changeable methods invoked.
+- **AEM-17** No mutator methods invoked on ``ModifiableValueMap``
+  - ``ModifiableValueMap`` should be replaced by ``ValueMap`` if no mutator methods are invoked.
 
 ## Possible bugs
 
@@ -67,8 +67,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
     - `org.apache.jackrabbit.api.security.user.Authorizable`
     - `org.apache.jackrabbit.api.security.user.User`
     - `org.apache.jackrabbit.api.security.user.UserManager`
-    - `com.day.cq.search.QueryBuilder`
-    - `com.day.cq.commons.Externalizer`
 
 - **AEM-6** ResourceResolver should be closed in finally block.
   - According to its [Javadoc](https://sling.apache.org/apidocs/sling6/org/apache/sling/api/resource/ResourceResolver.html), Resource Resolver has a life cycle which begins with the creation of the Resource Resolver using any of the factory methods and ends with calling the `close` method. It is very important to call the `close` method once the resource resolver is not used any more to ensure any system resources are properly clean up.

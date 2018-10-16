@@ -82,10 +82,12 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
 	public void visitClass(ClassTree tree) {
 		if (isSlingServlet(tree)) {
 			scan(tree.modifiers());
-			if (!annotations.hasSlingServletAnnotation()) {
-				context.reportIssue(this, tree, RULE_MESSAGE);
-			} else if (annotations.hasMixedUpAnnotations()) {
-				context.reportIssue(this, tree, "@Component nor @Service annotation is not needed when @SlingServlet is used.");
+			if (!annotations.hasStandardComponentAnnotation()) {
+				if (!annotations.hasSlingServletAnnotation()) {
+					context.reportIssue(this, tree, RULE_MESSAGE);
+				} else if (annotations.hasMixedUpAnnotations()) {
+					context.reportIssue(this, tree, "@Component nor @Service annotation is not needed when @SlingServlet is used.");
+				}
 			}
 		}
 	}
@@ -151,26 +153,31 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
 
 	private class CheckAppliedAnnotationsVisitor extends BaseTreeVisitor {
 
-		private boolean serviceAnnotation;
+		private boolean legacyServiceAnnotation;
 
-		private boolean componentAnnotation;
+		private boolean legacyComponentAnnotation;
+
+		private boolean standardComponentAnnotation;
 
 		private boolean slingServletAnnotation;
 
 		@Override
 		public void visitAnnotation(AnnotationTree annotationTree) {
-			serviceAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Service");
-			componentAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Component");
+			standardComponentAnnotation |= isOfType(annotationTree, "org.osgi.service.component.annotations.Component");
+			legacyServiceAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Service");
+			legacyComponentAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Component");
 			slingServletAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.sling.SlingServlet");
 			super.visitAnnotation(annotationTree);
 		}
 
 		public boolean hasMixedUpAnnotations() {
-			return slingServletAnnotation && (serviceAnnotation || componentAnnotation);
+			return slingServletAnnotation && (legacyServiceAnnotation || legacyComponentAnnotation);
 		}
 
 		public boolean hasSlingServletAnnotation() {
 			return slingServletAnnotation;
 		}
+
+		public boolean hasStandardComponentAnnotation() { return standardComponentAnnotation; }
 	}
 }
