@@ -1,8 +1,11 @@
 language: java
 script: mvn clean package
 jdk:
-  - oraclejdk8
+- oraclejdk8
+
+env:
+  - secure: dB5bagwpVIxYHzWdRHz56Beh8PBr+vZEMPgFC2lbNfYNYgFg8pCn8DTbO73mqUOJssNoD1hEPf0wysF9btzPP/krF2SakrWtr2ZqeDBMZ8kJBmsnuTq1Z5BSDXh3NBdAtBi1Z4AvPrT9HDJ51TaxovLWmnQ88ki117hADKKXSlK4ZsqoihyfvaPDT11VDUlYz2vDtsee85rnvFkQGostuiJsxGu7PzZZpXwHNl5bJMKaxOG+8ml52rqkybTfKD4tWynJcSSjSxs9lsM5AUbsC7vw3buxCDHdwaZ6rINlmm9rlp4yP5n3HT7FrXDGB9QWALJs6wsZRYpy/zbin1Lw+TFc2DOqHoRWYWs20PlwX1XBoHI4ICUKaVCNPZbWkmXTdb0rYsAzWYghWexcODKqv8W1FaUD5ygsqjJuJccy6KarGqt99IpxQ83V2DmKPPyoB71ZTKB3Vl3kjWUN6sBXNFRAbpKBvLT2EpNb7+QNpFvH2fka0kNS4u4xjJqTeQlVDsH+RMp8m7BtYCI2yLHtZMVwFePZQylQPv/Xx3hM+mWYBI0cIdzVzCDG6x8V4oBSrL/RNmC10Xs6GGwLw8wfEIMgNNy9PjXJmYRsqK1EZllLF98kWZZXuaoc3wxlDfxw1q/9yJSAEDOi/deGhVBRGQjEkLWggYLxH9inC//bJz8=
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=${sonar.login}
+- mvn clean cobertura:cobertura coveralls:report
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarqube.io -Dsonar.login=$SONAR_LOGIN
