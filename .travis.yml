@@ -8,4 +8,4 @@ env:
 
 after_success:
 - mvn clean cobertura:cobertura coveralls:report
-- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarqube.io -Dsonar.login=$SONAR_LOGIN
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.projectKey=AEM-Rules-for-SonarQube -Dsonar.organization=chutch-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN

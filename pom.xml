@@ -264,11 +264,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.sonar</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>5.6.1</version>
-            </plugin>
-            <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <version>2.11</version>
