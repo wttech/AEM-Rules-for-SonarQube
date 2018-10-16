@@ -25,10 +25,12 @@ import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
+import com.google.gson.Gson;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.rule.RuleStatus;
+import org.sonar.api.server.debt.DebtRemediationFunction;
 import org.sonar.api.server.rule.RuleParamType;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.AnnotationUtils;
@@ -45,6 +47,13 @@ import java.util.List;
 public class RulesLoader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
+
+	private static final String RULE_DESCRIPTION_FOLDER = "rules";
+	private static final String RULE_DESCRIPTION_EXTENSION = "md";
+	private static final String RULE_METADATA_FOLDER = "metadata";
+	private static final String RULE_METADATA_EXTENSION = "json";
+
+	private final Gson gson = new Gson();
 
 	private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
 			ImmutableMap.<Class<?>, RuleParamType>builder()
@@ -78,13 +87,15 @@ public class RulesLoader {
 	private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz, Rule ruleAnnotation) {
 		String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
 		String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
-		String description = StringUtils.defaultIfEmpty(getDescriptionFromResources(ruleKey), "No description yet.");
+		String description = StringUtils.defaultIfEmpty(loadDescription(ruleKey), "No description yet.");
 
 		RulesDefinition.NewRule rule = repo.createRule(ruleKey);
 		rule.setName(ruleName).setMarkdownDescription(description);
 		rule.setSeverity(ruleAnnotation.priority().name());
 		rule.setStatus(RuleStatus.valueOf(ruleAnnotation.status()));
 		rule.setTags(ruleAnnotation.tags());
+
+		addMetadata(rule);
 
 		List<Field> fields = FieldUtils2.getFields(clazz, true);
 		for (Field field : fields) {
@@ -94,14 +105,30 @@ public class RulesLoader {
 		return rule;
 	}
 
-	protected String getDescriptionFromResources(String ruleKey) {
+	private void addMetadata(RulesDefinition.NewRule rule) {
+		String json = loadMetadata(rule.key());
+		if(json != null) {
+			RuleMetadata ruleMetadata = gson.fromJson(json, RuleMetadata.class);
+			rule.setDebtRemediationFunction(ruleMetadata.remediation.remediationFunction(rule.debtRemediationFunctions()));
+		}
+	}
+
+	protected String loadDescription(String ruleKey) {
+		return loadResource(RULE_DESCRIPTION_FOLDER, ruleKey, RULE_DESCRIPTION_EXTENSION);
+	}
+
+	protected String loadMetadata(String ruleKey) {
+		return loadResource(RULE_METADATA_FOLDER, ruleKey, RULE_METADATA_EXTENSION);
+	}
+
+	protected String loadResource(String resourceFolder, String ruleKey, String fileExtension) {
 		String result = null;
 		try {
-			String path = String.format("/rules/%s.md", ruleKey);
+			String path = String.format("/%s/%s.%s", resourceFolder, ruleKey, fileExtension);
 			URL url = Resources.getResource(RulesLoader.class, path);
 			result = Resources.toString(url, Charsets.UTF_8);
 		} catch (IOException | IllegalArgumentException e) {
-			LOG.error("Cannot read resource file with rule description.", e);
+			LOG.error("Cannot read resource file.", e);
 		}
 		return result;
 	}
@@ -129,5 +156,17 @@ public class RulesLoader {
 	@VisibleForTesting
 	static RuleParamType guessType(Class<?> type) {
 		return TYPE_FOR_CLASS.apply(type);
+	}
+
+	private static class RuleMetadata {
+		Remediation remediation;
+	}
+
+	private static class Remediation {
+		String constantCost;
+
+		public DebtRemediationFunction remediationFunction(RulesDefinition.DebtRemediationFunctions remediationFn) {
+			return remediationFn.constantPerIssue(constantCost);
+		}
 	}
 }
