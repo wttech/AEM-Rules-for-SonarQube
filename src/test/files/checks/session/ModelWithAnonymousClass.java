@@ -86,8 +86,7 @@ public class ModelWithAnonymousClass implements InitializableModel {
             .transform(new Function<String, String>() {
                 @Override
                 public String apply(String path) {
-                    Resource resource = resourceResolver.getResource(
-                        path); // Noncompliant {{Objects annotated by @SliceResource should not use or return any session based object, except in constructor or com.cognifide.slice.api.model.InitializableModel.afterCreated().}}
+                    Resource resource = resourceResolver.getResource(path); // Noncompliant {{Objects annotated by @SliceResource should not use or return any session based object, except in constructor or com.cognifide.slice.api.model.InitializableModel.afterCreated().}}
                     return resource.getValueMap().get(property, String.class);
                 }
             }).filter(Predicates.notNull())

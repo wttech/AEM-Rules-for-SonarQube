@@ -36,10 +36,8 @@ import java.io.IOException;
     methods = {"POST"} // Noncompliant {{Use constant METHOD_POST from class org.apache.sling.api.servlets.HttpConstants instead of hardcoded value.}}
 )
 @Properties({
-    @Property(name = "service.vendor", value = ZenGardenConstants.VENDOR_NAME),
-    // Noncompliant {{Use constant SERVICE_VENDOR from interface org.osgi.framework.Constants instead of hardcoded value.}}
-    @Property(name = "service.description", value = "Provides import process.")
-    // Noncompliant {{Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants instead of hardcoded value.}}
+    @Property(name = "service.vendor", value = ZenGardenConstants.VENDOR_NAME), // Noncompliant {{Use constant SERVICE_VENDOR from interface org.osgi.framework.Constants instead of hardcoded value.}}
+    @Property(name = "service.description", value = "Provides import process.") // Noncompliant {{Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants instead of hardcoded value.}}
 })
 public class AnnotationsConstantsCheck extends SlingAllMethodsServlet {
 
@@ -50,8 +48,7 @@ public class AnnotationsConstantsCheck extends SlingAllMethodsServlet {
         throws ServletException, IOException {
     }
 
-    @Override("service.description")
-    // Noncompliant {{Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants instead of hardcoded value.}}
+    @Override("service.description") // Noncompliant {{Use constant SERVICE_DESCRIPTION from interface org.osgi.framework.Constants instead of hardcoded value.}}
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
         throws ServletException, IOException {
     }

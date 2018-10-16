@@ -39,8 +39,7 @@ class A {
     public ResourceResolver getResourceResolver(Map<String, Object> credentials) {
         ResourceResolver resolver = null;
         try {
-            resolver = resolverFactory.getAdministrativeResourceResolver(
-                credentials); // Noncompliant {{Method 'getAdministrativeResourceResolver' is deprecated. Use 'getServiceResourceResolver' instead.}}
+            resolver = resolverFactory.getAdministrativeResourceResolver(credentials); // Noncompliant {{Method 'getAdministrativeResourceResolver' is deprecated. Use 'getServiceResourceResolver' instead.}}
         } catch (LoginException e) {
             //
         }

@@ -34,8 +34,7 @@ public class ClosingInjector {
     }
 
     private void firstCase(ResourceResolver resourceResolver, String path) {
-        InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME,
-            resourceResolver); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
+        InjectorWithContext injector = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // Noncompliant {{Injector should be closed in finally block or created as a resource within try block.}}
         InjectorWithContext injector2 = InjectorUtil.getInjector(INJECTOR_NAME, resourceResolver); // Noncompliant
         ModelProvider modelProvider = injector.getInstance(ModelProvider.class);
         injector2.close();
