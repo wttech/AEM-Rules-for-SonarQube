@@ -48,11 +48,11 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-    private static final String SLICE_RESOURCE_ANNOTATION = "com.cognifide.slice.mapper.annotation.SliceResource";
-
     public static final String RULE_KEY = "AEM-12";
 
     public static final String RULE_MESSAGE = "Fields annotated by @JcrProperty shouldn't be accessed from constructor.";
+
+    private static final String SLICE_RESOURCE_ANNOTATION = "com.cognifide.slice.mapper.annotation.SliceResource";
 
     private final Set<String> annotatedVariables = Sets.newHashSet();
 

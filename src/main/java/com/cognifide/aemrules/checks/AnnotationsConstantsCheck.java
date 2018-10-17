@@ -39,7 +39,7 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
     tags = Tags.AEM
 )
 @AemVersion(
-		all = true
+    all = true
 )
 public class AnnotationsConstantsCheck extends BaseTreeVisitor implements JavaFileScanner {
 

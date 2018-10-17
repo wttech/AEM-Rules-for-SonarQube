@@ -22,6 +22,8 @@ package com.cognifide.aemrules.checks;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.ImmutableSet;
+import java.util.List;
+import java.util.Set;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.java.ast.parser.ArgumentListTreeImpl;
@@ -35,23 +37,24 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import java.util.List;
-import java.util.Set;
-
 @Rule(
     key = ModifiableValueMapUsageCheck.RULE_KEY,
     name = ModifiableValueMapUsageCheck.RULE_MESSAGE,
     priority = Priority.CRITICAL,
-    tags = Tags.AEM)
+    tags = Tags.AEM
+)
+@AemVersion(
+    all = true
+)
 public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements JavaFileScanner {
-
-    private static final String MODIFIABLE_VALUE_MAP_FULL_NAME = "org.apache.sling.api.resource.ModifiableValueMap";
-
-    private static final Set<String> MUTABLE_METHODS = ImmutableSet.of("put", "putAll", "remove");
 
     protected static final String RULE_KEY = "AEM-17";
 
     protected static final String RULE_MESSAGE = "No mutator methods invoked on ModifiableValueMap";
+
+    private static final String MODIFIABLE_VALUE_MAP_FULL_NAME = "org.apache.sling.api.resource.ModifiableValueMap";
+
+    private static final Set<String> MUTABLE_METHODS = ImmutableSet.of("put", "putAll", "remove");
 
     private JavaFileScannerContext context;
 

@@ -23,6 +23,7 @@ import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.ConstantsChecker;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -31,8 +32,6 @@ import org.sonar.plugins.java.api.tree.LiteralTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
-import java.util.List;
-
 @Rule(
     key = ConstantsCheck.RULE_KEY,
     name = ConstantsCheck.RULE_MESSAGE,
@@ -40,13 +39,13 @@ import java.util.List;
     tags = Tags.AEM
 )
 @AemVersion(
-		all = true
+    all = true
 )
 public class ConstantsCheck extends IssuableSubscriptionVisitor {
 
-    protected static final String RULE_KEY = "AEM-2";
-
     public static final String RULE_MESSAGE = "Use predefined constant instead of hardcoded value.";
+
+    protected static final String RULE_KEY = "AEM-2";
 
     @Override
     public List<Kind> nodesToVisit() {
