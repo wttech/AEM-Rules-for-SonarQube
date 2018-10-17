@@ -21,10 +21,9 @@ package com.example;
 
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
-import org.apache.commons.lang.StringUtils;
-
-import javax.inject.Inject;
 import java.util.Properties;
+import javax.inject.Inject;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Krzysztof Watral
