@@ -37,13 +37,13 @@ import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(
-		key = DefaultInjectionStrategyAnnotationCheck.RULE_KEY,
-		name = DefaultInjectionStrategyAnnotationCheck.RULE_MESSAGE,
-		priority = Priority.MINOR,
-		tags = {Tags.AEM, Tags.SLING_MODELS}
+    key = DefaultInjectionStrategyAnnotationCheck.RULE_KEY,
+    name = DefaultInjectionStrategyAnnotationCheck.RULE_MESSAGE,
+    priority = Priority.MINOR,
+    tags = {Tags.AEM, Tags.SLING_MODELS}
 )
 @AemVersion(
-		all = true
+    all = true
 )
 public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor implements JavaFileScanner {
 

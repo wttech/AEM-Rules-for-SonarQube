@@ -26,55 +26,54 @@ import org.apache.commons.lang.StringUtils;
 
 public class Version {
 
-  private static final Pattern VERSION_PATTERN = Pattern
-      .compile("(?<major>[0-9]+)\\.(?<minor>[0-9])");
+    private static final Pattern VERSION_PATTERN = Pattern.compile("(?<major>[0-9]+)\\.(?<minor>[0-9])");
 
-  private final int major;
+    private final int major;
 
-  private final int minor;
+    private final int minor;
 
-  private Version(int major, int minor) {
-    this.major = major;
-    this.minor = minor;
-  }
-
-  public static Version of(String version, String defaultVersion) {
-    return of(StringUtils.defaultIfEmpty(version, defaultVersion));
-  }
-
-  public static Version of(String version) {
-    Matcher versionMatcher = VERSION_PATTERN.matcher(version);
-    if (!versionMatcher.matches()) {
-      throw new IllegalArgumentException(
-          "Incorrect AEM version format provided: " + version + " expected pattern: [0-9]+.[0-9]");
+    private Version(int major, int minor) {
+        this.major = major;
+        this.minor = minor;
     }
-    int major = Integer.parseInt(versionMatcher.group("major"));
-    int minor = Integer.parseInt(versionMatcher.group("minor"));
 
-    return new Version(major, minor);
-  }
-
-  public boolean isEqualOrGreaterThan(Version version) {
-    return version.major < this.major
-        || (version.major == this.major && version.minor <= this.minor);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public static Version of(String version, String defaultVersion) {
+        return of(StringUtils.defaultIfEmpty(version, defaultVersion));
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Version version = (Version) o;
-    return major == version.major &&
-        minor == version.minor;
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(major, minor);
-  }
+    public static Version of(String version) {
+        Matcher versionMatcher = VERSION_PATTERN.matcher(version);
+        if (!versionMatcher.matches()) {
+            throw new IllegalArgumentException(
+                "Incorrect AEM version format provided: " + version + " expected pattern: [0-9]+.[0-9]");
+        }
+        int major = Integer.parseInt(versionMatcher.group("major"));
+        int minor = Integer.parseInt(versionMatcher.group("minor"));
+
+        return new Version(major, minor);
+    }
+
+    public boolean isEqualOrGreaterThan(Version version) {
+        return version.major < this.major
+            || (version.major == this.major && version.minor <= this.minor);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Version version = (Version) o;
+        return major == version.major &&
+            minor == version.minor;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(major, minor);
+    }
 
 }

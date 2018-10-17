@@ -25,6 +25,8 @@ import com.cognifide.aemrules.checks.visitors.FindVariableDeclarationVisitor;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Set;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -34,9 +36,6 @@ import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import java.util.List;
-import java.util.Set;
-
 @Rule(
     key = InjectorShouldBeClosedCheck.RULE_KEY,
     name = InjectorShouldBeClosedCheck.RULE_MESSAGE,
@@ -44,15 +43,15 @@ import java.util.Set;
     tags = Tags.AEM
 )
 @AemVersion(
-		all = true
+    all = true
 )
 public class InjectorShouldBeClosedCheck extends BaseTreeVisitor implements JavaFileScanner {
-
-    private static final String CLASS_INJECTOR_NAME = "com.cognifide.slice.api.injector.InjectorWithContext";
 
     protected static final String RULE_KEY = "AEM-4";
 
     protected static final String RULE_MESSAGE = "Injector should be closed in finally block or created as a resource within try block.";
+
+    private static final String CLASS_INJECTOR_NAME = "com.cognifide.slice.api.injector.InjectorWithContext";
 
     protected JavaFileScannerContext context;
 
