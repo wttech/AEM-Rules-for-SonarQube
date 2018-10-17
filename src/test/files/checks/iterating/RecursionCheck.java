@@ -19,27 +19,26 @@
  */
 package com.example;
 
+import java.util.Iterator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.resource.Resource;
 
-import java.util.Iterator;
-
 public class RecursionCheck {
 
-	public void processResource(Resource resource) {
-		if (isGreen(resource) || isRed(resource)) {
-			Iterator<Resource> iterator = resource.listChildren();
-			while (iterator.hasNext()) {
-				processResource(iterator.next());
-			}
-		}
-	}
+    public void processResource(Resource resource) {
+        if (isGreen(resource) || isRed(resource)) {
+            Iterator<Resource> iterator = resource.listChildren();
+            while (iterator.hasNext()) {
+                processResource(iterator.next());
+            }
+        }
+    }
 
-	private boolean isGreen(Resource resource) {
-		return StringUtils.equals("green", resource.getValueMap().get("colour", String.class));
-	}
+    private boolean isGreen(Resource resource) {
+        return StringUtils.equals("green", resource.getValueMap().get("colour", String.class));
+    }
 
-	private boolean isRed(Resource resource) {
-		return StringUtils.equals("red", resource.getValueMap().get("colour", String.class));
-	}
+    private boolean isRed(Resource resource) {
+        return StringUtils.equals("red", resource.getValueMap().get("colour", String.class));
+    }
 }

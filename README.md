@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube.svg?branch=master)](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube)
 [![Coverage Status](https://coveralls.io/repos/github/Cognifide/AEM-Rules-for-SonarQube/badge.svg?branch=master)](https://coveralls.io/github/Cognifide/AEM-Rules-for-SonarQube?branch=master)
-[![Quality Gate](https://sonarqube.com/api/badges/gate?key=com.cognifide.aemrules%3Aaemrules)](https://sonarqube.com/dashboard?id=com.cognifide.aemrules%3Aaemrules)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=AEM-Rules-for-SonarQube&metric=alert_status)](https://sonarcloud.io/dashboard?id=AEM-Rules-for-SonarQube)
 # About AEM Rules for SonarQube
 
 ![AEM Rules for SonarQube](https://raw.githubusercontent.com/Cognifide/AEM-Rules-for-SonarQube/master/assets/logo.png)
@@ -27,7 +27,27 @@ Go to your SonarQube instance administration console and open Update Center. Fin
 2. Paste it into `sonarqube/extensions/plugins` directory.
 3. Restart SonarQube.
 4. Go to rules section and activate AEM rules in your profile.
- 
+
+## Rule AEM version support
+
+Each rule is configured to be executed by Sonar Runner only for the AEM version which is supporting. By providing AEM version for the parameter `sonarRunner.aemVersion` we are informing Sonar Runner to use only set of rules supporting current AEM version. When the parameter is not provided then a default AEM version is used (currently 6.4)
+
+### Running Sonar Runner
+
+When running Sonar Runner please add property `sonarRunner.aemVersion` with AEM version for which sonar analyzes should be run.
+
+`sonarRunner.aemVersion=<MAJOR_VERSION>.<MINOR_VERSION>`
+
+- Example using maven
+```
+mvn sonar:sonar -DsonarRunner.aemVersion=6.4
+```
+
+- Example using [Gradle AEM Plugin](https://github.com/Cognifide/gradle-aem-plugin)
+```
+gradlew sonarQube -DsonarRunner.aemVersion=6.4
+```
+
 # Rule set
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.

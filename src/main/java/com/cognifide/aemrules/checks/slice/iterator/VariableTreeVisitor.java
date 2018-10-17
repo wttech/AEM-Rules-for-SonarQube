@@ -24,18 +24,18 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 
 class VariableTreeVisitor extends BaseTreeVisitor {
 
-	private boolean withResourceTypeVariable;
+    private boolean withResourceTypeVariable;
 
-	public boolean hasResourceTypeVariable() {
-		return withResourceTypeVariable;
-	}
+    public boolean hasResourceTypeVariable() {
+        return withResourceTypeVariable;
+    }
 
-	@Override
-	public void visitVariable(VariableTree variableTree) {
-		ParameterizedTypeTreeVisitor treeVisitor = new ParameterizedTypeTreeVisitor();
-		variableTree.type().accept(treeVisitor);
-		withResourceTypeVariable = treeVisitor.hasResourceTypeVariable();
-		super.visitVariable(variableTree);
-	}
+    @Override
+    public void visitVariable(VariableTree variableTree) {
+        ParameterizedTypeTreeVisitor treeVisitor = new ParameterizedTypeTreeVisitor();
+        variableTree.type().accept(treeVisitor);
+        withResourceTypeVariable = treeVisitor.hasResourceTypeVariable();
+        super.visitVariable(variableTree);
+    }
 
 }

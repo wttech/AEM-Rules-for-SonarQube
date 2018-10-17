@@ -23,7 +23,7 @@ import javax.jcr.Session;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 
 @SlingServlet
-public class ThreadSafeFieldCheckSlingServletExample  {
+public class ThreadSafeFieldCheckSlingServletExample {
 
     private Session session; // Noncompliant
 
