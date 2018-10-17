@@ -25,12 +25,11 @@ import org.sonar.api.Plugin;
 
 public class AemRulesSonarPlugin implements Plugin {
 
-	@Override
-	public void define(Context context) {
-		context.addExtension(AemRulesRulesDefinition.class);
-		context.addExtension(CheckListRegistrar.class);
-	}
-
+    @Override
+    public void define(Context context) {
+        context.addExtension(AemRulesRulesDefinition.class);
+        context.addExtension(CheckListRegistrar.class);
+    }
 
 
 }

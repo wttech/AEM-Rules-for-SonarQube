@@ -33,45 +33,45 @@ import javax.jcr.Session;
 
 public class ResourceResolverConsumer extends AbstractAssetWorkflowProcess {
 
-	private final ResourceResolverProducer resourceResolverProducer;
+    private final ResourceResolverProducer resourceResolverProducer;
 
-	public ResourceResolverConsumer(ResourceResolverProducer resourceResolverProducer) {
-		this.resourceResolverProducer = resourceResolverProducer;
-	}
+    public ResourceResolverConsumer(ResourceResolverProducer resourceResolverProducer) {
+        this.resourceResolverProducer = resourceResolverProducer;
+    }
 
-	public String findName(final String path) {
-		String name = "";
-		ResourceResolver resourceResolver = null;
-		try {
-			resourceResolver = resourceResolverProducer.produce();
-			name = resourceResolver.getResource(path).getName();
-		} finally {
-			if (null != resourceResolver && resourceResolver.isLive()) {
-				resourceResolver.close();
-			}
-		}
-		return name;
-	}
+    public String findName(final String path) {
+        String name = "";
+        ResourceResolver resourceResolver = null;
+        try {
+            resourceResolver = resourceResolverProducer.produce();
+            name = resourceResolver.getResource(path).getName();
+        } finally {
+            if (null != resourceResolver && resourceResolver.isLive()) {
+                resourceResolver.close();
+            }
+        }
+        return name;
+    }
 
-	public Tag findTag(String tagId, Asset asset, Session session) {
-		Tag tag = null;
-		ResourceResolver resourceResolver = null;
+    public Tag findTag(String tagId, Asset asset, Session session) {
+        Tag tag = null;
+        ResourceResolver resourceResolver = null;
 
-		try {
-			resourceResolver = getResourceResolver(session);
-			TagManager tagManager = resourceResolver.adaptTo(TagManager.class);
-			tag = tagManager.resolve(tagId);
-		} finally {
-			if (null != resourceResolver && resourceResolver.isLive()) {
-				resourceResolver.close();
-			}
-		}
+        try {
+            resourceResolver = getResourceResolver(session);
+            TagManager tagManager = resourceResolver.adaptTo(TagManager.class);
+            tag = tagManager.resolve(tagId);
+        } finally {
+            if (null != resourceResolver && resourceResolver.isLive()) {
+                resourceResolver.close();
+            }
+        }
 
-		return tag;
-	}
+        return tag;
+    }
 
-	@Override
-	public void execute(WorkItem item, WorkflowSession session, MetaDataMap args) throws WorkflowException {
-		// not used
-	}
+    @Override
+    public void execute(WorkItem item, WorkflowSession session, MetaDataMap args) throws WorkflowException {
+        // not used
+    }
 }

@@ -28,28 +28,28 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 class MethodInvocationVisitor extends BaseTreeVisitor {
 
-	private final JavaFileScanner javaFileScanner;
+    private final JavaFileScanner javaFileScanner;
 
-	private final JavaFileScannerContext context;
+    private final JavaFileScannerContext context;
 
-	MethodInvocationVisitor(JavaFileScanner javaFileScanner, JavaFileScannerContext context) {
-		this.javaFileScanner = javaFileScanner;
-		this.context = context;
-	}
+    MethodInvocationVisitor(JavaFileScanner javaFileScanner, JavaFileScannerContext context) {
+        this.javaFileScanner = javaFileScanner;
+        this.context = context;
+    }
 
-	@Override
-	public void visitMethod(MethodTree tree) {
-		tree.accept(new SessionUsageVisitor(javaFileScanner, context));
-		super.visitMethod(tree);
-	}
+    @Override
+    public void visitMethod(MethodTree tree) {
+        tree.accept(new SessionUsageVisitor(javaFileScanner, context));
+        super.visitMethod(tree);
+    }
 
-	@Override
-	public void visitMethodInvocation(MethodInvocationTree tree) {
-		Tree declaration = tree.symbol().declaration();
-		if (null != declaration) {
-			declaration.accept(new MethodInvocationVisitor(javaFileScanner, context));
-		}
-		super.visitMethodInvocation(tree);
-	}
+    @Override
+    public void visitMethodInvocation(MethodInvocationTree tree) {
+        Tree declaration = tree.symbol().declaration();
+        if (null != declaration) {
+            declaration.accept(new MethodInvocationVisitor(javaFileScanner, context));
+        }
+        super.visitMethodInvocation(tree);
+    }
 
 }

@@ -41,100 +41,99 @@ import java.util.Map;
 @Component
 public class LongSessionService implements EventListener {
 
-	@Reference
-	private ResourceResolverFactory resourceResolverFactory;
+    @Reference
+    private ResourceResolverFactory resourceResolverFactory;
 
-	private ResourceResolver resolver;
+    private ResourceResolver resolver;
 
-	private ServiceRegistration registration;
+    private ServiceRegistration registration;
 
-	@Activate
-	protected void activate(final BundleContext bundleContext, final Map<String, Object> properties) {
-		try {
-			resolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
-			registerObservation();
-		} catch (LoginException x) {
-		}
-	}
+    @Activate
+    protected void activate(final BundleContext bundleContext, final Map<String, Object> properties) {
+        try {
+            resolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
+            registerObservation();
+        } catch (LoginException x) {
+        }
+    }
 
-	private void registerObservation() {
-		final Session session = getSession();
-		if (session != null) {
-			try {
-				session.getWorkspace().getObservationManager().addEventListener(this, 63, "/", true, null, null, true);
-			} catch (RepositoryException x) {
-			}
-		}
-	}
+    private void registerObservation() {
+        final Session session = getSession();
+        if (session != null) {
+            try {
+                session.getWorkspace().getObservationManager().addEventListener(this, 63, "/", true, null, null, true);
+            } catch (RepositoryException x) {
+            }
+        }
+    }
 
-	private Session getSession() {
-		return resolver.adaptTo(Session.class);
-	}
+    private Session getSession() {
+        return resolver.adaptTo(Session.class);
+    }
 
-	@Deactivate
-	protected void deactivate() {
-		if (registration != null) {
-			registration.unregister();
-			registration = null;
-		}
-		try {
-			unregisterObservation();
-		}
-		finally {
-			if (resolver != null) {
-				resolver.close();
-				resolver = null;
-			}
-		}
-	}
+    @Deactivate
+    protected void deactivate() {
+        if (registration != null) {
+            registration.unregister();
+            registration = null;
+        }
+        try {
+            unregisterObservation();
+        } finally {
+            if (resolver != null) {
+                resolver.close();
+                resolver = null;
+            }
+        }
+    }
 
-	private void unregisterObservation() {
-		final Session session = getSession();
-		if (session != null) {
-			try {
-				session.getWorkspace().getObservationManager().removeEventListener(this);
-			} catch (RepositoryException x) {
-			}
-		}
-	}
+    private void unregisterObservation() {
+        final Session session = getSession();
+        if (session != null) {
+            try {
+                session.getWorkspace().getObservationManager().removeEventListener(this);
+            } catch (RepositoryException x) {
+            }
+        }
+    }
 
-	@Override
-	public void onEvent(EventIterator events) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+    @Override
+    public void onEvent(EventIterator events) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	public String getLoginPage(final HttpServletRequest request) {
-		final String loginPage = request.getParameter("loignPage");
-		if (loginPage != null) {
-			if (ResourceUtil.isNonExistingResource(resolver.resolve(loginPage))) {
-				System.out.println("Login page " + loginPage);
-			}
-		}
-		return loginPage;
-	}
+    public String getLoginPage(final HttpServletRequest request) {
+        final String loginPage = request.getParameter("loignPage");
+        if (loginPage != null) {
+            if (ResourceUtil.isNonExistingResource(resolver.resolve(loginPage))) {
+                System.out.println("Login page " + loginPage);
+            }
+        }
+        return loginPage;
+    }
 
-	public String getPath(final HttpServletRequest request) {
-		String path = request.getParameter("resource");
-		final Resource mappedResource = resolver.resolve(request, path);
-		if (!ResourceUtil.isNonExistingResource(mappedResource)) {
-			path = mappedResource.getPath();
-		}
-		return path;
-	}
+    public String getPath(final HttpServletRequest request) {
+        String path = request.getParameter("resource");
+        final Resource mappedResource = resolver.resolve(request, path);
+        if (!ResourceUtil.isNonExistingResource(mappedResource)) {
+            path = mappedResource.getPath();
+        }
+        return path;
+    }
 
-	public String toRawPath(final String path) {
-		String result = "";
-		if (resolver != null) {
-			final Resource loginPageResource = resolver.resolve(path);
-			if (!ResourceUtil.isNonExistingResource(loginPageResource)) {
-				result = resolver.map(loginPageResource.getPath());
-			}
-		}
-		return result;
-	}
+    public String toRawPath(final String path) {
+        String result = "";
+        if (resolver != null) {
+            final Resource loginPageResource = resolver.resolve(path);
+            if (!ResourceUtil.isNonExistingResource(loginPageResource)) {
+                result = resolver.map(loginPageResource.getPath());
+            }
+        }
+        return result;
+    }
 
-	public boolean enable(final String rootPath) {
-		final String fullPath = resolver.map(rootPath);
-		return null != fullPath;
-	}
+    public boolean enable(final String rootPath) {
+        final String fullPath = resolver.map(rootPath);
+        return null != fullPath;
+    }
 }

@@ -30,27 +30,27 @@ import java.util.Set;
  */
 public class CheckLoggedOutVisitor extends BaseTreeVisitor {
 
-	private static final String LOG_OUT_METHOD_NAME = "logout";
+    private static final String LOG_OUT_METHOD_NAME = "logout";
 
-	private final Set<IdentifierTree> usages;
+    private final Set<IdentifierTree> usages;
 
-	private boolean loggedOut;
+    private boolean loggedOut;
 
-	public CheckLoggedOutVisitor(Set<IdentifierTree> usages) {
-		this.usages = usages;
-		this.loggedOut = false;
-	}
+    public CheckLoggedOutVisitor(Set<IdentifierTree> usages) {
+        this.usages = usages;
+        this.loggedOut = false;
+    }
 
-	public boolean isLoggedOut() {
-		return loggedOut;
-	}
+    public boolean isLoggedOut() {
+        return loggedOut;
+    }
 
-	@Override
-	public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
-		if (usages.contains(tree.expression())) {
-			loggedOut |= tree.identifier().name().equals(LOG_OUT_METHOD_NAME);
-		}
-		super.visitMemberSelectExpression(tree);
-	}
+    @Override
+    public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
+        if (usages.contains(tree.expression())) {
+            loggedOut |= tree.identifier().name().equals(LOG_OUT_METHOD_NAME);
+        }
+        super.visitMemberSelectExpression(tree);
+    }
 
 }

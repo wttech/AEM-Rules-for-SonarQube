@@ -44,31 +44,31 @@ import java.util.List;
 
 public class CheckListRegistrar implements CheckRegistrar {
 
-	public static final String REPOSITORY_KEY = "AEM Rules";
+    public static final String REPOSITORY_KEY = "AEM Rules";
 
-	public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
-		= ImmutableList.<Class<? extends JavaCheck>>builder()
-		.add(AdministrativeAccessUsageCheck.class)
-		.add(AnnotationsConstantsCheck.class)
-		.add(ConstantsCheck.class)
-		.add(HttpConstantCheck.class)
-		.add(InjectorShouldBeClosedCheck.class)
-		.add(InjectorTryWithResourcesCheck.class)
-		.add(ModelsShouldNotUseSessionCheck.class)
-		.add(IteratingResourcesCheck.class)
-		.add(JcrPropertyFieldsInConstructorCheck.class)
-		.add(PreferSlingServletAnnotation.class)
-		.add(ResourceResolverShouldBeClosed.class)
-		.add(SessionShouldBeLoggedOut.class)
-		.add(SynchornizedKeywordUsageCheck.class)
-		.add(ThreadSafeFieldCheck.class)
-		.add(DefaultInjectionStrategyAnnotationCheck.class)
-		.add(ModifiableValueMapUsageCheck.class)
-		.build();
+    public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
+        = ImmutableList.<Class<? extends JavaCheck>>builder()
+        .add(AdministrativeAccessUsageCheck.class)
+        .add(AnnotationsConstantsCheck.class)
+        .add(ConstantsCheck.class)
+        .add(HttpConstantCheck.class)
+        .add(InjectorShouldBeClosedCheck.class)
+        .add(InjectorTryWithResourcesCheck.class)
+        .add(ModelsShouldNotUseSessionCheck.class)
+        .add(IteratingResourcesCheck.class)
+        .add(JcrPropertyFieldsInConstructorCheck.class)
+        .add(PreferSlingServletAnnotation.class)
+        .add(ResourceResolverShouldBeClosed.class)
+        .add(SessionShouldBeLoggedOut.class)
+        .add(SynchornizedKeywordUsageCheck.class)
+        .add(ThreadSafeFieldCheck.class)
+        .add(DefaultInjectionStrategyAnnotationCheck.class)
+        .add(ModifiableValueMapUsageCheck.class)
+        .build();
 
-	@Override
-	public void register(RegistrarContext registrarContext) {
-		registrarContext.registerClassesForRepository(REPOSITORY_KEY, CHECK_CLASSES,
-			Collections.<Class<? extends JavaCheck>>emptyList());
-	}
+    @Override
+    public void register(RegistrarContext registrarContext) {
+        registrarContext.registerClassesForRepository(REPOSITORY_KEY, CHECK_CLASSES,
+            Collections.<Class<? extends JavaCheck>>emptyList());
+    }
 }

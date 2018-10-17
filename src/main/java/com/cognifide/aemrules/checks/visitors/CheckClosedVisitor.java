@@ -30,27 +30,27 @@ import java.util.Set;
  */
 public class CheckClosedVisitor extends BaseTreeVisitor {
 
-	private static final String CLOSE_METHOD_NAME = "close";
+    private static final String CLOSE_METHOD_NAME = "close";
 
-	private final Set<IdentifierTree> usages;
+    private final Set<IdentifierTree> usages;
 
-	private boolean closed;
+    private boolean closed;
 
-	public CheckClosedVisitor(Set<IdentifierTree> usages) {
-		this.usages = usages;
-		this.closed = false;
-	}
+    public CheckClosedVisitor(Set<IdentifierTree> usages) {
+        this.usages = usages;
+        this.closed = false;
+    }
 
-	public boolean isClosed() {
-		return closed;
-	}
+    public boolean isClosed() {
+        return closed;
+    }
 
-	@Override
-	public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
-		if (usages.contains(tree.expression())) {
-			closed |= tree.identifier().name().equals(CLOSE_METHOD_NAME);
-		}
-		super.visitMemberSelectExpression(tree);
-	}
+    @Override
+    public void visitMemberSelectExpression(MemberSelectExpressionTree tree) {
+        if (usages.contains(tree.expression())) {
+            closed |= tree.identifier().name().equals(CLOSE_METHOD_NAME);
+        }
+        super.visitMemberSelectExpression(tree);
+    }
 
 }

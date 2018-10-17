@@ -24,13 +24,13 @@ import org.junit.Test;
 
 public class RulesLoaderTest {
 
-	@Test
-	public void testGetMetadataFromResources() throws Exception {
-		Assert.assertEquals(new RulesLoader().loadMetadata("UnitTest"), "{\"unit\":\"test\"}");
-	}
+    @Test
+    public void testGetMetadataFromResources() throws Exception {
+        Assert.assertEquals(new RulesLoader().loadMetadata("UnitTest"), "{\"unit\":\"test\"}");
+    }
 
-	@Test
-	public void testGetDescriptionFromResources() throws Exception {
-		Assert.assertEquals(new RulesLoader().loadDescription("UnitTest"), "Unit Test.");
-	}
+    @Test
+    public void testGetDescriptionFromResources() throws Exception {
+        Assert.assertEquals(new RulesLoader().loadDescription("UnitTest"), "Unit Test.");
+    }
 }
