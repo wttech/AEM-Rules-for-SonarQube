@@ -28,17 +28,17 @@ import org.sonar.plugins.java.api.tree.TryStatementTree;
  */
 public class FinallyBlockVisitor extends BaseTreeVisitor {
 
-	private final TreeVisitor visitor;
+    private final TreeVisitor visitor;
 
-	public FinallyBlockVisitor(TreeVisitor visitor) {
-		this.visitor = visitor;
-	}
+    public FinallyBlockVisitor(TreeVisitor visitor) {
+        this.visitor = visitor;
+    }
 
-	@Override
-	public void visitTryStatement(TryStatementTree tree) {
-		if (tree.finallyBlock() != null) {
-			tree.finallyBlock().accept(visitor);
-		}
-		super.visitTryStatement(tree);
-	}
+    @Override
+    public void visitTryStatement(TryStatementTree tree) {
+        if (tree.finallyBlock() != null) {
+            tree.finallyBlock().accept(visitor);
+        }
+        super.visitTryStatement(tree);
+    }
 }

@@ -33,49 +33,50 @@ import org.sonar.plugins.java.api.tree.LiteralTree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 @Rule(
-		key = AnnotationsConstantsCheck.RULE_KEY,
-		name = AnnotationsConstantsCheck.RULE_MESSAGE,
-		priority = Priority.MINOR,
-		tags = Tags.AEM
+    key = AnnotationsConstantsCheck.RULE_KEY,
+    name = AnnotationsConstantsCheck.RULE_MESSAGE,
+    priority = Priority.MINOR,
+    tags = Tags.AEM
 )
 @AemVersion(
 		all = true
 )
 public class AnnotationsConstantsCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-	public static final String RULE_KEY = "AEM-1";
+    public static final String RULE_KEY = "AEM-1";
 
-	public static final String RULE_MESSAGE = "Use predefined constant in annotation instead of hardcoded value.";
+    public static final String RULE_MESSAGE = "Use predefined constant in annotation instead of hardcoded value.";
 
-	private JavaFileScannerContext context;
+    private JavaFileScannerContext context;
 
-	private boolean inAnnotation;
+    private boolean inAnnotation;
 
-	@Override
-	public void scanFile(JavaFileScannerContext context) {
-		this.context = context;
-		scan(context.getTree());
-	}
+    @Override
+    public void scanFile(JavaFileScannerContext context) {
+        this.context = context;
+        scan(context.getTree());
+    }
 
-	@Override
-	public void visitAnnotation(AnnotationTree annotationTree) {
-		inAnnotation = true;
-		super.visitAnnotation(annotationTree);
-		inAnnotation = false;
-	}
+    @Override
+    public void visitAnnotation(AnnotationTree annotationTree) {
+        inAnnotation = true;
+        super.visitAnnotation(annotationTree);
+        inAnnotation = false;
+    }
 
-	@Override
-	public void visitLiteral(LiteralTree tree) {
-		if (inAnnotation && tree.is(Kind.STRING_LITERAL)) {
-			String literalValue = removeQuotes(tree.value());
-			if (ConstantsChecker.isAnnotationConstant(literalValue)) {
-				context.reportIssue(this, tree, String.format("Use constant %s instead of hardcoded value.", ConstantsChecker.getAnnotationMessageForConstant(literalValue)));
-			}
-		}
-		super.visitLiteral(tree);
-	}
+    @Override
+    public void visitLiteral(LiteralTree tree) {
+        if (inAnnotation && tree.is(Kind.STRING_LITERAL)) {
+            String literalValue = removeQuotes(tree.value());
+            if (ConstantsChecker.isAnnotationConstant(literalValue)) {
+                context.reportIssue(this, tree,
+                    String.format("Use constant %s instead of hardcoded value.", ConstantsChecker.getAnnotationMessageForConstant(literalValue)));
+            }
+        }
+        super.visitLiteral(tree);
+    }
 
-	private String removeQuotes(String value) {
-		return value.replaceAll("^\"|\"$", StringUtils.EMPTY);
-	}
+    private String removeQuotes(String value) {
+        return value.replaceAll("^\"|\"$", StringUtils.EMPTY);
+    }
 }

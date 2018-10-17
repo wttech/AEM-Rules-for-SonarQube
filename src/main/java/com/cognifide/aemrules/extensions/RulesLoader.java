@@ -25,10 +25,12 @@ import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
+import com.google.gson.Gson;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.rule.RuleStatus;
+import org.sonar.api.server.debt.DebtRemediationFunction;
 import org.sonar.api.server.rule.RuleParamType;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.AnnotationUtils;
@@ -44,90 +46,129 @@ import java.util.List;
 
 public class RulesLoader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
 
-	private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
-			ImmutableMap.<Class<?>, RuleParamType>builder()
-					.put(Integer.class, RuleParamType.INTEGER)
-					.put(int.class, RuleParamType.INTEGER)
-					.put(Float.class, RuleParamType.FLOAT)
-					.put(float.class, RuleParamType.FLOAT)
-					.put(Boolean.class, RuleParamType.BOOLEAN)
-					.put(boolean.class, RuleParamType.BOOLEAN)
-					.build(),
-			RuleParamType.STRING
-	);
+    private static final String RULE_DESCRIPTION_FOLDER = "rules";
+    private static final String RULE_DESCRIPTION_EXTENSION = "md";
+    private static final String RULE_METADATA_FOLDER = "metadata";
+    private static final String RULE_METADATA_EXTENSION = "json";
 
-	public void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends JavaCheck>> annotatedClasses) {
-		for (Class<? extends JavaCheck> annotatedClass : annotatedClasses) {
-			loadRule(repo, annotatedClass);
-		}
-	}
+    private final Gson gson = new Gson();
 
-	@CheckForNull
-	RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz) {
-		Rule ruleAnnotation = AnnotationUtils.getAnnotation(clazz, Rule.class);
-		if (ruleAnnotation != null) {
-			return loadRule(repo, clazz, ruleAnnotation);
-		} else {
-			LOG.warn("The class {} should be annotated with {}", clazz.getCanonicalName(), Rule.class);
-			return null;
-		}
-	}
+    private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
+        ImmutableMap.<Class<?>, RuleParamType>builder()
+            .put(Integer.class, RuleParamType.INTEGER)
+            .put(int.class, RuleParamType.INTEGER)
+            .put(Float.class, RuleParamType.FLOAT)
+            .put(float.class, RuleParamType.FLOAT)
+            .put(Boolean.class, RuleParamType.BOOLEAN)
+            .put(boolean.class, RuleParamType.BOOLEAN)
+            .build(),
+        RuleParamType.STRING
+    );
 
-	private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz, Rule ruleAnnotation) {
-		String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
-		String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
-		String description = StringUtils.defaultIfEmpty(getDescriptionFromResources(ruleKey), "No description yet.");
+    public void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends JavaCheck>> annotatedClasses) {
+        for (Class<? extends JavaCheck> annotatedClass : annotatedClasses) {
+            loadRule(repo, annotatedClass);
+        }
+    }
 
-		RulesDefinition.NewRule rule = repo.createRule(ruleKey);
-		rule.setName(ruleName).setMarkdownDescription(description);
-		rule.setSeverity(ruleAnnotation.priority().name());
-		rule.setStatus(RuleStatus.valueOf(ruleAnnotation.status()));
-		rule.setTags(ruleAnnotation.tags());
+    @CheckForNull
+    RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz) {
+        Rule ruleAnnotation = AnnotationUtils.getAnnotation(clazz, Rule.class);
+        if (ruleAnnotation != null) {
+            return loadRule(repo, clazz, ruleAnnotation);
+        } else {
+            LOG.warn("The class {} should be annotated with {}", clazz.getCanonicalName(), Rule.class);
+            return null;
+        }
+    }
 
-		List<Field> fields = FieldUtils2.getFields(clazz, true);
-		for (Field field : fields) {
-			loadParameters(rule, field);
-		}
+    private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz, Rule ruleAnnotation) {
+        String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
+        String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
+        String description = StringUtils.defaultIfEmpty(loadDescription(ruleKey), "No description yet.");
 
-		return rule;
-	}
+        RulesDefinition.NewRule rule = repo.createRule(ruleKey);
+        rule.setName(ruleName).setMarkdownDescription(description);
+        rule.setSeverity(ruleAnnotation.priority().name());
+        rule.setStatus(RuleStatus.valueOf(ruleAnnotation.status()));
+        rule.setTags(ruleAnnotation.tags());
 
-	protected String getDescriptionFromResources(String ruleKey) {
-		String result = null;
-		try {
-			String path = String.format("/rules/%s.md", ruleKey);
-			URL url = Resources.getResource(RulesLoader.class, path);
-			result = Resources.toString(url, Charsets.UTF_8);
-		} catch (IOException | IllegalArgumentException e) {
-			LOG.error("Cannot read resource file with rule description.", e);
-		}
-		return result;
-	}
+        addMetadata(rule);
 
-	private void loadParameters(RulesDefinition.NewRule rule, Field field) {
-		org.sonar.check.RuleProperty propertyAnnotation = field.getAnnotation(org.sonar.check.RuleProperty.class);
-		if (propertyAnnotation != null) {
-			String fieldKey = StringUtils.defaultIfEmpty(propertyAnnotation.key(), field.getName());
-			RulesDefinition.NewParam param = rule.createParam(fieldKey)
-					.setDescription(propertyAnnotation.description())
-					.setDefaultValue(propertyAnnotation.defaultValue());
+        List<Field> fields = FieldUtils2.getFields(clazz, true);
+        for (Field field : fields) {
+            loadParameters(rule, field);
+        }
 
-			if (!StringUtils.isBlank(propertyAnnotation.type())) {
-				try {
-					param.setType(RuleParamType.parse(propertyAnnotation.type().trim()));
-				} catch (IllegalArgumentException e) {
-					throw new IllegalArgumentException("Invalid property type [" + propertyAnnotation.type() + "]", e);
-				}
-			} else {
-				param.setType(guessType(field.getType()));
-			}
-		}
-	}
+        return rule;
+    }
 
-	@VisibleForTesting
-	static RuleParamType guessType(Class<?> type) {
-		return TYPE_FOR_CLASS.apply(type);
-	}
+    private void addMetadata(RulesDefinition.NewRule rule) {
+        String json = loadMetadata(rule.key());
+        if (json != null) {
+            RuleMetadata ruleMetadata = gson.fromJson(json, RuleMetadata.class);
+            rule.setDebtRemediationFunction(ruleMetadata.remediation.remediationFunction(rule.debtRemediationFunctions()));
+        }
+    }
+
+    protected String loadDescription(String ruleKey) {
+        return loadResource(RULE_DESCRIPTION_FOLDER, ruleKey, RULE_DESCRIPTION_EXTENSION);
+    }
+
+    protected String loadMetadata(String ruleKey) {
+        return loadResource(RULE_METADATA_FOLDER, ruleKey, RULE_METADATA_EXTENSION);
+    }
+
+    protected String loadResource(String resourceFolder, String ruleKey, String fileExtension) {
+        String result = null;
+        try {
+            String path = String.format("/%s/%s.%s", resourceFolder, ruleKey, fileExtension);
+            URL url = Resources.getResource(RulesLoader.class, path);
+            result = Resources.toString(url, Charsets.UTF_8);
+        } catch (IOException | IllegalArgumentException e) {
+            LOG.error("Cannot read resource file.", e);
+        }
+        return result;
+    }
+
+    private void loadParameters(RulesDefinition.NewRule rule, Field field) {
+        org.sonar.check.RuleProperty propertyAnnotation = field.getAnnotation(org.sonar.check.RuleProperty.class);
+        if (propertyAnnotation != null) {
+            String fieldKey = StringUtils.defaultIfEmpty(propertyAnnotation.key(), field.getName());
+            RulesDefinition.NewParam param = rule.createParam(fieldKey)
+                .setDescription(propertyAnnotation.description())
+                .setDefaultValue(propertyAnnotation.defaultValue());
+
+            if (!StringUtils.isBlank(propertyAnnotation.type())) {
+                try {
+                    param.setType(RuleParamType.parse(propertyAnnotation.type().trim()));
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Invalid property type [" + propertyAnnotation.type() + "]", e);
+                }
+            } else {
+                param.setType(guessType(field.getType()));
+            }
+        }
+    }
+
+    @VisibleForTesting
+    static RuleParamType guessType(Class<?> type) {
+        return TYPE_FOR_CLASS.apply(type);
+    }
+
+    private static class RuleMetadata {
+
+        Remediation remediation;
+    }
+
+    private static class Remediation {
+
+        String constantCost;
+
+        public DebtRemediationFunction remediationFunction(RulesDefinition.DebtRemediationFunctions remediationFn) {
+            return remediationFn.constantPerIssue(constantCost);
+        }
+    }
 }

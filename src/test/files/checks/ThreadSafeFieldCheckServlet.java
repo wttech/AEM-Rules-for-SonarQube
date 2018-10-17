@@ -52,7 +52,7 @@ public class ThreadSafeFieldCheckExample extends SlingSafeMethodsServlet {
 
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         // nothing here
     }
 

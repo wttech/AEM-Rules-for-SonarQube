@@ -41,93 +41,93 @@ import com.google.common.collect.Maps;
 @SlingServlet(paths = "somePath", methods = {HttpConstants.METHOD_GET})
 public class SampleServlet extends SlingAllMethodsServlet {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SampleServlet.class);
 
-	@Reference
-	private ResourceResolverFactory resourceResolverFactory;
+    @Reference
+    private ResourceResolverFactory resourceResolverFactory;
 
-	@Override
-	protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
-			throws ServletException, IOException {
-		ResourceResolver resourceResolver = null; // Noncompliant {{ResourceResolver should be closed in finally block.}}
-		try {
-			resourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
-		} catch (LoginException e) {
-			LOGGER.error("Error during getting instance of ResourceResolver class", e);
-		} finally {
-			if (resourceResolver != null) {
-				//resourceResolver.close();
-			}
-		}
-	}
+    @Override
+    protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
+        throws ServletException, IOException {
+        ResourceResolver resourceResolver = null; // Noncompliant {{ResourceResolver should be closed in finally block.}}
+        try {
+            resourceResolver = resourceResolverFactory.getServiceResourceResolver(null);
+        } catch (LoginException e) {
+            LOGGER.error("Error during getting instance of ResourceResolver class", e);
+        } finally {
+            if (resourceResolver != null) {
+                //resourceResolver.close();
+            }
+        }
+    }
 
-	@Override
-	protected void doPost(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
-			throws ServletException, IOException {
-		ResourceResolver resourceResolver = null;
-		resourceResolver = request.getResourceResolver();
-		// do sth
-	}
+    @Override
+    protected void doPost(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
+        throws ServletException, IOException {
+        ResourceResolver resourceResolver = null;
+        resourceResolver = request.getResourceResolver();
+        // do sth
+    }
 
-	/**
-	 * Create a new session for specified user (impersonating).
-	 */
-	public static ResourceResolver getResourceResolverForUser(ResourceResolverFactory factory, String userId)
-			throws LoginException {
-		ResourceResolver resolver;
-		if (userId != null) {
-			Map<String, Object> authenticationInfo = Maps.newHashMap();
-			authenticationInfo.put(ResourceResolverFactory.USER_IMPERSONATION, userId);
-			resolver = factory.getServiceResourceResolver(authenticationInfo);
-		} else {
-			resolver = factory.getServiceResourceResolver(null);
-		}
-		return resolver;
-	}
+    /**
+     * Create a new session for specified user (impersonating).
+     */
+    public static ResourceResolver getResourceResolverForUser(ResourceResolverFactory factory, String userId)
+        throws LoginException {
+        ResourceResolver resolver;
+        if (userId != null) {
+            Map<String, Object> authenticationInfo = Maps.newHashMap();
+            authenticationInfo.put(ResourceResolverFactory.USER_IMPERSONATION, userId);
+            resolver = factory.getServiceResourceResolver(authenticationInfo);
+        } else {
+            resolver = factory.getServiceResourceResolver(null);
+        }
+        return resolver;
+    }
 
-	public static ResourceResolver getResourceResolverForUserNested(ResourceResolverFactory factory, String userId)
-			throws LoginException {
-		ResourceResolver resolver;
-		resolver = getResourceResolverForUser(resourceResolverFactory, userId);
-		return resolver;
-	}
+    public static ResourceResolver getResourceResolverForUserNested(ResourceResolverFactory factory, String userId)
+        throws LoginException {
+        ResourceResolver resolver;
+        resolver = getResourceResolverForUser(resourceResolverFactory, userId);
+        return resolver;
+    }
 
-	public static ResourceResolver getResourceResolverForUserInit(ResourceResolverFactory factory)
-			throws LoginException {
-		ResourceResolver resolver = factory.getServiceResourceResolver(null);
-		return resolver;
-	}
+    public static ResourceResolver getResourceResolverForUserInit(ResourceResolverFactory factory)
+        throws LoginException {
+        ResourceResolver resolver = factory.getServiceResourceResolver(null);
+        return resolver;
+    }
 
-	public static ResourceResolver getResourceResolverForUserNestedInit(ResourceResolverFactory factory)
-			throws LoginException {
-		ResourceResolver resolver = getResourceResolverForUserInit(resourceResolverFactory);
-		return resolver;
-	}
+    public static ResourceResolver getResourceResolverForUserNestedInit(ResourceResolverFactory factory)
+        throws LoginException {
+        ResourceResolver resolver = getResourceResolverForUserInit(resourceResolverFactory);
+        return resolver;
+    }
 
-	public void checkCorrectJumpMethod() {
-		ResourceResolver resourceResolver = null;
-		try {
-			resourceResolver = getResourceResolverForUserNested(resourceResolverFactory, null);
-		} catch (LoginException e) {
-			e.printStackTrace();
-		} finally {
-			if (resourceResolver != null) {
-				resourceResolver.close();
-			}
-		}
-	}
+    public void checkCorrectJumpMethod() {
+        ResourceResolver resourceResolver = null;
+        try {
+            resourceResolver = getResourceResolverForUserNested(resourceResolverFactory, null);
+        } catch (LoginException e) {
+            e.printStackTrace();
+        } finally {
+            if (resourceResolver != null) {
+                resourceResolver.close();
+            }
+        }
+    }
 
-	public void checkWrongJumpMethod() {
-		ResourceResolver resourceResolver = null; // Noncompliant
-		try {
-			resourceResolver = getResourceResolverForUserNestedInit(resourceResolverFactory);
-		} catch (LoginException e) {
-			e.printStackTrace();
-		} finally {
-			if (resourceResolver != null) {
-				//resourceResolver.close();
-			}
-		}
-	}
+    public void checkWrongJumpMethod() {
+        ResourceResolver resourceResolver = null; // Noncompliant
+        try {
+            resourceResolver = getResourceResolverForUserNestedInit(resourceResolverFactory);
+        } catch (LoginException e) {
+            e.printStackTrace();
+        } finally {
+            if (resourceResolver != null) {
+                //resourceResolver.close();
+            }
+        }
+    }
 
 }

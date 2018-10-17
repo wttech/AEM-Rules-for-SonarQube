@@ -30,22 +30,22 @@ import javax.jcr.Session;
 @Component(immediate = true)
 public class SessionLogout {
 
-	@Reference
-	private SlingRepository repository;
+    @Reference
+    private SlingRepository repository;
 
-	public void four() {
-		Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
-		session = createAdminSession();
-	}
+    public void four() {
+        Session session = null; // Noncompliant {{Session should be logged out in finally block.}}
+        session = createAdminSession();
+    }
 
-	private Session createAdminSession() {
-		Session result = null;
-		try {
-			result = repository.loginAdministrative(null);
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+    private Session createAdminSession() {
+        Session result = null;
+        try {
+            result = repository.loginAdministrative(null);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 }

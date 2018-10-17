@@ -23,45 +23,45 @@ import org.junit.Test;
 
 public class ThreadSafeFieldCheckTest extends AbstractBaseTest {
 
-	@Test
-	public void checkThreadSafeFieldsInServlet() {
-		check = new ThreadSafeFieldCheck();
-		filename = "src/test/files/checks/ThreadSafeFieldCheckServlet.java";
-		verify();
-	}
+    @Test
+    public void checkThreadSafeFieldsInServlet() {
+        check = new ThreadSafeFieldCheck();
+        filename = "src/test/files/checks/ThreadSafeFieldCheckServlet.java";
+        verify();
+    }
 
-	@Test
-	public void checkThreadSafeFieldsInFilter() {
-		check = new ThreadSafeFieldCheck();
-		filename = "src/test/files/checks/ThreadSafeFieldCheckFilter.java";
-		verify();
-	}
+    @Test
+    public void checkThreadSafeFieldsInFilter() {
+        check = new ThreadSafeFieldCheck();
+        filename = "src/test/files/checks/ThreadSafeFieldCheckFilter.java";
+        verify();
+    }
 
-	@Test
-	public void checkThreadSafeFieldsInEventHandler() {
-		check = new ThreadSafeFieldCheck();
-		filename = "src/test/files/checks/ThreadSafeFieldCheckEventHandler.java";
-		verify();
-	}
+    @Test
+    public void checkThreadSafeFieldsInEventHandler() {
+        check = new ThreadSafeFieldCheck();
+        filename = "src/test/files/checks/ThreadSafeFieldCheckEventHandler.java";
+        verify();
+    }
 
-	@Test
-	public void checkThreadSafeFieldsInScrComponent() {
-		check = new ThreadSafeFieldCheck();
-		filename = "src/test/files/checks/ThreadSafeFieldCheckScrComponentAnnotation.java";
-		verify();
-	}
+    @Test
+    public void checkThreadSafeFieldsInScrComponent() {
+        check = new ThreadSafeFieldCheck();
+        filename = "src/test/files/checks/ThreadSafeFieldCheckScrComponentAnnotation.java";
+        verify();
+    }
 
-	@Test
-	public void checkThreadSafeFieldsInDsComponent() {
-		check = new ThreadSafeFieldCheck();
-		filename = "src/test/files/checks/ThreadSafeFieldCheckDsComponentAnnotation.java";
-		verify();
-	}
+    @Test
+    public void checkThreadSafeFieldsInDsComponent() {
+        check = new ThreadSafeFieldCheck();
+        filename = "src/test/files/checks/ThreadSafeFieldCheckDsComponentAnnotation.java";
+        verify();
+    }
 
-	@Test
-	public void checkThreadSafeFieldsInSlingServletAnnotated() {
-		check = new ThreadSafeFieldCheck();
-		filename = "src/test/files/checks/ThreadSafeFieldCheckSlingServletAnnotation.java";
-		verify();
-	}
+    @Test
+    public void checkThreadSafeFieldsInSlingServletAnnotated() {
+        check = new ThreadSafeFieldCheck();
+        filename = "src/test/files/checks/ThreadSafeFieldCheckSlingServletAnnotation.java";
+        verify();
+    }
 }

@@ -44,40 +44,40 @@ import org.sonar.plugins.java.api.tree.Tree;
 )
 public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 
-	public static final String RULE_KEY = "AEM-11";
+    public static final String RULE_KEY = "AEM-11";
 
-	public static final String RULE_MESSAGE = "Do not use deprecated administrative access methods";
+    public static final String RULE_MESSAGE = "Do not use deprecated administrative access methods";
 
-	private static final Map<String, String> SUBSTITUTES = ImmutableMap.<String, String>builder()
-		.put("loginAdministrative", "loginService")
-		.put("getAdministrativeResourceResolver", "getServiceResourceResolver")
-		.build();
+    private static final Map<String, String> SUBSTITUTES = ImmutableMap.<String, String>builder()
+        .put("loginAdministrative", "loginService")
+        .put("getAdministrativeResourceResolver", "getServiceResourceResolver")
+        .build();
 
-	@Override
-	public List<Tree.Kind> nodesToVisit() {
-		return ImmutableList.of(Tree.Kind.METHOD_INVOCATION);
-	}
+    @Override
+    public List<Tree.Kind> nodesToVisit() {
+        return ImmutableList.of(Tree.Kind.METHOD_INVOCATION);
+    }
 
-	@Override
-	protected void onMethodInvocationFound(MethodInvocationTree mit) {
-		String method = ((MemberSelectExpressionTree) mit.methodSelect()).identifier().name();
-		context.reportIssue(this, mit, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
-		super.onMethodInvocationFound(mit);
-	}
+    @Override
+    protected void onMethodInvocationFound(MethodInvocationTree mit) {
+        String method = ((MemberSelectExpressionTree) mit.methodSelect()).identifier().name();
+        context.reportIssue(this, mit, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
+        super.onMethodInvocationFound(mit);
+    }
 
-	@Override
-	protected List<MethodMatcher> getMethodInvocationMatchers() {
-		return ImmutableList.of(
-				//@formatter:off
-				MethodMatcher.create()
-						.typeDefinition("org.apache.sling.jcr.api.SlingRepository")
-						.name("loginAdministrative")
-				.addParameter("java.lang.String"),
-				MethodMatcher.create()
-						.typeDefinition("org.apache.sling.api.resource.ResourceResolverFactory")
-						.name("getAdministrativeResourceResolver")
-						.addParameter("java.util.Map")
-				//@formatter:on
-		);
-	}
+    @Override
+    protected List<MethodMatcher> getMethodInvocationMatchers() {
+        return ImmutableList.of(
+            //@formatter:off
+            MethodMatcher.create()
+                .typeDefinition("org.apache.sling.jcr.api.SlingRepository")
+                .name("loginAdministrative")
+                .addParameter("java.lang.String"),
+            MethodMatcher.create()
+                .typeDefinition("org.apache.sling.api.resource.ResourceResolverFactory")
+                .name("getAdministrativeResourceResolver")
+                .addParameter("java.util.Map")
+            //@formatter:on
+        );
+    }
 }

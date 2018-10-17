@@ -34,38 +34,38 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 import java.util.List;
 
 @Rule(
-		key = ConstantsCheck.RULE_KEY,
-		name = ConstantsCheck.RULE_MESSAGE,
-		priority = Priority.MINOR,
-		tags = Tags.AEM
+    key = ConstantsCheck.RULE_KEY,
+    name = ConstantsCheck.RULE_MESSAGE,
+    priority = Priority.MINOR,
+    tags = Tags.AEM
 )
 @AemVersion(
 		all = true
 )
 public class ConstantsCheck extends IssuableSubscriptionVisitor {
 
-	protected static final String RULE_KEY = "AEM-2";
+    protected static final String RULE_KEY = "AEM-2";
 
-	public static final String RULE_MESSAGE = "Use predefined constant instead of hardcoded value.";
+    public static final String RULE_MESSAGE = "Use predefined constant instead of hardcoded value.";
 
-	@Override
-	public List<Kind> nodesToVisit() {
-		return Lists.newArrayList(Kind.STRING_LITERAL);
-	}
+    @Override
+    public List<Kind> nodesToVisit() {
+        return Lists.newArrayList(Kind.STRING_LITERAL);
+    }
 
-	@Override
-	public void visitNode(Tree stringLiteral) {
-		String literalValue = removeQuotes(((LiteralTree) stringLiteral).value());
-		if (ConstantsChecker.isConstant(literalValue)) {
-			String message = ConstantsChecker.getMessageForConstant(literalValue);
-			reportIssue(stringLiteral, String.format("Use constant %s instead of hardcoded value.", message));
-		}
-		super.visitNode(stringLiteral);
-	}
+    @Override
+    public void visitNode(Tree stringLiteral) {
+        String literalValue = removeQuotes(((LiteralTree) stringLiteral).value());
+        if (ConstantsChecker.isConstant(literalValue)) {
+            String message = ConstantsChecker.getMessageForConstant(literalValue);
+            reportIssue(stringLiteral, String.format("Use constant %s instead of hardcoded value.", message));
+        }
+        super.visitNode(stringLiteral);
+    }
 
-	private String removeQuotes(String value) {
-		return value.replaceAll("^\"|\"$", StringUtils.EMPTY);
-	}
+    private String removeQuotes(String value) {
+        return value.replaceAll("^\"|\"$", StringUtils.EMPTY);
+    }
 
 
 }

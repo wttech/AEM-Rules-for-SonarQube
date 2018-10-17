@@ -34,17 +34,17 @@ import static org.apache.sling.servlets.resolver.internal.ServletResolverConstan
 
 @SlingServlet(methods = "GET")
 @Properties({
-		@Property(name = Constants.SERVICE_VENDOR, value = "Cognifide"),
-		@Property(name = Constants.SERVICE_DESCRIPTION, value = "Some description"),
-		@Property(name = ServletResolverConstants.SLING_SERVLET_SELECTORS, value = "selector"), // Noncompliant {{Property SLING_SERVLET_SELECTORS can be handled by @SlingServlet annotation.}}
-		@Property(name = SLING_SERVLET_EXTENSIONS, value = "json"), // Noncompliant {{Property SLING_SERVLET_EXTENSIONS can be handled by @SlingServlet annotation.}}
-		@Property(name = "sling.servlet.resourceTypes", value = { "sling/servlet/default" }) // Noncompliant {{Property "sling.servlet.resourceTypes" can be handled by @SlingServlet annotation.}}
+    @Property(name = Constants.SERVICE_VENDOR, value = "Cognifide"),
+    @Property(name = Constants.SERVICE_DESCRIPTION, value = "Some description"),
+    @Property(name = ServletResolverConstants.SLING_SERVLET_SELECTORS, value = "selector"), // Noncompliant {{Property SLING_SERVLET_SELECTORS can be handled by @SlingServlet annotation.}}
+    @Property(name = SLING_SERVLET_EXTENSIONS, value = "json"), // Noncompliant {{Property SLING_SERVLET_EXTENSIONS can be handled by @SlingServlet annotation.}}
+    @Property(name = "sling.servlet.resourceTypes", value = {"sling/servlet/default"}) // Noncompliant {{Property "sling.servlet.resourceTypes" can be handled by @SlingServlet annotation.}}
 })
 public class SlingTestThree extends SlingSafeMethodsServlet {
 
-	@Override
-	protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
-			throws ServletException, IOException {
-		//do sth
-	}
+    @Override
+    protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response)
+        throws ServletException, IOException {
+        //do sth
+    }
 }

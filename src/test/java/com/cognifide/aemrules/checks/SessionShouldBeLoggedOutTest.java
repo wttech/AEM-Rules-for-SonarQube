@@ -29,38 +29,38 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class SessionShouldBeLoggedOutTest extends AbstractBaseTest {
 
-	// format is filename, failure expected
-	@Parameterized.Parameters
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] {
-				{ "src/test/files/checks/SessionLogoutOne.java", false},
-				{ "src/test/files/checks/SessionLogoutTwo.java", false},
-				{ "src/test/files/checks/SessionLogoutThree.java", false},
-				{ "src/test/files/checks/SessionLogoutFour.java", true},
-				{ "src/test/files/checks/SessionLogoutFive.java", true},
-				{ "src/test/files/checks/SessionLogoutSix.java", true},
-				{ "src/test/files/checks/SessionLogoutSeven.java", true},
-				{ "src/test/files/checks/SessionLogoutEight.java", false},
-				{ "src/test/files/checks/LongSessionEventListener.java", false},
-				{ "src/test/files/checks/LongSessionEventListenerError.java", true}
-		});
-	}
+    // format is filename, failure expected
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+            {"src/test/files/checks/SessionLogoutOne.java", false},
+            {"src/test/files/checks/SessionLogoutTwo.java", false},
+            {"src/test/files/checks/SessionLogoutThree.java", false},
+            {"src/test/files/checks/SessionLogoutFour.java", true},
+            {"src/test/files/checks/SessionLogoutFive.java", true},
+            {"src/test/files/checks/SessionLogoutSix.java", true},
+            {"src/test/files/checks/SessionLogoutSeven.java", true},
+            {"src/test/files/checks/SessionLogoutEight.java", false},
+            {"src/test/files/checks/LongSessionEventListener.java", false},
+            {"src/test/files/checks/LongSessionEventListenerError.java", true}
+        });
+    }
 
-	private boolean expectFailure;
+    private boolean expectFailure;
 
-	public SessionShouldBeLoggedOutTest(Object fn, Object expectFailure) {
-		filename = (String) fn;
-		this.expectFailure = ((Boolean) expectFailure).booleanValue();
-	}
+    public SessionShouldBeLoggedOutTest(Object fn, Object expectFailure) {
+        filename = (String) fn;
+        this.expectFailure = ((Boolean) expectFailure).booleanValue();
+    }
 
-	@Test
-	public void checkInjectorNotClosedInFinallyBlock() {
-		check = new SessionShouldBeLoggedOut();
-		if (expectFailure) {
-			verify();
-		} else {
-			verifyNoIssues();
-		}
-	}
+    @Test
+    public void checkInjectorNotClosedInFinallyBlock() {
+        check = new SessionShouldBeLoggedOut();
+        if (expectFailure) {
+            verify();
+        } else {
+            verifyNoIssues();
+        }
+    }
 
 }

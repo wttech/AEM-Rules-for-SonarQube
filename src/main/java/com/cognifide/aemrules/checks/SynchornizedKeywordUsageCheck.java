@@ -36,61 +36,61 @@ import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 @Rule(
-		key = SynchornizedKeywordUsageCheck.RULE_KEY,
-		name = SynchornizedKeywordUsageCheck.MESSAGE,
-		description = DESCRIPTION,
-		priority = Priority.INFO,
-		tags = {Tags.MULTI_THREADING, Tags.PERFORMANCE}
+    key = SynchornizedKeywordUsageCheck.RULE_KEY,
+    name = SynchornizedKeywordUsageCheck.MESSAGE,
+    description = DESCRIPTION,
+    priority = Priority.INFO,
+    tags = {Tags.MULTI_THREADING, Tags.PERFORMANCE}
 )
 @AemVersion(
-		all = true
+    all = true
 )
 public class SynchornizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
-	protected static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
+    protected static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
 
-	protected static final String RULE_KEY = "AEM-15";
+    protected static final String RULE_KEY = "AEM-15";
 
-	protected static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
+    protected static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
 
-	private static final List<Tree.Kind> ACCEPTED_NODE_KINDS
-		= ImmutableList.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);
+    private static final List<Tree.Kind> ACCEPTED_NODE_KINDS
+        = ImmutableList.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);
 
-	@Override
-	public List<Tree.Kind> nodesToVisit() {
-		return ACCEPTED_NODE_KINDS;
-	}
+    @Override
+    public List<Tree.Kind> nodesToVisit() {
+        return ACCEPTED_NODE_KINDS;
+    }
 
-	@Override
-	public void visitNode(Tree tree) {
-		Kind i = tree.kind();
-		if (i == Kind.METHOD) {
-			SynchronizedMethodVisitor visitor = new SynchronizedMethodVisitor(this);
-			tree.accept(visitor);
-		} else if (i == Kind.SYNCHRONIZED_STATEMENT) {
-			reportIssue(tree, MESSAGE);
-		}
-		super.visitNode(tree);
-	}
+    @Override
+    public void visitNode(Tree tree) {
+        Kind i = tree.kind();
+        if (i == Kind.METHOD) {
+            SynchronizedMethodVisitor visitor = new SynchronizedMethodVisitor(this);
+            tree.accept(visitor);
+        } else if (i == Kind.SYNCHRONIZED_STATEMENT) {
+            reportIssue(tree, MESSAGE);
+        }
+        super.visitNode(tree);
+    }
 
-	private static class SynchronizedMethodVisitor extends BaseTreeVisitor {
+    private static class SynchronizedMethodVisitor extends BaseTreeVisitor {
 
-		private final IssuableSubscriptionVisitor visitor;
+        private final IssuableSubscriptionVisitor visitor;
 
-		SynchronizedMethodVisitor(IssuableSubscriptionVisitor visitor) {
-			this.visitor = visitor;
-		}
+        SynchronizedMethodVisitor(IssuableSubscriptionVisitor visitor) {
+            this.visitor = visitor;
+        }
 
-		@Override
-		public void visitMethod(MethodTree tree) {
-			List<ModifierKeywordTree> modifiers = tree.modifiers().modifiers();
-			for (ModifierKeywordTree modifier : modifiers) {
-				if (modifier.modifier() == Modifier.SYNCHRONIZED) {
-					visitor.reportIssue(modifier, MESSAGE);
-				}
-			}
-			super.visitMethod(tree);
-		}
-	}
+        @Override
+        public void visitMethod(MethodTree tree) {
+            List<ModifierKeywordTree> modifiers = tree.modifiers().modifiers();
+            for (ModifierKeywordTree modifier : modifiers) {
+                if (modifier.modifier() == Modifier.SYNCHRONIZED) {
+                    visitor.reportIssue(modifier, MESSAGE);
+                }
+            }
+            super.visitMethod(tree);
+        }
+    }
 
 }
