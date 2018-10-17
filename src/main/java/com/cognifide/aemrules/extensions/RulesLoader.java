@@ -48,24 +48,24 @@ public class RulesLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
 
-	private static final String RULE_DESCRIPTION_FOLDER = "rules";
-	private static final String RULE_DESCRIPTION_EXTENSION = "md";
-	private static final String RULE_METADATA_FOLDER = "metadata";
-	private static final String RULE_METADATA_EXTENSION = "json";
+    private static final String RULE_DESCRIPTION_FOLDER = "rules";
+    private static final String RULE_DESCRIPTION_EXTENSION = "md";
+    private static final String RULE_METADATA_FOLDER = "metadata";
+    private static final String RULE_METADATA_EXTENSION = "json";
 
-	private final Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
-	private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
-			ImmutableMap.<Class<?>, RuleParamType>builder()
-					.put(Integer.class, RuleParamType.INTEGER)
-					.put(int.class, RuleParamType.INTEGER)
-					.put(Float.class, RuleParamType.FLOAT)
-					.put(float.class, RuleParamType.FLOAT)
-					.put(Boolean.class, RuleParamType.BOOLEAN)
-					.put(boolean.class, RuleParamType.BOOLEAN)
-					.build(),
-			RuleParamType.STRING
-	);
+    private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
+        ImmutableMap.<Class<?>, RuleParamType>builder()
+            .put(Integer.class, RuleParamType.INTEGER)
+            .put(int.class, RuleParamType.INTEGER)
+            .put(Float.class, RuleParamType.FLOAT)
+            .put(float.class, RuleParamType.FLOAT)
+            .put(Boolean.class, RuleParamType.BOOLEAN)
+            .put(boolean.class, RuleParamType.BOOLEAN)
+            .build(),
+        RuleParamType.STRING
+    );
 
     public void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends JavaCheck>> annotatedClasses) {
         for (Class<? extends JavaCheck> annotatedClass : annotatedClasses) {
@@ -84,10 +84,10 @@ public class RulesLoader {
         }
     }
 
-	private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz, Rule ruleAnnotation) {
-		String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
-		String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
-		String description = StringUtils.defaultIfEmpty(loadDescription(ruleKey), "No description yet.");
+    private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz, Rule ruleAnnotation) {
+        String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
+        String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
+        String description = StringUtils.defaultIfEmpty(loadDescription(ruleKey), "No description yet.");
 
         RulesDefinition.NewRule rule = repo.createRule(ruleKey);
         rule.setName(ruleName).setMarkdownDescription(description);
@@ -95,43 +95,43 @@ public class RulesLoader {
         rule.setStatus(RuleStatus.valueOf(ruleAnnotation.status()));
         rule.setTags(ruleAnnotation.tags());
 
-		addMetadata(rule);
+        addMetadata(rule);
 
-		List<Field> fields = FieldUtils2.getFields(clazz, true);
-		for (Field field : fields) {
-			loadParameters(rule, field);
-		}
+        List<Field> fields = FieldUtils2.getFields(clazz, true);
+        for (Field field : fields) {
+            loadParameters(rule, field);
+        }
 
         return rule;
     }
 
-	private void addMetadata(RulesDefinition.NewRule rule) {
-		String json = loadMetadata(rule.key());
-		if(json != null) {
-			RuleMetadata ruleMetadata = gson.fromJson(json, RuleMetadata.class);
-			rule.setDebtRemediationFunction(ruleMetadata.remediation.remediationFunction(rule.debtRemediationFunctions()));
-		}
-	}
+    private void addMetadata(RulesDefinition.NewRule rule) {
+        String json = loadMetadata(rule.key());
+        if (json != null) {
+            RuleMetadata ruleMetadata = gson.fromJson(json, RuleMetadata.class);
+            rule.setDebtRemediationFunction(ruleMetadata.remediation.remediationFunction(rule.debtRemediationFunctions()));
+        }
+    }
 
-	protected String loadDescription(String ruleKey) {
-		return loadResource(RULE_DESCRIPTION_FOLDER, ruleKey, RULE_DESCRIPTION_EXTENSION);
-	}
+    protected String loadDescription(String ruleKey) {
+        return loadResource(RULE_DESCRIPTION_FOLDER, ruleKey, RULE_DESCRIPTION_EXTENSION);
+    }
 
-	protected String loadMetadata(String ruleKey) {
-		return loadResource(RULE_METADATA_FOLDER, ruleKey, RULE_METADATA_EXTENSION);
-	}
+    protected String loadMetadata(String ruleKey) {
+        return loadResource(RULE_METADATA_FOLDER, ruleKey, RULE_METADATA_EXTENSION);
+    }
 
-	protected String loadResource(String resourceFolder, String ruleKey, String fileExtension) {
-		String result = null;
-		try {
-			String path = String.format("/%s/%s.%s", resourceFolder, ruleKey, fileExtension);
-			URL url = Resources.getResource(RulesLoader.class, path);
-			result = Resources.toString(url, Charsets.UTF_8);
-		} catch (IOException | IllegalArgumentException e) {
-			LOG.error("Cannot read resource file.", e);
-		}
-		return result;
-	}
+    protected String loadResource(String resourceFolder, String ruleKey, String fileExtension) {
+        String result = null;
+        try {
+            String path = String.format("/%s/%s.%s", resourceFolder, ruleKey, fileExtension);
+            URL url = Resources.getResource(RulesLoader.class, path);
+            result = Resources.toString(url, Charsets.UTF_8);
+        } catch (IOException | IllegalArgumentException e) {
+            LOG.error("Cannot read resource file.", e);
+        }
+        return result;
+    }
 
     private void loadParameters(RulesDefinition.NewRule rule, Field field) {
         org.sonar.check.RuleProperty propertyAnnotation = field.getAnnotation(org.sonar.check.RuleProperty.class);
@@ -153,20 +153,22 @@ public class RulesLoader {
         }
     }
 
-	@VisibleForTesting
-	static RuleParamType guessType(Class<?> type) {
-		return TYPE_FOR_CLASS.apply(type);
-	}
+    @VisibleForTesting
+    static RuleParamType guessType(Class<?> type) {
+        return TYPE_FOR_CLASS.apply(type);
+    }
 
-	private static class RuleMetadata {
-		Remediation remediation;
-	}
+    private static class RuleMetadata {
 
-	private static class Remediation {
-		String constantCost;
+        Remediation remediation;
+    }
 
-		public DebtRemediationFunction remediationFunction(RulesDefinition.DebtRemediationFunctions remediationFn) {
-			return remediationFn.constantPerIssue(constantCost);
-		}
-	}
+    private static class Remediation {
+
+        String constantCost;
+
+        public DebtRemediationFunction remediationFunction(RulesDefinition.DebtRemediationFunctions remediationFn) {
+            return remediationFn.constantPerIssue(constantCost);
+        }
+    }
 }
