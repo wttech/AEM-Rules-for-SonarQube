@@ -20,6 +20,8 @@
 package com.cognifide.aemrules.checks.slingmodels;
 
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
+import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -34,13 +36,15 @@ import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.List;
-
 @Rule(
-    key = DefaultInjectionStrategyAnnotationCheck.RULE_KEY,
-    name = DefaultInjectionStrategyAnnotationCheck.RULE_MESSAGE,
-    priority = Priority.MINOR,
-    tags = {Tags.AEM, Tags.SLING_MODELS})
+		key = DefaultInjectionStrategyAnnotationCheck.RULE_KEY,
+		name = DefaultInjectionStrategyAnnotationCheck.RULE_MESSAGE,
+		priority = Priority.MINOR,
+		tags = {Tags.AEM, Tags.SLING_MODELS}
+)
+@AemVersion(
+		all = true
+)
 public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor implements JavaFileScanner {
 
     public static final String RULE_KEY = "AEM-16";

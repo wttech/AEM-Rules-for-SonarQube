@@ -27,9 +27,8 @@ import com.day.cq.workflow.WorkflowException;
 import com.day.cq.workflow.WorkflowSession;
 import com.day.cq.workflow.exec.WorkItem;
 import com.day.cq.workflow.metadata.MetaDataMap;
-import org.apache.sling.api.resource.ResourceResolver;
-
 import javax.jcr.Session;
+import org.apache.sling.api.resource.ResourceResolver;
 
 public class ResourceResolverConsumer extends AbstractAssetWorkflowProcess {
 

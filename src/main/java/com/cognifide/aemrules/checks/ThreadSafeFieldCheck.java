@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import java.util.Set;
 
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -41,6 +42,9 @@ import org.sonar.check.Rule;
     name = ThreadSafeFieldCheck.RULE_NAME,
     priority = Priority.CRITICAL,
     tags = {Tags.BUG, Tags.AEM}
+)
+@AemVersion(
+		all = true
 )
 public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileScanner {
 

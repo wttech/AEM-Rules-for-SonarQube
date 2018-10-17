@@ -19,8 +19,12 @@
  */
 package com.cognifide.aemrules.checks;
 
+import static com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck.DESCRIPTION;
+
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
@@ -31,16 +35,16 @@ import org.sonar.plugins.java.api.tree.ModifierKeywordTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
-import java.util.List;
-
-import static com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck.DESCRIPTION;
-
 @Rule(
     key = SynchornizedKeywordUsageCheck.RULE_KEY,
     name = SynchornizedKeywordUsageCheck.MESSAGE,
     description = DESCRIPTION,
     priority = Priority.INFO,
-    tags = {Tags.MULTI_THREADING, Tags.PERFORMANCE})
+    tags = {Tags.MULTI_THREADING, Tags.PERFORMANCE}
+)
+@AemVersion(
+    all = true
+)
 public class SynchornizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
     protected static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";

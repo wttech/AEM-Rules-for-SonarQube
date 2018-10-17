@@ -19,10 +19,15 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.checks.visitors.CheckLoggedOutVisitor;
+import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
+import com.cognifide.aemrules.checks.visitors.FindSessionDeclarationVisitor;
+import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
+import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -34,17 +39,14 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import com.cognifide.aemrules.checks.visitors.CheckLoggedOutVisitor;
-import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
-import com.cognifide.aemrules.checks.visitors.FindSessionDeclarationVisitor;
-import com.cognifide.aemrules.tag.Tags;
-import com.google.common.collect.Sets;
-
 @Rule(
     key = SessionShouldBeLoggedOut.RULE_KEY,
     name = SessionShouldBeLoggedOut.RULE_MESSAGE,
     priority = Priority.CRITICAL,
     tags = Tags.AEM
+)
+@AemVersion(
+    all = true
 )
 public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFileScanner {
 

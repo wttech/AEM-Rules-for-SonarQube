@@ -20,6 +20,9 @@
 package com.example;
 
 import com.day.cq.wcm.api.PageManager;
+import java.io.IOException;
+import javax.jcr.Session;
+import javax.servlet.ServletException;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
@@ -27,10 +30,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
-
-import javax.jcr.Session;
-import javax.servlet.ServletException;
-import java.io.IOException;
 
 @Component
 @Service(value = javax.servlet.Servlet.class)

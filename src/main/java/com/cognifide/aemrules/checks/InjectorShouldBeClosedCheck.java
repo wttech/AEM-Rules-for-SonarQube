@@ -23,6 +23,7 @@ import com.cognifide.aemrules.checks.visitors.CheckClosedVisitor;
 import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
 import com.cognifide.aemrules.checks.visitors.FindVariableDeclarationVisitor;
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -41,6 +42,9 @@ import java.util.Set;
     name = InjectorShouldBeClosedCheck.RULE_MESSAGE,
     priority = Priority.CRITICAL,
     tags = Tags.AEM
+)
+@AemVersion(
+		all = true
 )
 public class InjectorShouldBeClosedCheck extends BaseTreeVisitor implements JavaFileScanner {
 

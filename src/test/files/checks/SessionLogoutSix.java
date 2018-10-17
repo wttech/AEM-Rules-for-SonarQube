@@ -19,13 +19,12 @@
  */
 package com.example;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import org.apache.commons.lang.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.sling.jcr.api.SlingRepository;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 @Component(immediate = true)
 public class SessionLogout {

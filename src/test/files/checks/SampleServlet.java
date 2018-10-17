@@ -19,11 +19,10 @@
  */
 package com.example;
 
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.Map;
-
 import javax.servlet.ServletException;
-
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.sling.SlingServlet;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -35,8 +34,6 @@ import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
 
 @SlingServlet(paths = "somePath", methods = {HttpConstants.METHOD_GET})
 public class SampleServlet extends SlingAllMethodsServlet {

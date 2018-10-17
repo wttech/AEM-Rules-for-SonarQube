@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.checks.slice.session;
 
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import javax.annotation.Nonnull;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -36,6 +37,9 @@ import org.sonar.plugins.java.api.tree.ClassTree;
     name = ModelsShouldNotUseSessionCheck.RULE_MESSAGE,
     priority = Priority.BLOCKER,
     tags = {Tags.AEM, Tags.SLICE}
+)
+@AemVersion(
+    all = true
 )
 public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements JavaFileScanner {
 
