@@ -50,8 +50,8 @@ import org.sonar.plugins.java.api.tree.Tree;
     tags = Tags.AEM
 )
 @AemVersion(
-		from = "6.0",
-		to = "6.2"
+    from = "6.0",
+    to = "6.2"
 )
 public class PreferSlingServletAnnotation extends BaseTreeVisitor implements JavaFileScanner {
 
@@ -62,6 +62,8 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
     public static final String PROPERTY_MESSAGE = "Property %s can be handled by @SlingServlet annotation.";
 
     public static final String SERVLET_RESOLVER_CONSTANTS_CLASS = "org.apache.sling.servlets.resolver.internal.ServletResolverConstants";
+
+    public static final String NAME = "name";
 
     private static final Set<String> SERVLET_CONSTANTS = Sets.newHashSet(
         "SLING_SERVLET_METHODS",
@@ -74,7 +76,6 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
         "sling.servlet.resourceTypes",
         "sling.servlet.selectors",
         "sling.servlet.extensions");
-    public static final String NAME = "name";
 
     private JavaFileScannerContext context;
 

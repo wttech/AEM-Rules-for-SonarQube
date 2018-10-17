@@ -34,13 +34,13 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(
-		key = AdministrativeAccessUsageCheck.RULE_KEY,
-		name = AdministrativeAccessUsageCheck.RULE_MESSAGE,
-		priority = Priority.MAJOR,
-		tags = Tags.AEM
+    key = AdministrativeAccessUsageCheck.RULE_KEY,
+    name = AdministrativeAccessUsageCheck.RULE_MESSAGE,
+    priority = Priority.MAJOR,
+    tags = Tags.AEM
 )
 @AemVersion(
-		from = "6.0"
+    from = "6.0"
 )
 public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 
