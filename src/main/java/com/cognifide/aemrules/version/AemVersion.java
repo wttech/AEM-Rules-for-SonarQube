@@ -31,29 +31,29 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface AemVersion {
 
-  /**
-   * Sets the AEM version from which rule is supported (inclusive).
-   */
-  String from() default "";
+    /**
+     * Sets the AEM version from which rule is supported (inclusive).
+     */
+    String from() default "";
 
-  /**
-   * Sets the AEM version to which rule is supported (inclusive).
-   */
-  String to() default "";
+    /**
+     * Sets the AEM version to which rule is supported (inclusive).
+     */
+    String to() default "";
 
-  /**
-   * Indicates that all versions are supported.
-   */
-  boolean all() default false;
+    /**
+     * Indicates that all versions are supported.
+     */
+    boolean all() default false;
 
-  /**
-   * Sets AEM versions which are supported by rule
-   */
-  String[] included() default {};
+    /**
+     * Sets AEM versions which are supported by rule
+     */
+    String[] included() default {};
 
-  /**
-   * Sets AEM versions which are not supported by rule
-   */
-  String[] excluded() default {};
+    /**
+     * Sets AEM versions which are not supported by rule
+     */
+    String[] excluded() default {};
 
 }
