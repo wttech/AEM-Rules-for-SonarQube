@@ -19,13 +19,14 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import org.junit.Test;
 
 public class SlingQueryImplicitStrategyCheckTest extends AbstractBaseTest {
 
 	@Test
 	public void checkImplicitSearches() {
-		check = new PreferSlingServletAnnotation();
+		check = new SlingQueryImplicitStrategyCheck();
 		filename = "src/test/files/checks/slingquery/SlingQueryImplicitStrategyCheck.java";
 		verify();
 	}

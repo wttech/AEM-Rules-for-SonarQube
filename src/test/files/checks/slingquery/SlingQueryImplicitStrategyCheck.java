@@ -19,6 +19,10 @@
  */
 package com.cognifide.statistics.accelerator.foundation.datasource;
 
+import static org.apache.sling.query.SlingQuery.$;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -27,38 +31,36 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.query.SlingQuery;
 import org.apache.sling.query.api.SearchStrategy;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-
-import static org.apache.sling.query.SlingQuery.$;
-
 public class SlingQueryImplicitStrategyCheck extends SlingAllMethodsServlet {
 
-	@Override
-	protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
-			throws ServletException, IOException {
-		Resource resource = request.getResource();
-		// static import, splitted implicit
-		SlingQuery sq = $(resource);
-		sq.find(); // Noncompliant
-		// static import, splitted explicit
-		SlingQuery sq2 = $(resource).searchStrategy(SearchStrategy.DFS).find("");
-		sq2.find();
-		// static import, implicit
-		SlingQuery sq3 = $(resource).find("").find(); // Noncompliant
-		// static import, explicit
-		SlingQuery sq4 = $(resource).searchStrategy(SearchStrategy.DFS).find("").find();
-		// implicit
-		SlingQuery.$(resource).find(""); // Noncompliant
-		// explicit
-		SlingQuery.$(resource).searchStrategy(SearchStrategy.BFS).find("").find();
-		$(resource).searchStrategy(SearchStrategy.QUERY)
-				.find("res_type").asList().stream()
-				.map(r -> r.adaptTo(SlingQueryImplicitStrategyCheck.class).toString())
-				.filter(StringUtils::isNotEmpty).iterator();
+    @Override
+    protected void doGet(final SlingHttpServletRequest request, final SlingHttpServletResponse response)
+        throws ServletException, IOException {
+        Resource resource = request.getResource();
+        strategyNotDefined(resource);
+        strategyDefined(resource);
+    }
 
-		$(resource).find("res_type").asList().stream() // Noncompliant
-				.map(r -> r.adaptTo(SlingQueryImplicitStrategyCheck.class).toString())
-				.filter(StringUtils::isNotEmpty).iterator();
-	}
+    private void strategyNotDefined(Resource resource) {
+        SlingQuery sq = $(resource);
+        sq.find(); // Noncompliant
+
+        SlingQuery sq2 = $(resource).find("").find(); // Noncompliant
+
+        SlingQuery.$(resource).find(""); // Noncompliant
+
+        $(resource).find("res_type").asList().stream().map(r -> r.adaptTo(SlingQueryImplicitStrategyCheck.class).toString()).filter(StringUtils::isNotEmpty).iterator(); // Noncompliant
+    }
+
+    private void strategyDefined(Resource resource) {
+        SlingQuery sq = $(resource).searchStrategy(SearchStrategy.DFS).find("");
+        sq2.find();
+
+        SlingQuery sq2 = $(resource).searchStrategy(SearchStrategy.DFS).find("").find();
+
+        SlingQuery.$(resource).searchStrategy(SearchStrategy.BFS).find("").find();
+
+        $(resource).searchStrategy(SearchStrategy.QUERY).find("res_type").asList().stream()
+            .map(r -> r.adaptTo(SlingQueryImplicitStrategyCheck.class).toString()).filter(StringUtils::isNotEmpty).iterator();
+    }
 }
