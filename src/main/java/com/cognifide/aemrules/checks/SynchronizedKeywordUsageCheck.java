@@ -19,8 +19,9 @@
  */
 package com.cognifide.aemrules.checks;
 
-import static com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck.DESCRIPTION;
+import static com.cognifide.aemrules.checks.SynchronizedKeywordUsageCheck.DESCRIPTION;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.ImmutableList;
@@ -36,8 +37,8 @@ import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 @Rule(
-    key = SynchornizedKeywordUsageCheck.RULE_KEY,
-    name = SynchornizedKeywordUsageCheck.MESSAGE,
+    key = SynchronizedKeywordUsageCheck.RULE_KEY,
+    name = SynchronizedKeywordUsageCheck.MESSAGE,
     description = DESCRIPTION,
     priority = Priority.INFO,
     tags = {Tags.MULTI_THREADING, Tags.PERFORMANCE}
@@ -45,7 +46,10 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 @AemVersion(
     all = true
 )
-public class SynchornizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
+@Metadata(
+    technicalDebt = "30min"
+)
+public class SynchronizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
     protected static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
 

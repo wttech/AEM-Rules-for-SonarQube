@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.ImmutableList;
@@ -41,6 +42,9 @@ import org.sonar.plugins.java.api.tree.Tree;
 )
 @AemVersion(
     from = "6.0"
+)
+@Metadata(
+    technicalDebt = "30min"
 )
 public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
 

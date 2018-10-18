@@ -22,7 +22,7 @@ package com.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SynchornizedKeywordUsageCheck {
+public class SynchronizedKeywordUsageCheck {
 
     private final List<String> list = new ArrayList<>(16);
 

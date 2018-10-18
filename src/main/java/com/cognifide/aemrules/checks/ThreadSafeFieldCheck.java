@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
@@ -43,6 +44,9 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "1h"
 )
 public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileScanner {
 
