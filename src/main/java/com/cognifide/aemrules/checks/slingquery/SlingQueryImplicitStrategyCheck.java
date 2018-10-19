@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.checks.slingquery;
 
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import java.util.HashMap;
 import java.util.Map;
 import org.sonar.check.Priority;
@@ -36,6 +37,9 @@ import org.sonar.plugins.java.api.tree.VariableTree;
     name = SlingQueryImplicitStrategyCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
+)
+@AemVersion(
+    all = true
 )
 public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements JavaFileScanner {
 
