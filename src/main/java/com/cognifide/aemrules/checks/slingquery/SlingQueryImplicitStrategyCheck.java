@@ -60,7 +60,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private String slingQueryName = null;
 
-    private Map<String, SlingQueryStates> slingQueries = new HashMap();
+    private Map<String, SlingQueryStates> slingQueries = new HashMap<>();
 
     private JavaFileScannerContext context;
 
