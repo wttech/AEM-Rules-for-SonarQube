@@ -55,13 +55,6 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private JavaFileScannerContext context;
 
-    private enum SlingQueryStates {
-        NOT_USED,
-        FIND_USED_WITHOUT_STRATEGY,
-        STRATEGY_USED,
-        ISSUE_RETURNED
-    }
-
     @Override
     public void scanFile(JavaFileScannerContext context) {
         this.context = context;
@@ -70,16 +63,16 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     @Override
     public void visitVariable(VariableTree tree) {
-        String variableName = tree.simpleName().name();
+        String slingQueryName = tree.simpleName().name();
         if (isSlingQuery(tree)) {
-            slingQueries.put(variableName, SlingQueryStates.NOT_USED);
-            slingQueryName = variableName;
+            slingQueries.put(slingQueryName, SlingQueryStates.NOT_USED);
+            this.slingQueryName = slingQueryName;
         }
         super.visitVariable(tree);
-        // This part of code will trigger directly after initialization
+        // This part of code will will be executed directly after initialization
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
-            slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
+            slingQueries.put(this.slingQueryName, SlingQueryStates.ISSUE_RETURNED);
         }
     }
 
@@ -95,14 +88,14 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     @Override
     public void visitExpressionStatement(ExpressionStatementTree tree) {
-        String variableName = tree.firstToken().text();
-        slingQueries.putIfAbsent(variableName, SlingQueryStates.NOT_USED);
-        slingQueryName = variableName;
+        String slingQueryName = tree.firstToken().text();
+        slingQueries.putIfAbsent(slingQueryName, SlingQueryStates.NOT_USED);
+        this.slingQueryName = slingQueryName;
         super.visitExpressionStatement(tree);
-        // This part of code will trigger directly after expression
+        // This part of code will be executed directly after expression
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
-            slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
+            slingQueries.put(this.slingQueryName, SlingQueryStates.ISSUE_RETURNED);
         }
     }
 
@@ -128,5 +121,12 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private boolean isThisANewSlingQuery() {
         return slingQueryWasNotUsed() || "$".equals(slingQueryName) || SLING_QUERY.equals(slingQueryName);
+    }
+
+    private enum SlingQueryStates {
+        NOT_USED,
+        FIND_USED_WITHOUT_STRATEGY,
+        STRATEGY_USED,
+        ISSUE_RETURNED
     }
 }
