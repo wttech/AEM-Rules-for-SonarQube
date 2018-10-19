@@ -281,7 +281,7 @@
             <exclude>**/README</exclude>
             <exclude>src/main/resources/**</exclude>
             <exclude>**/LICENSE.txt</exclude>
-            <exclude>**/pom.xml</exclude>
+            <exclude>**.xml</exclude>
             <exclude>assets/**</exclude>
           </excludes>
         </configuration>
