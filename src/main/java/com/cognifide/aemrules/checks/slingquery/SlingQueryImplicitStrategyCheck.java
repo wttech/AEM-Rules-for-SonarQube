@@ -51,15 +51,15 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private String slingQueryName = null;
 
-    private Map<String, slingQueryStates> slingQueries = new HashMap();
+    private Map<String, SlingQueryStates> slingQueries = new HashMap();
 
     private JavaFileScannerContext context;
 
-    private enum slingQueryStates {
-        NOTUSED,
-        FINDUSED,
-        STRATEGYUSED,
-        ISSUERETURNED
+    private enum SlingQueryStates {
+        NOT_USED,
+        FIND_USED_WITHOUT_STRATEGY,
+        STRATEGY_USED,
+        ISSUE_RETURNED
     }
 
     @Override
@@ -70,37 +70,39 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     @Override
     public void visitVariable(VariableTree tree) {
+        String variableName = tree.simpleName().name();
         if (isSlingQuery(tree)) {
-            slingQueries.put(tree.simpleName().name(), slingQueryStates.NOTUSED);
-            slingQueryName = tree.simpleName().name();
+            slingQueries.put(variableName, SlingQueryStates.NOT_USED);
+            slingQueryName = variableName;
         }
         super.visitVariable(tree);
         // This part of code will trigger directly after initialization
-        if (findWasUsedOnSlingQuery()) {
+        if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
-            slingQueries.put(slingQueryName, slingQueryStates.ISSUERETURNED);
+            slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
         }
     }
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {
-        if (isFindMethod(tree) && (slingQueryWasNotUsed() || "$".equals(slingQueryName) || SLING_QUERY.equals(slingQueryName))) {
-            slingQueries.replace(slingQueryName, slingQueryStates.FINDUSED);
+        if (isFindMethod(tree) && isThisANewSlingQuery()) {
+            slingQueries.replace(slingQueryName, SlingQueryStates.FIND_USED_WITHOUT_STRATEGY);
         } else if (isSearchStrategyMethod(tree)) {
-            slingQueries.replace(slingQueryName, slingQueryStates.STRATEGYUSED);
+            slingQueries.replace(slingQueryName, SlingQueryStates.STRATEGY_USED);
         }
         super.visitMethodInvocation(tree);
     }
 
     @Override
     public void visitExpressionStatement(ExpressionStatementTree tree) {
-        slingQueries.putIfAbsent(tree.firstToken().text(), slingQueryStates.NOTUSED);
-        slingQueryName = tree.firstToken().text();
+        String variableName = tree.firstToken().text();
+        slingQueries.putIfAbsent(variableName, SlingQueryStates.NOT_USED);
+        slingQueryName = variableName;
         super.visitExpressionStatement(tree);
         // This part of code will trigger directly after expression
-        if (findWasUsedOnSlingQuery()) {
+        if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
-            slingQueries.put(slingQueryName, slingQueryStates.ISSUERETURNED);
+            slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
         }
     }
 
@@ -117,10 +119,14 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
     }
 
     private boolean slingQueryWasNotUsed() {
-        return slingQueries.getOrDefault(slingQueryName, slingQueryStates.NOTUSED).equals(slingQueryStates.NOTUSED);
+        return slingQueries.getOrDefault(slingQueryName, SlingQueryStates.NOT_USED) == SlingQueryStates.NOT_USED;
     }
 
-    private boolean findWasUsedOnSlingQuery() {
-        return slingQueries.getOrDefault(slingQueryName, slingQueryStates.NOTUSED).equals(slingQueryStates.FINDUSED);
+    private boolean findWithoutStrategyWasUsedOnSlingQuery() {
+        return slingQueries.getOrDefault(slingQueryName, SlingQueryStates.NOT_USED) == SlingQueryStates.FIND_USED_WITHOUT_STRATEGY;
+    }
+
+    private boolean isThisANewSlingQuery() {
+        return slingQueryWasNotUsed() || "$".equals(slingQueryName) || SLING_QUERY.equals(slingQueryName);
     }
 }
