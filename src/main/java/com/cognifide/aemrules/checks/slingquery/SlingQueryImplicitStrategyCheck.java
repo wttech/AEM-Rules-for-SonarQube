@@ -75,6 +75,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
             slingQueryName = tree.simpleName().name();
         }
         super.visitVariable(tree);
+        // This part of code will trigger directly after initialization
         if (findWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
             slingQueries.put(slingQueryName, slingQueryStates.ISSUERETURNED);
@@ -96,6 +97,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         slingQueries.putIfAbsent(tree.firstToken().text(), slingQueryStates.NOTUSED);
         slingQueryName = tree.firstToken().text();
         super.visitExpressionStatement(tree);
+        // This part of code will trigger directly after expression
         if (findWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
             slingQueries.put(slingQueryName, slingQueryStates.ISSUERETURNED);
