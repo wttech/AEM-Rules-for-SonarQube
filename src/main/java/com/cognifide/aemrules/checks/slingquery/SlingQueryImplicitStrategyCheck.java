@@ -66,6 +66,14 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private boolean insideLambdaExpression = false;
 
+    private boolean isDollarSlingQuery = false;
+
+    private boolean searchStrategyOccurredInLambdaExpression = false;
+
+    private boolean findOccurredInLambdaExpression = false;
+
+    private boolean issueReportedInThisLambdaExpression = false;
+
     @Override
     public void scanFile(JavaFileScannerContext context) {
         this.context = context;
@@ -80,10 +88,14 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
             slingQueryName = variableName;
         }
         super.visitVariable(tree);
-        // This part of code will will be executed directly after initialization
+        // This part of code will be executed directly after initialization
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
             slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
+
+            if (insideLambdaExpression) {
+                issueReportedInThisLambdaExpression = true;
+            }
         }
     }
 
@@ -119,8 +131,10 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     @Override
     public void visitIdentifier(IdentifierTree tree) {
-        if (insideLambdaExpression && DOLLAR_SIGN.equals(tree.name())) {
+        checkFlags(tree);
+        if (shouldIssueBeReported()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
+            issueReportedInThisLambdaExpression = true;
         }
         super.visitIdentifier(tree);
     }
@@ -129,7 +143,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
     public void visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree) {
         insideLambdaExpression = true;
         super.visitLambdaExpression(lambdaExpressionTree);
-        insideLambdaExpression = false;
+        cleaningFlags();
     }
 
     private boolean isSlingQuery(VariableTree tree) {
@@ -156,11 +170,34 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         return DOLLAR_SIGN.equals(slingQueryName) || SLING_QUERY.equals(slingQueryName);
     }
 
+    private boolean shouldIssueBeReported() {
+        return insideLambdaExpression && isDollarSlingQuery && !issueReportedInThisLambdaExpression && !searchStrategyOccurredInLambdaExpression &&
+            findOccurredInLambdaExpression;
+    }
+
+    private void cleaningFlags() {
+        isDollarSlingQuery = false;
+        searchStrategyOccurredInLambdaExpression = false;
+        findOccurredInLambdaExpression = false;
+        issueReportedInThisLambdaExpression = false;
+        insideLambdaExpression = false;
+    }
+
+    private void checkFlags(IdentifierTree tree) {
+        String identifier = tree.name();
+        if (DOLLAR_SIGN.equals(identifier)) {
+            isDollarSlingQuery = true;
+        } else if (SEARCH_STRATEGY_METHOD.equals(identifier)) {
+            searchStrategyOccurredInLambdaExpression = true;
+        } else if (FIND_METHOD.equals(identifier)) {
+            findOccurredInLambdaExpression = true;
+        }
+    }
+
     private enum SlingQueryStates {
         NOT_USED,
         FIND_USED_WITHOUT_STRATEGY,
         STRATEGY_USED,
         ISSUE_RETURNED
-
     }
 }

@@ -96,6 +96,18 @@ public class SlingQueryImplicitStrategyCheck extends SlingAllMethodsServlet {
             .filter(String.class::isInstance)
             .map(String::valueOf)
             .map(path -> resource.getResourceResolver().getResource(path))
+            .map(r -> $(r).searchStrategy(SearchStrategy.QUERY).find(RATINGS_AND_REVIEWS_RESOURCE_TYPE).asList())
+            .filter(CollectionUtils::isNotEmpty)
+            .map(list -> list.get(0));
+    }
+
+    @PostConstruct
+    public void afterCreated() {
+        this.ratingsAndReviews = Optional.of(resource.getResourceMetadata())
+            .map(metadata -> metadata.get(ResourceMetadata.RESOLUTION_PATH))
+            .filter(String.class::isInstance)
+            .map(String::valueOf)
+            .map(path -> resource.getResourceResolver().getResource(path))
             .map(r -> $(r).find(RATINGS_AND_REVIEWS_RESOURCE_TYPE).asList()) // Noncompliant
             .filter(CollectionUtils::isNotEmpty)
             .map(list -> list.get(0));
