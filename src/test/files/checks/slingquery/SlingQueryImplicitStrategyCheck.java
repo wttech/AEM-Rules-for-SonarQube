@@ -54,7 +54,7 @@ public class SlingQueryImplicitStrategyCheck extends SlingAllMethodsServlet {
 
     private void strategyDefined(Resource resource) {
         SlingQuery sq = $(resource).searchStrategy(SearchStrategy.DFS).find("");
-        sq2.find();
+        sq.find();
 
         SlingQuery sq2 = $(resource).searchStrategy(SearchStrategy.DFS).find("").find();
 
@@ -62,5 +62,42 @@ public class SlingQueryImplicitStrategyCheck extends SlingAllMethodsServlet {
 
         $(resource).searchStrategy(SearchStrategy.QUERY).find("res_type").asList().stream()
             .map(r -> r.adaptTo(SlingQueryImplicitStrategyCheck.class).toString()).filter(StringUtils::isNotEmpty).iterator();
+    }
+
+    public void casesThatShouldBeIgnored(ResourceResolver resourceResolver, ScriptFinder scriptFinder) {
+        Script script = scriptFinder.find(PERMISSION_SCRIPT_PATH, resourceResolver);
+
+        while (matcher.find()) {
+            String placeholder = matcher.group(REGEXP_PLACEHOLDER_KEY_GROUP);
+        }
+    }
+
+    private GroupedSearchResponse groupedSearch(GroupedSearchQueryModel queryModel,
+        GroupedSearchRepository repository) {
+        log.info("Global search request [{}]", queryModel);
+        if (StringUtils.EMPTY.equals(queryModel.getPreparedQuery())) {
+            return prepareEmptyGroupedSearchResponse(queryModel);
+        }
+        AemRenditionsConfig renditionsConfig = queryModel.getRenditions();
+        GroupPage<SolrDocument> groupPage =
+            repository.find(queryModel.getSolrCore(),
+                queryModel.getPreparedQuery(),
+                queryModel.getGroupLimit(),
+                queryModel.getSortType(),
+                queryModel.getFiltersQueryModel().getFiltersCriteria());
+
+        resources = resourceSelector.find(path, resolver);
+    }
+
+    @PostConstruct
+    public void afterCreated() {
+        this.ratingsAndReviews = Optional.of(resource.getResourceMetadata())
+            .map(metadata -> metadata.get(ResourceMetadata.RESOLUTION_PATH))
+            .filter(String.class::isInstance)
+            .map(String::valueOf)
+            .map(path -> resource.getResourceResolver().getResource(path))
+            .map(r -> $(r).find(RATINGS_AND_REVIEWS_RESOURCE_TYPE).asList()) // Noncompliant
+            .filter(CollectionUtils::isNotEmpty)
+            .map(list -> list.get(0));
     }
 }
