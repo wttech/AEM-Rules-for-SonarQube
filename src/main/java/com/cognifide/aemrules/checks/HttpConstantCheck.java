@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Lists;
@@ -39,6 +40,9 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "5min"
 )
 public class HttpConstantCheck extends IssuableSubscriptionVisitor {
 
