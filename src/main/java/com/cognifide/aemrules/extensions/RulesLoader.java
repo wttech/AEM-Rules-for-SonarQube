@@ -91,7 +91,7 @@ public class RulesLoader {
         rule.setStatus(RuleStatus.valueOf(ruleAnnotation.status()));
         rule.setTags(ruleAnnotation.tags());
 
-        addMetadata(rule, clazz);
+        setMetadata(rule, clazz);
 
         List<Field> fields = FieldUtils2.getFields(clazz, true);
         for (Field field : fields) {
@@ -101,7 +101,7 @@ public class RulesLoader {
         return rule;
     }
 
-    private void addMetadata(RulesDefinition.NewRule rule, Class<? extends JavaCheck> clazz) {
+    private void setMetadata(RulesDefinition.NewRule rule, Class<? extends JavaCheck> clazz) {
         Optional.ofNullable(AnnotationUtils.getAnnotation(clazz, Metadata.class))
             .ifPresent(metadataAnnotation -> setTechnicalDebt(rule, metadataAnnotation));
     }
