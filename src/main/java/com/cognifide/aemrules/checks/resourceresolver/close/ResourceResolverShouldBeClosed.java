@@ -21,6 +21,7 @@ package com.cognifide.aemrules.checks.resourceresolver.close;
 
 import com.cognifide.aemrules.checks.visitors.CheckClosedVisitor;
 import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
@@ -46,6 +47,9 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "15min"
 )
 public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements JavaFileScanner {
 

@@ -23,6 +23,7 @@ import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
 import static org.sonar.plugins.java.api.tree.Tree.Kind.MEMBER_SELECT;
 import static org.sonar.plugins.java.api.tree.Tree.Kind.STRING_LITERAL;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
@@ -52,6 +53,9 @@ import org.sonar.plugins.java.api.tree.Tree;
 @AemVersion(
     from = "6.0",
     to = "6.2"
+)
+@Metadata(
+    technicalDebt = "10min"
 )
 public class PreferSlingServletAnnotation extends BaseTreeVisitor implements JavaFileScanner {
 

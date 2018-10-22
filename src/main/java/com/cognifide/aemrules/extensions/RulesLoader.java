@@ -19,37 +19,39 @@
  */
 package com.cognifide.aemrules.extensions;
 
-import com.google.common.annotations.VisibleForTesting;
+import com.cognifide.aemrules.metadata.Metadata;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.CheckForNull;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.rule.RuleStatus;
-import org.sonar.api.server.debt.DebtRemediationFunction;
 import org.sonar.api.server.rule.RuleParamType;
 import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.api.server.rule.RulesDefinition.DebtRemediationFunctions;
 import org.sonar.api.utils.AnnotationUtils;
 import org.sonar.api.utils.FieldUtils2;
 import org.sonar.check.Rule;
+import org.sonar.plugins.java.api.JavaCheck;
+
 
 public class RulesLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
 
     private static final String RULE_DESCRIPTION_FOLDER = "rules";
+
     private static final String RULE_DESCRIPTION_EXTENSION = "md";
-    private static final String RULE_METADATA_FOLDER = "metadata";
-    private static final String RULE_METADATA_EXTENSION = "json";
+
     private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
         ImmutableMap.<Class<?>, RuleParamType>builder()
             .put(Integer.class, RuleParamType.INTEGER)
@@ -61,12 +63,10 @@ public class RulesLoader {
             .build(),
         RuleParamType.STRING
     );
-    private final Gson gson = new Gson();
 
-    @VisibleForTesting
-    static RuleParamType guessType(Class<?> type) {
+   private static RuleParamType guessType(Class<?> type) {
         return TYPE_FOR_CLASS.apply(type);
-    }
+   }
 
     public <T> void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends T>> annotatedClasses) {
         for (Class annotatedClass : annotatedClasses) {
@@ -75,17 +75,13 @@ public class RulesLoader {
     }
 
     @CheckForNull
-    RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class clazz) {
-        Rule ruleAnnotation = AnnotationUtils.getAnnotation(clazz, Rule.class);
-        if (ruleAnnotation != null) {
-            return loadRule(repo, clazz, ruleAnnotation);
-        } else {
-            LOG.warn("The class {} should be annotated with {}", clazz.getCanonicalName(), Rule.class);
-            return null;
-        }
+    private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class clazz) {
+        return Optional.ofNullable(AnnotationUtils.getAnnotation(clazz, Rule.class))
+            .map(annotationRule -> createRule(repo, clazz, annotationRule))
+            .orElse(null);
     }
 
-    private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class clazz, Rule ruleAnnotation) {
+    private RulesDefinition.NewRule createRule(RulesDefinition.NewExtendedRepository repo, Class clazz, Rule ruleAnnotation) {
         String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
         String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
         String description = StringUtils.defaultIfEmpty(loadDescription(ruleKey), "No description yet.");
@@ -96,7 +92,7 @@ public class RulesLoader {
         rule.setStatus(RuleStatus.valueOf(ruleAnnotation.status()));
         rule.setTags(ruleAnnotation.tags());
 
-        addMetadata(rule);
+        setMetadata(rule, clazz);
 
         List<Field> fields = FieldUtils2.getFields(clazz, true);
         for (Field field : fields) {
@@ -106,23 +102,24 @@ public class RulesLoader {
         return rule;
     }
 
-    private void addMetadata(RulesDefinition.NewRule rule) {
-        String json = loadMetadata(rule.key());
-        if (json != null) {
-            RuleMetadata ruleMetadata = gson.fromJson(json, RuleMetadata.class);
-            rule.setDebtRemediationFunction(ruleMetadata.remediation.remediationFunction(rule.debtRemediationFunctions()));
+    private void setMetadata(RulesDefinition.NewRule rule, Class<? extends JavaCheck> clazz) {
+        Optional.ofNullable(AnnotationUtils.getAnnotation(clazz, Metadata.class))
+            .ifPresent(metadataAnnotation -> setTechnicalDebt(rule, metadataAnnotation));
+    }
+
+    private void setTechnicalDebt(RulesDefinition.NewRule rule, Metadata metadataAnnotation) {
+        String technicalDebt = metadataAnnotation.technicalDebt();
+        if (StringUtils.isNotEmpty(technicalDebt)) {
+            DebtRemediationFunctions remediationFunction = rule.debtRemediationFunctions();
+            rule.setDebtRemediationFunction(remediationFunction.constantPerIssue(technicalDebt));
         }
     }
 
-    protected String loadDescription(String ruleKey) {
+    private String loadDescription(String ruleKey) {
         return loadResource(RULE_DESCRIPTION_FOLDER, ruleKey, RULE_DESCRIPTION_EXTENSION);
     }
 
-    protected String loadMetadata(String ruleKey) {
-        return loadResource(RULE_METADATA_FOLDER, ruleKey, RULE_METADATA_EXTENSION);
-    }
-
-    protected String loadResource(String resourceFolder, String ruleKey, String fileExtension) {
+    private String loadResource(String resourceFolder, String ruleKey, String fileExtension) {
         String result = null;
         try {
             String path = String.format("/%s/%s.%s", resourceFolder, ruleKey, fileExtension);
@@ -154,17 +151,4 @@ public class RulesLoader {
         }
     }
 
-    private static class RuleMetadata {
-
-        Remediation remediation;
-    }
-
-    private static class Remediation {
-
-        String constantCost;
-
-        public DebtRemediationFunction remediationFunction(RulesDefinition.DebtRemediationFunctions remediationFn) {
-            return remediationFn.constantPerIssue(constantCost);
-        }
-    }
 }

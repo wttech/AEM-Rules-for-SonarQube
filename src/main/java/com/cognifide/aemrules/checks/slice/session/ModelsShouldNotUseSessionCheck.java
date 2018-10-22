@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks.slice.session;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import javax.annotation.Nonnull;
@@ -40,6 +41,9 @@ import org.sonar.plugins.java.api.tree.ClassTree;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "30min"
 )
 public class ModelsShouldNotUseSessionCheck extends BaseTreeVisitor implements JavaFileScanner {
 

@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks.slice.jcrproperty;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.TypeUtils;
 import com.cognifide.aemrules.version.AemVersion;
@@ -45,6 +46,9 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "15min"
 )
 public class JcrPropertyFieldsInConstructorCheck extends BaseTreeVisitor implements JavaFileScanner {
 

@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.util.ConstantsChecker;
 import com.cognifide.aemrules.version.AemVersion;
@@ -40,6 +41,9 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "5min"
 )
 public class ConstantsCheck extends IssuableSubscriptionVisitor {
 
