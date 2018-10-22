@@ -60,13 +60,13 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private Map<String, SlingQueryStates> slingQueries = new HashMap<>();
 
+    private boolean findMethodUsed = false;
+
+    private boolean searchStrategyMethodUsed = false;
+
+    private boolean ignoreIssues = false;
+
     private JavaFileScannerContext context;
-
-    private boolean find = false;
-
-    private boolean search = false;
-
-    private boolean reported = false;
 
     @Override
     public void scanFile(JavaFileScannerContext context) {
@@ -86,7 +86,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
             slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
-            reported = true;
+            ignoreIssues = true;
         }
     }
 
@@ -96,17 +96,15 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
             slingQueries.replace(slingQueryName, SlingQueryStates.FIND_USED_WITHOUT_STRATEGY);
         } else if (isSearchStrategyMethod(tree)) {
             slingQueries.replace(slingQueryName, SlingQueryStates.STRATEGY_USED);
-            reported = true;
+            ignoreIssues = true;
         }
-        if ("$".equals(tree.methodSelect().firstToken().text()) && find && !search && !reported) {
+        if (DOLLAR_SIGN.equals(tree.methodSelect().firstToken().text()) && isDollarCase()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
-            reported = true;
-        }
-        if (isFindMethod(tree)) {
-            find = true;
-        }
-        if (isSearchStrategyMethod(tree)) {
-            search = true;
+            ignoreIssues = true;
+        } else if (isFindMethod(tree)) {
+            findMethodUsed = true;
+        } else if (isSearchStrategyMethod(tree)) {
+            searchStrategyMethodUsed = true;
         }
         super.visitMethodInvocation(tree);
     }
@@ -122,14 +120,13 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
             slingQueries.put(this.slingQueryName, SlingQueryStates.ISSUE_RETURNED);
-            reported = true;
+            ignoreIssues = true;
         }
     }
 
     @Override
     public void visitMethod(MethodTree tree) {
-        slingQueries.clear();
-        cleanFlags();
+        clean();
         super.visitMethod(tree);
     }
 
@@ -157,10 +154,15 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         return DOLLAR_SIGN.equals(slingQueryName) || SLING_QUERY.equals(slingQueryName);
     }
 
-    private void cleanFlags() {
-        find = false;
-        search = false;
-        reported = false;
+    private boolean isDollarCase() {
+        return findMethodUsed && !searchStrategyMethodUsed && !ignoreIssues;
+    }
+
+    private void clean() {
+        slingQueries.clear();
+        findMethodUsed = false;
+        searchStrategyMethodUsed = false;
+        ignoreIssues = false;
     }
 
     private enum SlingQueryStates {
