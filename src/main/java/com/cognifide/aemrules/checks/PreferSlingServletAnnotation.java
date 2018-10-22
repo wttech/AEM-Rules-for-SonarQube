@@ -19,165 +19,186 @@
  */
 package com.cognifide.aemrules.checks;
 
+import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.MEMBER_SELECT;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.STRING_LITERAL;
+
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.semantic.Type;
-import org.sonar.plugins.java.api.tree.*;
-
-import java.util.Set;
-
-import static org.sonar.plugins.java.api.tree.Tree.Kind.*;
+import org.sonar.plugins.java.api.tree.AnnotationTree;
+import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
+import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.ExpressionTree;
+import org.sonar.plugins.java.api.tree.IdentifierTree;
+import org.sonar.plugins.java.api.tree.LiteralTree;
+import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
+import org.sonar.plugins.java.api.tree.Tree;
 
 @Rule(
-		key = PreferSlingServletAnnotation.RULE_KEY,
-		name = PreferSlingServletAnnotation.RULE_MESSAGE,
-		priority = Priority.MINOR,
-		tags = Tags.AEM
+    key = PreferSlingServletAnnotation.RULE_KEY,
+    name = PreferSlingServletAnnotation.RULE_MESSAGE,
+    priority = Priority.MINOR,
+    tags = Tags.AEM
+)
+@AemVersion(
+    from = "6.0",
+    to = "6.2"
+)
+@Metadata(
+    technicalDebt = "10min"
 )
 public class PreferSlingServletAnnotation extends BaseTreeVisitor implements JavaFileScanner {
 
-	public static final String RULE_KEY = "AEM-8";
+    public static final String RULE_KEY = "AEM-8";
 
-	public static final String RULE_MESSAGE = "Prefer cleaner @SlingServlet annotation.";
+    public static final String RULE_MESSAGE = "Prefer cleaner @SlingServlet annotation.";
 
-	public static final String PROPERTY_MESSAGE = "Property %s can be handled by @SlingServlet annotation.";
+    public static final String PROPERTY_MESSAGE = "Property %s can be handled by @SlingServlet annotation.";
 
-	public static final String SERVLET_RESOLVER_CONSTANTS_CLASS = "org.apache.sling.servlets.resolver.internal.ServletResolverConstants";
+    public static final String SERVLET_RESOLVER_CONSTANTS_CLASS = "org.apache.sling.servlets.resolver.internal.ServletResolverConstants";
 
-	private static final Set<String> SERVLET_CONSTANTS = Sets.newHashSet(
-			"SLING_SERVLET_METHODS",
-			"SLING_SERVLET_EXTENSIONS",
-			"SLING_SERVLET_SELECTORS",
-			"SLING_SERVLET_RESOURCE_TYPES");
+    public static final String NAME = "name";
 
-	private static final Set<String> SERVLET_CONSTANTS_VALUES = Sets.newHashSet(
-			"sling.servlet.paths",
-			"sling.servlet.resourceTypes",
-			"sling.servlet.selectors",
-			"sling.servlet.extensions");
-	public static final String NAME = "name";
+    private static final Set<String> SERVLET_CONSTANTS = Sets.newHashSet(
+        "SLING_SERVLET_METHODS",
+        "SLING_SERVLET_EXTENSIONS",
+        "SLING_SERVLET_SELECTORS",
+        "SLING_SERVLET_RESOURCE_TYPES");
 
-	private JavaFileScannerContext context;
+    private static final Set<String> SERVLET_CONSTANTS_VALUES = Sets.newHashSet(
+        "sling.servlet.paths",
+        "sling.servlet.resourceTypes",
+        "sling.servlet.selectors",
+        "sling.servlet.extensions");
 
-	private CheckAppliedAnnotationsVisitor annotations;
+    private JavaFileScannerContext context;
 
-	@Override
-	public void scanFile(JavaFileScannerContext context) {
-		this.context = context;
-		gatherAppliedAnnotations(context);
-		scan(context.getTree());
-	}
+    private CheckAppliedAnnotationsVisitor annotations;
 
-	private void gatherAppliedAnnotations(JavaFileScannerContext context) {
-		annotations = new CheckAppliedAnnotationsVisitor();
-		context.getTree().accept(annotations);
-	}
+    @Override
+    public void scanFile(JavaFileScannerContext context) {
+        this.context = context;
+        gatherAppliedAnnotations(context);
+        scan(context.getTree());
+    }
 
-	@Override
-	public void visitClass(ClassTree tree) {
-		if (isSlingServlet(tree)) {
-			scan(tree.modifiers());
-			if (!annotations.hasStandardComponentAnnotation()) {
-				if (!annotations.hasSlingServletAnnotation()) {
-					context.reportIssue(this, tree, RULE_MESSAGE);
-				} else if (annotations.hasMixedUpAnnotations()) {
-					context.reportIssue(this, tree, "@Component nor @Service annotation is not needed when @SlingServlet is used.");
-				}
-			}
-		}
-	}
+    private void gatherAppliedAnnotations(JavaFileScannerContext context) {
+        annotations = new CheckAppliedAnnotationsVisitor();
+        context.getTree().accept(annotations);
+    }
 
-	@Override
-	public void visitAnnotation(AnnotationTree annotationTree) {
-		if (annotations.hasSlingServletAnnotation() && isPropertyAnnotation(annotationTree)) {
-			for (ExpressionTree expression : annotationTree.arguments()) {
-				if (isAssignmentToName(expression)) {
-					checkIfPropertyInsteadSlingServletIsUsed(annotationTree, (AssignmentExpressionTree) expression);
-				}
-			}
-		}
-		super.visitAnnotation(annotationTree);
-	}
+    @Override
+    public void visitClass(ClassTree tree) {
+        if (isSlingServlet(tree)) {
+            scan(tree.modifiers());
+            if (!annotations.hasStandardComponentAnnotation()) {
+                if (!annotations.hasSlingServletAnnotation()) {
+                    context.reportIssue(this, tree, RULE_MESSAGE);
+                } else if (annotations.hasMixedUpAnnotations()) {
+                    context.reportIssue(this, tree, "@Component nor @Service annotation is not needed when @SlingServlet is used.");
+                }
+            }
+        }
+    }
 
-	private void checkIfPropertyInsteadSlingServletIsUsed(AnnotationTree annotationTree, AssignmentExpressionTree assignmentExpression) {
-		ExpressionTree expression = assignmentExpression.expression();
-		if (expression.is(STRING_LITERAL)) {
-			LiteralTree literal = (LiteralTree) expression;
-			if (SERVLET_CONSTANTS_VALUES.contains(removeQuotes(literal.value()))) {
-				String message = String.format(PROPERTY_MESSAGE, literal.value());
-				context.reportIssue(this, annotationTree, message);
-			}
-		} else if (expression.is(IDENTIFIER, MEMBER_SELECT)) {
-			IdentifierTree identifier = expression.is(IDENTIFIER) ? (IdentifierTree) expression : ((MemberSelectExpressionTree) expression).identifier();
-			String name = identifier.symbol().name();
-			Type type = identifier.symbol().owner().type();
-			if (type != null && type.fullyQualifiedName().equals(SERVLET_RESOLVER_CONSTANTS_CLASS) && SERVLET_CONSTANTS.contains(name)) {
-				String message = String.format(PROPERTY_MESSAGE, name);
-				context.reportIssue(this, annotationTree, message);
-			}
-		}
-	}
+    @Override
+    public void visitAnnotation(AnnotationTree annotationTree) {
+        if (annotations.hasSlingServletAnnotation() && isPropertyAnnotation(annotationTree)) {
+            for (ExpressionTree expression : annotationTree.arguments()) {
+                if (isAssignmentToName(expression)) {
+                    checkIfPropertyInsteadSlingServletIsUsed(annotationTree, (AssignmentExpressionTree) expression);
+                }
+            }
+        }
+        super.visitAnnotation(annotationTree);
+    }
 
-	private boolean isAssignmentToName(ExpressionTree expression) {
-		boolean result = false;
-		if (expression.is(Tree.Kind.ASSIGNMENT)) {
-			AssignmentExpressionTree assignment = (AssignmentExpressionTree) expression;
-			result = NAME.equals(((IdentifierTree) assignment.variable()).name());
-		}
-		return result;
-	}
+    private void checkIfPropertyInsteadSlingServletIsUsed(AnnotationTree annotationTree, AssignmentExpressionTree assignmentExpression) {
+        ExpressionTree expression = assignmentExpression.expression();
+        if (expression.is(STRING_LITERAL)) {
+            LiteralTree literal = (LiteralTree) expression;
+            if (SERVLET_CONSTANTS_VALUES.contains(removeQuotes(literal.value()))) {
+                String message = String.format(PROPERTY_MESSAGE, literal.value());
+                context.reportIssue(this, annotationTree, message);
+            }
+        } else if (expression.is(IDENTIFIER, MEMBER_SELECT)) {
+            IdentifierTree identifier = expression.is(IDENTIFIER) ? (IdentifierTree) expression : ((MemberSelectExpressionTree) expression).identifier();
+            String name = identifier.symbol().name();
+            Type type = identifier.symbol().owner().type();
+            if (type != null && type.fullyQualifiedName().equals(SERVLET_RESOLVER_CONSTANTS_CLASS) && SERVLET_CONSTANTS.contains(name)) {
+                String message = String.format(PROPERTY_MESSAGE, name);
+                context.reportIssue(this, annotationTree, message);
+            }
+        }
+    }
 
-	private boolean isPropertyAnnotation(AnnotationTree annotationTree) {
-		return isOfType(annotationTree, "org.apache.felix.scr.annotations.Property");
-	}
+    private boolean isAssignmentToName(ExpressionTree expression) {
+        boolean result = false;
+        if (expression.is(Tree.Kind.ASSIGNMENT)) {
+            AssignmentExpressionTree assignment = (AssignmentExpressionTree) expression;
+            result = NAME.equals(((IdentifierTree) assignment.variable()).name());
+        }
+        return result;
+    }
 
-	private boolean isOfType(AnnotationTree annotationTree, String fullyQualifiedName) {
-		return annotationTree.annotationType().symbolType().fullyQualifiedName().equals(fullyQualifiedName);
-	}
+    private boolean isPropertyAnnotation(AnnotationTree annotationTree) {
+        return isOfType(annotationTree, "org.apache.felix.scr.annotations.Property");
+    }
 
-	private boolean isSlingServlet(ClassTree tree) {
-		Type type = tree.symbol().type();
-		boolean allMethodsServlet = type.isSubtypeOf("org.apache.sling.api.servlets.SlingAllMethodsServlet");
-		boolean safeMethodsServlet = type.isSubtypeOf("org.apache.sling.api.servlets.SlingSafeMethodsServlet");
-		return allMethodsServlet || safeMethodsServlet;
-	}
+    private boolean isOfType(AnnotationTree annotationTree, String fullyQualifiedName) {
+        return annotationTree.annotationType().symbolType().fullyQualifiedName().equals(fullyQualifiedName);
+    }
 
-	private String removeQuotes(String value) {
-		return value.replaceAll("^\"|\"$", StringUtils.EMPTY);
-	}
+    private boolean isSlingServlet(ClassTree tree) {
+        Type type = tree.symbol().type();
+        boolean allMethodsServlet = type.isSubtypeOf("org.apache.sling.api.servlets.SlingAllMethodsServlet");
+        boolean safeMethodsServlet = type.isSubtypeOf("org.apache.sling.api.servlets.SlingSafeMethodsServlet");
+        return allMethodsServlet || safeMethodsServlet;
+    }
 
-	private class CheckAppliedAnnotationsVisitor extends BaseTreeVisitor {
+    private String removeQuotes(String value) {
+        return value.replaceAll("^\"|\"$", StringUtils.EMPTY);
+    }
 
-		private boolean legacyServiceAnnotation;
+    private class CheckAppliedAnnotationsVisitor extends BaseTreeVisitor {
 
-		private boolean legacyComponentAnnotation;
+        private boolean legacyServiceAnnotation;
 
-		private boolean standardComponentAnnotation;
+        private boolean legacyComponentAnnotation;
 
-		private boolean slingServletAnnotation;
+        private boolean standardComponentAnnotation;
 
-		@Override
-		public void visitAnnotation(AnnotationTree annotationTree) {
-			standardComponentAnnotation |= isOfType(annotationTree, "org.osgi.service.component.annotations.Component");
-			legacyServiceAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Service");
-			legacyComponentAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Component");
-			slingServletAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.sling.SlingServlet");
-			super.visitAnnotation(annotationTree);
-		}
+        private boolean slingServletAnnotation;
 
-		public boolean hasMixedUpAnnotations() {
-			return slingServletAnnotation && (legacyServiceAnnotation || legacyComponentAnnotation);
-		}
+        @Override
+        public void visitAnnotation(AnnotationTree annotationTree) {
+            standardComponentAnnotation |= isOfType(annotationTree, "org.osgi.service.component.annotations.Component");
+            legacyServiceAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Service");
+            legacyComponentAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.Component");
+            slingServletAnnotation |= isOfType(annotationTree, "org.apache.felix.scr.annotations.sling.SlingServlet");
+            super.visitAnnotation(annotationTree);
+        }
 
-		public boolean hasSlingServletAnnotation() {
-			return slingServletAnnotation;
-		}
+        public boolean hasMixedUpAnnotations() {
+            return slingServletAnnotation && (legacyServiceAnnotation || legacyComponentAnnotation);
+        }
 
-		public boolean hasStandardComponentAnnotation() { return standardComponentAnnotation; }
-	}
+        public boolean hasSlingServletAnnotation() {
+            return slingServletAnnotation;
+        }
+
+        public boolean hasStandardComponentAnnotation() {
+            return standardComponentAnnotation;
+        }
+    }
 }

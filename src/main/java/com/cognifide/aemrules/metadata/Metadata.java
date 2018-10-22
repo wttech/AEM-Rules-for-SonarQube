@@ -17,17 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.checks;
+package com.cognifide.aemrules.metadata;
 
-import org.junit.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class SynchornizedKeywordUsageCheckTest extends AbstractBaseTest {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Metadata {
 
-	@Test
-	public void checkThreadSafeFieldsInServlet() {
-		check = new SynchornizedKeywordUsageCheck();
-		filename = "src/test/files/checks/SynchornizedKeywordUsageCheck.java";
-		verify();
-	}
-
+    /**
+     * Sets a technical debt for the Rule.
+     */
+    String technicalDebt();
 }

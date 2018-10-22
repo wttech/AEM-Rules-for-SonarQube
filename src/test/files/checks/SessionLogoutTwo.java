@@ -19,31 +19,29 @@
  */
 package com.example;
 
-import org.apache.commons.lang.StringUtils;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.sling.jcr.api.SlingRepository;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
 @Component(immediate = true)
 public class SessionLogout {
 
-	@Reference
-	private SlingRepository repository;
+    @Reference
+    private SlingRepository repository;
 
-	public void two() {
-		Session session = null;
-		try {
-			session = repository.loginAdministrative(null);
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-		} finally {
-			if (session != null && session.isLive()) {
-				session.logout();
-			}
-		}
-	}
+    public void two() {
+        Session session = null;
+        try {
+            session = repository.loginAdministrative(null);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isLive()) {
+                session.logout();
+            }
+        }
+    }
 
 }

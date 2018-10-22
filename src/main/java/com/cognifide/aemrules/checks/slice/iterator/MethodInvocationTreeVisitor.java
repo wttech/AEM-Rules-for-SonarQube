@@ -34,65 +34,65 @@ import static com.cognifide.aemrules.Constants.RESOURCE_TYPE;
 
 class MethodInvocationTreeVisitor extends BaseTreeVisitor {
 
-	private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER = MethodMatcher
-		.create()
-		.typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
-		.name("get")
-		.addParameter(TypeCriteria.anyType())
-		.addParameter(RESOURCE_TYPE);
+    private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER = MethodMatcher
+        .create()
+        .typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
+        .name("get")
+        .addParameter(TypeCriteria.anyType())
+        .addParameter(RESOURCE_TYPE);
 
-	private final Set<MethodInvocationTree> visitedMethodInvocationTrees;
+    private final Set<MethodInvocationTree> visitedMethodInvocationTrees;
 
-	private boolean modelProviderGetCalled;
+    private boolean modelProviderGetCalled;
 
-	MethodInvocationTreeVisitor() {
-		this(new HashSet<MethodInvocationTree>(16));
-	}
+    MethodInvocationTreeVisitor() {
+        this(new HashSet<MethodInvocationTree>(16));
+    }
 
-	MethodInvocationTreeVisitor(Set<MethodInvocationTree> visitedMethodInvocationTrees) {
-		this.visitedMethodInvocationTrees = new HashSet<>(visitedMethodInvocationTrees);
-	}
+    MethodInvocationTreeVisitor(Set<MethodInvocationTree> visitedMethodInvocationTrees) {
+        this.visitedMethodInvocationTrees = new HashSet<>(visitedMethodInvocationTrees);
+    }
 
-	public boolean isModelProviderGetCalled() {
-		return modelProviderGetCalled;
-	}
+    public boolean isModelProviderGetCalled() {
+        return modelProviderGetCalled;
+    }
 
-	@Override
-	public void visitMethodInvocation(MethodInvocationTree tree) {
-		if (wasNotVisitedYet(tree)) {
-			if (MODEL_PROVIDER_GET_MATCHER.matches(tree)) {
-				modelProviderGetCalled = true;
-			} else {
-				MethodTree methodDeclaration = getMethodTree(tree);
-				if (methodDeclaration != null) {
-					MethodInvocationTreeVisitor visitor = new MethodInvocationTreeVisitor(visitedMethodInvocationTrees);
-					methodDeclaration.accept(visitor);
-					modelProviderGetCalled = visitor.isModelProviderGetCalled();
-				} else {
-					super.visitMethodInvocation(tree);
-				}
-			}
-		}
-	}
+    @Override
+    public void visitMethodInvocation(MethodInvocationTree tree) {
+        if (wasNotVisitedYet(tree)) {
+            if (MODEL_PROVIDER_GET_MATCHER.matches(tree)) {
+                modelProviderGetCalled = true;
+            } else {
+                MethodTree methodDeclaration = getMethodTree(tree);
+                if (methodDeclaration != null) {
+                    MethodInvocationTreeVisitor visitor = new MethodInvocationTreeVisitor(visitedMethodInvocationTrees);
+                    methodDeclaration.accept(visitor);
+                    modelProviderGetCalled = visitor.isModelProviderGetCalled();
+                } else {
+                    super.visitMethodInvocation(tree);
+                }
+            }
+        }
+    }
 
-	private boolean wasNotVisitedYet(MethodInvocationTree tree) {
-		boolean wasNotVisited = !visitedMethodInvocationTrees.contains(tree);
-		if (wasNotVisited) {
-			visitedMethodInvocationTrees.add(tree);
-		}
-		return wasNotVisited;
-	}
+    private boolean wasNotVisitedYet(MethodInvocationTree tree) {
+        boolean wasNotVisited = !visitedMethodInvocationTrees.contains(tree);
+        if (wasNotVisited) {
+            visitedMethodInvocationTrees.add(tree);
+        }
+        return wasNotVisited;
+    }
 
-	private MethodTree getMethodTree(MethodInvocationTree methodInvocation) {
-		if (methodInvocation.methodSelect() instanceof IdentifierTree) {
-			IdentifierTree method = (IdentifierTree) methodInvocation.methodSelect();
-			return (MethodTree) getDeclaration(method);
-		}
-		return null;
-	}
+    private MethodTree getMethodTree(MethodInvocationTree methodInvocation) {
+        if (methodInvocation.methodSelect() instanceof IdentifierTree) {
+            IdentifierTree method = (IdentifierTree) methodInvocation.methodSelect();
+            return (MethodTree) getDeclaration(method);
+        }
+        return null;
+    }
 
-	private Tree getDeclaration(IdentifierTree variable) {
-		return variable.symbol().declaration();
-	}
+    private Tree getDeclaration(IdentifierTree variable) {
+        return variable.symbol().declaration();
+    }
 
 }

@@ -21,10 +21,9 @@ package com.example;
 
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
-import org.apache.commons.lang.StringUtils;
-
-import javax.inject.Inject;
 import java.util.Properties;
+import javax.inject.Inject;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Krzysztof Watral
@@ -32,40 +31,40 @@ import java.util.Properties;
 @SliceResource
 public class JcrPropertySampleModel {
 
-	@JcrProperty
-	private String name;
+    @JcrProperty
+    private String name;
 
-	@JcrProperty
-	private String surname;
+    @JcrProperty
+    private String surname;
 
-	private String modName;
+    private String modName;
 
-	private String city;
+    private String city;
 
-	public JcrPropertySampleModel() {
-	}
+    public JcrPropertySampleModel() {
+    }
 
-	public JcrPropertySampleModel(int i) {
-		if (StringUtils.isBlank(name)) { // Noncompliant {{Fields annotated by @JcrProperty shouldn't be accessed from constructor.}}
-			modName = surname + i; // Noncompliant
-		}
-		city = "Poznan";
-	}
-	
-	@Inject
-	public JcrPropertySampleModel(Properties properties) {
-		city = properties.getProperty("city");
-	}
+    public JcrPropertySampleModel(int i) {
+        if (StringUtils.isBlank(name)) { // Noncompliant {{Fields annotated by @JcrProperty shouldn't be accessed from constructor.}}
+            modName = surname + i; // Noncompliant
+        }
+        city = "Poznan";
+    }
 
-	public JcrPropertySampleModel(String surname) {
-		this.surname = surname; // Noncompliant
-	}
+    @Inject
+    public JcrPropertySampleModel(Properties properties) {
+        city = properties.getProperty("city");
+    }
 
-	public String getName() {
-		return name;
-	}
+    public JcrPropertySampleModel(String surname) {
+        this.surname = surname; // Noncompliant
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

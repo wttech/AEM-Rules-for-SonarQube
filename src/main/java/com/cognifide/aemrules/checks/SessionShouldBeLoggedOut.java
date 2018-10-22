@@ -19,10 +19,16 @@
  */
 package com.cognifide.aemrules.checks;
 
+import com.cognifide.aemrules.checks.visitors.CheckLoggedOutVisitor;
+import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
+import com.cognifide.aemrules.checks.visitors.FindSessionDeclarationVisitor;
+import com.cognifide.aemrules.metadata.Metadata;
+import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
+import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -34,95 +40,94 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import com.cognifide.aemrules.checks.visitors.CheckLoggedOutVisitor;
-import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
-import com.cognifide.aemrules.checks.visitors.FindSessionDeclarationVisitor;
-import com.cognifide.aemrules.tag.Tags;
-import com.google.common.collect.Sets;
-
 @Rule(
-	key = SessionShouldBeLoggedOut.RULE_KEY,
-	name = SessionShouldBeLoggedOut.RULE_MESSAGE,
-	priority = Priority.CRITICAL,
-	tags = Tags.AEM
+    key = SessionShouldBeLoggedOut.RULE_KEY,
+    name = SessionShouldBeLoggedOut.RULE_MESSAGE,
+    priority = Priority.CRITICAL,
+    tags = Tags.AEM
+)
+@AemVersion(
+    all = true
+)
+@Metadata(
+    technicalDebt = "10min"
 )
 public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFileScanner {
 
-	public static final String RULE_KEY = "AEM-7";
+    public static final String RULE_KEY = "AEM-7";
 
-	public static final String RULE_MESSAGE = "Session should be logged out in finally block.";
+    public static final String RULE_MESSAGE = "Session should be logged out in finally block.";
 
-	private static final String ACTIVATE = "Activate";
+    private static final String ACTIVATE = "Activate";
 
-	private static final String DEACTIVATE = "Deactivate";
+    private static final String DEACTIVATE = "Deactivate";
 
-	protected JavaFileScannerContext context;
+    protected JavaFileScannerContext context;
 
-	private Collection<VariableTree> longSessions;
+    private Collection<VariableTree> longSessions;
 
-	@Override
-	public void scanFile(JavaFileScannerContext javaFileScannerContext) {
-		context = javaFileScannerContext;
-		scan(context.getTree());
-	}
+    @Override
+    public void scanFile(JavaFileScannerContext javaFileScannerContext) {
+        context = javaFileScannerContext;
+        scan(context.getTree());
+    }
 
-	@Override
-	public void visitMethod(MethodTree method) {
-		if (!checkIfLongSession(method)) {
-			Collection<VariableTree> sessions = findSessionsInMethod(method);
-			for (VariableTree session : sessions) {
-				if (!checkIfLoggedOut(method, session)) {
-					context.reportIssue(this, session, RULE_MESSAGE);
-				}
-			}
-		}
-		super.visitMethod(method);
-	}
+    @Override
+    public void visitMethod(MethodTree method) {
+        if (!checkIfLongSession(method)) {
+            Collection<VariableTree> sessions = findSessionsInMethod(method);
+            for (VariableTree session : sessions) {
+                if (!checkIfLoggedOut(method, session)) {
+                    context.reportIssue(this, session, RULE_MESSAGE);
+                }
+            }
+        }
+        super.visitMethod(method);
+    }
 
-	protected boolean checkIfLongSession(MethodTree method) {
-		List<AnnotationTree> annotations = method.modifiers().annotations();
-		for (AnnotationTree annotationTree : annotations) {
-			if (annotationTree.annotationType().is(Tree.Kind.IDENTIFIER)) {
-				IdentifierTree idf = (IdentifierTree) annotationTree.annotationType();
-				if (idf.name().equals(ACTIVATE)) {
-					collectLongSessionOpened(method);
-					return true;
-				}
-				else if (idf.name().equals(DEACTIVATE)) {
-					collectLongSessionClosed(method);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    protected boolean checkIfLongSession(MethodTree method) {
+        List<AnnotationTree> annotations = method.modifiers().annotations();
+        for (AnnotationTree annotationTree : annotations) {
+            if (annotationTree.annotationType().is(Tree.Kind.IDENTIFIER)) {
+                IdentifierTree idf = (IdentifierTree) annotationTree.annotationType();
+                if (idf.name().equals(ACTIVATE)) {
+                    collectLongSessionOpened(method);
+                    return true;
+                } else if (idf.name().equals(DEACTIVATE)) {
+                    collectLongSessionClosed(method);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	private void collectLongSessionOpened(MethodTree method) {
-		longSessions = findSessionsInMethod(method);
-	}
+    private void collectLongSessionOpened(MethodTree method) {
+        longSessions = findSessionsInMethod(method);
+    }
 
-	private void collectLongSessionClosed(MethodTree method) {
-		if (longSessions != null) {
-			for (VariableTree longSession : longSessions) {
-				if (!checkIfLoggedOut(method, longSession)) {
-					context.reportIssue(this, longSession, RULE_MESSAGE);
-				}
-			}
-		}
-	}
+    private void collectLongSessionClosed(MethodTree method) {
+        if (longSessions != null) {
+            for (VariableTree longSession : longSessions) {
+                if (!checkIfLoggedOut(method, longSession)) {
+                    context.reportIssue(this, longSession, RULE_MESSAGE);
+                }
+            }
+        }
+    }
 
-	protected boolean checkIfLoggedOut(MethodTree method, VariableTree injector) {
-		Set<IdentifierTree> usagesOfSession = Sets.newHashSet(injector.symbol().usages());
-		CheckLoggedOutVisitor checkLoggedOutVisitor = new CheckLoggedOutVisitor(usagesOfSession);
-		FinallyBlockVisitor finallyBlockVisitor = new FinallyBlockVisitor(checkLoggedOutVisitor);
-		method.accept(finallyBlockVisitor);
-		return checkLoggedOutVisitor.isLoggedOut();
-	}
+    protected boolean checkIfLoggedOut(MethodTree method, VariableTree injector) {
+        Set<IdentifierTree> usagesOfSession = Sets.newHashSet(injector.symbol().usages());
+        CheckLoggedOutVisitor checkLoggedOutVisitor = new CheckLoggedOutVisitor(usagesOfSession);
+        FinallyBlockVisitor finallyBlockVisitor = new FinallyBlockVisitor(checkLoggedOutVisitor);
+        method.accept(finallyBlockVisitor);
+        return checkLoggedOutVisitor.isLoggedOut();
+    }
 
-	protected Collection<VariableTree> findSessionsInMethod(MethodTree methodTree) {
-		FindSessionDeclarationVisitor findSessionDeclarationVisitor = new FindSessionDeclarationVisitor();
-		methodTree.accept(findSessionDeclarationVisitor);
-		return findSessionDeclarationVisitor.getDeclarations();
-	}
+    protected Collection<VariableTree> findSessionsInMethod(MethodTree methodTree) {
+        FindSessionDeclarationVisitor findSessionDeclarationVisitor = new FindSessionDeclarationVisitor();
+        methodTree.accept(findSessionDeclarationVisitor);
+        return findSessionDeclarationVisitor.getDeclarations();
+    }
 
 }
