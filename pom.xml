@@ -67,7 +67,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.version>6.4</sonar.version>
+        <htl.version>1.0.14</htl.version>
+        <sonar.version>6.7</sonar.version>
+        <sonar.html.version>3.0.1.1444</sonar.html.version>
         <sonar.java.plugin>4.10.0.10260</sonar.java.plugin>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
         <tagName>v${project.version}</tagName>
@@ -86,6 +88,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.scripting.sightly.compiler</artifactId>
+            <version>${htl.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-plugin-api</artifactId>
             <version>${sonar.version}</version>
@@ -101,6 +118,17 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.html</groupId>
+            <artifactId>sonar-html-plugin</artifactId>
+            <version>${sonar.html.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Unit Test dependencies -->
@@ -231,7 +259,7 @@
                     <skipDependenciesPackaging>false</skipDependenciesPackaging>
                     <requirePlugins>java:4.10</requirePlugins>
                     <basePlugin>java</basePlugin>
-                    <sonarQubeMinVersion>5.6.6</sonarQubeMinVersion>
+                    <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
                 </configuration>
             </plugin>
             <plugin>

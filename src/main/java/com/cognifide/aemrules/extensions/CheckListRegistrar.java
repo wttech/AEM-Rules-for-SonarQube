@@ -46,6 +46,8 @@ public class CheckListRegistrar implements CheckRegistrar {
 
 	public static final String REPOSITORY_KEY = "AEM Rules";
 
+	public static final String REPOSITORY_NAME = "AEM Rules";
+
 	public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
 		= ImmutableList.<Class<? extends JavaCheck>>builder()
 		.add(AdministrativeAccessUsageCheck.class)

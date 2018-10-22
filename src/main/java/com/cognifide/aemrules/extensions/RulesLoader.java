@@ -34,7 +34,6 @@ import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.utils.AnnotationUtils;
 import org.sonar.api.utils.FieldUtils2;
 import org.sonar.check.Rule;
-import org.sonar.plugins.java.api.JavaCheck;
 
 import javax.annotation.CheckForNull;
 import java.io.IOException;
@@ -58,14 +57,14 @@ public class RulesLoader {
 			RuleParamType.STRING
 	);
 
-	public void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends JavaCheck>> annotatedClasses) {
-		for (Class<? extends JavaCheck> annotatedClass : annotatedClasses) {
+	public <T> void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends T>> annotatedClasses) {
+		for (Class annotatedClass : annotatedClasses) {
 			loadRule(repo, annotatedClass);
 		}
 	}
 
 	@CheckForNull
-	RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz) {
+	RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class clazz) {
 		Rule ruleAnnotation = AnnotationUtils.getAnnotation(clazz, Rule.class);
 		if (ruleAnnotation != null) {
 			return loadRule(repo, clazz, ruleAnnotation);
@@ -75,7 +74,7 @@ public class RulesLoader {
 		}
 	}
 
-	private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz, Rule ruleAnnotation) {
+	private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class clazz, Rule ruleAnnotation) {
 		String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
 		String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
 		String description = StringUtils.defaultIfEmpty(getDescriptionFromResources(ruleKey), "No description yet.");
