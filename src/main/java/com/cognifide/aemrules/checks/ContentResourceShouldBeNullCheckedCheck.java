@@ -20,7 +20,9 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.Constants;
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.version.AemVersion;
 import java.util.HashMap;
 import java.util.Map;
 import org.sonar.check.Priority;
@@ -45,8 +47,13 @@ import org.sonar.plugins.java.api.tree.VariableTree;
     priority = Priority.MINOR,
     tags = Tags.AEM
 )
-public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor implements
-    JavaFileScanner {
+@AemVersion(
+    all = true
+)
+@Metadata(
+    technicalDebt = "5min"
+)
+public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor implements JavaFileScanner {
 
     public static final String RULE_KEY = "AEM-18";
 
