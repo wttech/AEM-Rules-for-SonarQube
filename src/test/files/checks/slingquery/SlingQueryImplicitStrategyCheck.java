@@ -112,4 +112,20 @@ public class SlingQueryImplicitStrategyCheck extends SlingAllMethodsServlet {
             .filter(CollectionUtils::isNotEmpty)
             .map(list -> list.get(0));
     }
+
+    private void deleteProductPages(ResourceResolver resolver, String productPagesRootPath,
+        String productsRootPath, boolean createFromScratch, List<String> logMessages) {
+        String productPagesSql = StrSubstitutor.replace(FIND_PRODUCT_PAGES_QUERY, ImmutableMap
+            .of(ROOT_PATH_PARAMETER, productPagesRootPath));
+        Stream<Resource> productPages = StreamUtils
+            .fromOrdered(resolver.findResources(productPagesSql, Query.JCR_SQL2))
+            .sorted(Comparator.comparing(Resource::getPath).reversed());
+        if (createFromScratch) {
+            productPages.forEach(productPage -> deleteProductPage(resolver, productPage, logMessages));
+        } else {
+            productPages.forEach(
+                productPage -> deleteProductPageIfProductNotExist(resolver, productPage, productsRootPath,
+                    logMessages));
+        }
+    }
 }

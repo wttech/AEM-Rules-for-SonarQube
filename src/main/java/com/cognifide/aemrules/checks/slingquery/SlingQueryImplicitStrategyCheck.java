@@ -126,6 +126,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
     @Override
     public void visitMethod(MethodTree tree) {
         slingQueries.clear();
+        cleanFlags();
         super.visitMethod(tree);
     }
 
@@ -143,7 +144,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
     public void visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree) {
         insideLambdaExpression = true;
         super.visitLambdaExpression(lambdaExpressionTree);
-        cleaningFlags();
+        cleanFlags();
     }
 
     private boolean isSlingQuery(VariableTree tree) {
@@ -175,12 +176,12 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
             findOccurredInLambdaExpression;
     }
 
-    private void cleaningFlags() {
-        isDollarSlingQuery = false;
-        searchStrategyOccurredInLambdaExpression = false;
-        findOccurredInLambdaExpression = false;
-        issueReportedInThisLambdaExpression = false;
+    private void cleanFlags() {
         insideLambdaExpression = false;
+        isDollarSlingQuery = false;
+        findOccurredInLambdaExpression = false;
+        searchStrategyOccurredInLambdaExpression = false;
+        issueReportedInThisLambdaExpression = false;
     }
 
     private void checkFlags(IdentifierTree tree) {
