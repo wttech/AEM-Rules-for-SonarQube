@@ -236,6 +236,7 @@
           <requirePlugins>java:4.10</requirePlugins>
           <basePlugin>java</basePlugin>
           <sonarQubeMinVersion>5.6.6</sonarQubeMinVersion>
+          <sonarLintSupported>true</sonarLintSupported>
         </configuration>
       </plugin>
       <plugin>
