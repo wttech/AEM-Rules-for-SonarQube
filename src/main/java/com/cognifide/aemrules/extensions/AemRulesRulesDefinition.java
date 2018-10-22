@@ -26,7 +26,7 @@ import org.sonar.plugins.java.Java;
 
 public class AemRulesRulesDefinition implements RulesDefinition {
 
-	private static final RulesLoader rulesLoader = new RulesLoader();
+    private static final RulesLoader rulesLoader = new RulesLoader();
 
 	@Override
 	public void define(Context context) {

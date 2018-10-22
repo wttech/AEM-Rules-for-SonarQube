@@ -21,19 +21,18 @@ package com.example;
 
 import com.day.cq.tagging.TagManager;
 import com.day.cq.wcm.api.PageManager;
-import org.apache.felix.scr.annotations.sling.SlingFilter;
-import org.apache.felix.scr.annotations.sling.SlingFilterScope;
-
+import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.io.IOException;
+import org.apache.felix.scr.annotations.sling.SlingFilter;
+import org.apache.felix.scr.annotations.sling.SlingFilterScope;
 
 @SlingFilter(scope = SlingFilterScope.COMPONENT, order = Integer.MAX_VALUE, metatype = true, label =
-        "label", description = "description")
+    "label", description = "description")
 public class ThreadSafeFieldCheckFilterExample implements Filter {
 
     private PageManager pageManager; // Noncompliant {{Usage of com.day.cq.wcm.api.PageManager as a field is not thread safe.}}
@@ -47,7 +46,7 @@ public class ThreadSafeFieldCheckFilterExample implements Filter {
 
     @Override
     public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         // filter
     }
 

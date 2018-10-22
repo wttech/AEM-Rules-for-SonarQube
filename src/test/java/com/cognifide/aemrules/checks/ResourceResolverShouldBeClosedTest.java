@@ -25,39 +25,39 @@ import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShou
 
 public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
 
-	@Test
-	public void checkInjectorNotClosedInFinallyBlock() {
-		check = new ResourceResolverShouldBeClosed();
-		filename = "src/test/files/checks/SampleServlet.java";
-		verify();
-	}
+    @Test
+    public void checkInjectorNotClosedInFinallyBlock() {
+        check = new ResourceResolverShouldBeClosed();
+        filename = "src/test/files/checks/SampleServlet.java";
+        verify();
+    }
 
-	@Test
-	public void checkResourceResolverNotClosedInFinallyBlockWhenResourceResolverComesFromDifferentClass() {
-		check = new ResourceResolverShouldBeClosed();
-		filename = "src/test/files/checks/ResourceResolverConsumer.java";
-		verifyNoIssues();
-	}
+    @Test
+    public void checkResourceResolverNotClosedInFinallyBlockWhenResourceResolverComesFromDifferentClass() {
+        check = new ResourceResolverShouldBeClosed();
+        filename = "src/test/files/checks/ResourceResolverConsumer.java";
+        verifyNoIssues();
+    }
 
-	@Test
-	public void checkResourceResolverNotClosedWhenItIsOpenedInActivateAndClosedInDeactivate() {
-		check = new ResourceResolverShouldBeClosed();
-		filename = "src/test/files/checks/LongSessionService.java";
-		verifyNoIssues();
-	}
+    @Test
+    public void checkResourceResolverNotClosedWhenItIsOpenedInActivateAndClosedInDeactivate() {
+        check = new ResourceResolverShouldBeClosed();
+        filename = "src/test/files/checks/LongSessionService.java";
+        verifyNoIssues();
+    }
 
-	@Test
-	public void checkResourceResolverClosedInDeactivateMethod() {
-		check = new ResourceResolverShouldBeClosed();
-		filename = "src/test/files/checks/LongSessionEventListener.java";
-		verifyNoIssues();
-	}
+    @Test
+    public void checkResourceResolverClosedInDeactivateMethod() {
+        check = new ResourceResolverShouldBeClosed();
+        filename = "src/test/files/checks/LongSessionEventListener.java";
+        verifyNoIssues();
+    }
 
-	@Test
-	public void checkResourceResolverClosedInDeactivateMethodError() {
-		check = new ResourceResolverShouldBeClosed();
-		filename = "src/test/files/checks/LongResourceResolverEvenListenerError.java";
-		verify();
-	}
+    @Test
+    public void checkResourceResolverClosedInDeactivateMethodError() {
+        check = new ResourceResolverShouldBeClosed();
+        filename = "src/test/files/checks/LongResourceResolverEvenListenerError.java";
+        verify();
+    }
 
 }

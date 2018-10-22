@@ -32,9 +32,9 @@ import org.sonar.api.resources.Qualifiers;
 
 public class AemRulesSonarPlugin implements Plugin {
 
-	@Override
-	public void define(Context context) {
-		context.addExtensions(
+    @Override
+    public void define(Context context) {
+        context.addExtensions(
 				Htl.class,
 				AemRulesRulesDefinition.class,
 				CheckListRegistrar.class,

@@ -35,18 +35,22 @@ import com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck;
 import com.cognifide.aemrules.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
+import com.cognifide.aemrules.version.AemVersion;
+import com.cognifide.aemrules.version.VersionSupportChecker;
 import com.google.common.collect.ImmutableList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.sonar.api.config.Settings;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
-import java.util.Collections;
-import java.util.List;
-
 public class CheckListRegistrar implements CheckRegistrar {
 
-	public static final String REPOSITORY_KEY = "AEM Rules";
+  public static final String REPOSITORY_KEY = "AEM Rules";
 
-	public static final String REPOSITORY_NAME = "AEM Rules";
+  public static final String REPOSITORY_NAME = "AEM Rules";
 
 	public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
 		= ImmutableList.<Class<? extends JavaCheck>>builder()
@@ -68,9 +72,25 @@ public class CheckListRegistrar implements CheckRegistrar {
 		.add(ModifiableValueMapUsageCheck.class)
 		.build();
 
-	@Override
-	public void register(RegistrarContext registrarContext) {
-		registrarContext.registerClassesForRepository(REPOSITORY_KEY, CHECK_CLASSES,
-			Collections.<Class<? extends JavaCheck>>emptyList());
-	}
+  private final Settings settings;
+
+  public CheckListRegistrar(Settings settings) {
+    this.settings = settings;
+  }
+
+  @Override
+  public void register(RegistrarContext registrarContext) {
+    String aemVersion = settings.getString(VersionSupportChecker.VERSION_PROPERTY);
+    List<Class<? extends JavaCheck>> checkClassesToRegister = CHECK_CLASSES.stream()
+        .filter(checkClass -> shouldRegister(aemVersion, checkClass))
+        .collect(Collectors.toList());
+    registrarContext.registerClassesForRepository(REPOSITORY_KEY, checkClassesToRegister,
+        Collections.emptyList());
+  }
+
+  private boolean shouldRegister(String aemVersion, Class<? extends JavaCheck> checkClass) {
+    return Optional.ofNullable(checkClass.getAnnotation(AemVersion.class))
+        .map(supportedVersion -> VersionSupportChecker.create(supportedVersion).supports(aemVersion))
+        .orElse(true);
+  }
 }

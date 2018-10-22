@@ -26,20 +26,20 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 class ParameterizedTypeTreeVisitor extends BaseTreeVisitor {
 
-	private boolean withResourceTypeVariable;
+    private boolean withResourceTypeVariable;
 
-	public boolean hasResourceTypeVariable() {
-		return withResourceTypeVariable;
-	}
+    public boolean hasResourceTypeVariable() {
+        return withResourceTypeVariable;
+    }
 
-	@Override
-	public void visitParameterizedType(ParameterizedTypeTree parameterizedTypeTree) {
-		for (Iterator<Tree> iterator = parameterizedTypeTree.typeArguments().iterator(); iterator.hasNext() && !withResourceTypeVariable;) {
-			TypeTreeVisitor treeVisitor = new TypeTreeVisitor();
-			iterator.next().accept(treeVisitor);
-			withResourceTypeVariable = treeVisitor.isResourceTypeInstance();
-		}
-		super.visitParameterizedType(parameterizedTypeTree);
-	}
+    @Override
+    public void visitParameterizedType(ParameterizedTypeTree parameterizedTypeTree) {
+        for (Iterator<Tree> iterator = parameterizedTypeTree.typeArguments().iterator(); iterator.hasNext() && !withResourceTypeVariable; ) {
+            TypeTreeVisitor treeVisitor = new TypeTreeVisitor();
+            iterator.next().accept(treeVisitor);
+            withResourceTypeVariable = treeVisitor.isResourceTypeInstance();
+        }
+        super.visitParameterizedType(parameterizedTypeTree);
+    }
 
 }

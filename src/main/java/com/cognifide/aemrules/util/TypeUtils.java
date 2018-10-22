@@ -23,11 +23,11 @@ import org.sonar.plugins.java.api.tree.TypeTree;
 
 public class TypeUtils {
 
-	private TypeUtils() {
-		throw new AssertionError();
-	}
+    private TypeUtils() {
+        throw new AssertionError();
+    }
 
-	public static boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
-		return typeTree.symbolType().is(fullyQualifiedName);
-	}
+    public static boolean isOfType(final TypeTree typeTree, final String fullyQualifiedName) {
+        return typeTree.symbolType().is(fullyQualifiedName);
+    }
 }

@@ -20,12 +20,10 @@
 package com.example;
 
 import java.util.Map;
-
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
@@ -38,28 +36,28 @@ import org.apache.sling.jcr.api.SlingRepository;
 @Component
 public class LongResourceResolverEvenListenerError implements EventListener {
 
-	private ResourceResolver resolver; // Noncompliant {{ResourceResolver should be closed in finally block.}}
+    private ResourceResolver resolver; // Noncompliant {{ResourceResolver should be closed in finally block.}}
 
-	@Reference
-	private SlingRepository repository;
+    @Reference
+    private SlingRepository repository;
 
-	@Reference
-	private ResourceResolverFactory resourceResolverFactory;
+    @Reference
+    private ResourceResolverFactory resourceResolverFactory;
 
-	@Activate
-	public void activate(final Map<String, String> config) throws RepositoryException, LoginException {
-		resolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
-	}
+    @Activate
+    public void activate(final Map<String, String> config) throws RepositoryException, LoginException {
+        resolver = resourceResolverFactory.getAdministrativeResourceResolver(null);
+    }
 
-	@Deactivate
-	public void deactivate(final Map<String, String> config) throws RepositoryException {
-		try {
-			final Session session = resolver.adaptTo(Session.class);
-		} finally {
-		}
-	}
+    @Deactivate
+    public void deactivate(final Map<String, String> config) throws RepositoryException {
+        try {
+            final Session session = resolver.adaptTo(Session.class);
+        } finally {
+        }
+    }
 
-	@Override
-	public void onEvent(final EventIterator events) {
-	}
+    @Override
+    public void onEvent(final EventIterator events) {
+    }
 }
