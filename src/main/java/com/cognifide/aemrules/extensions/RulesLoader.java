@@ -26,6 +26,11 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.List;
+import javax.annotation.CheckForNull;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +42,6 @@ import org.sonar.api.utils.AnnotationUtils;
 import org.sonar.api.utils.FieldUtils2;
 import org.sonar.check.Rule;
 
-import javax.annotation.CheckForNull;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.List;
-
 public class RulesLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
@@ -51,9 +50,6 @@ public class RulesLoader {
     private static final String RULE_DESCRIPTION_EXTENSION = "md";
     private static final String RULE_METADATA_FOLDER = "metadata";
     private static final String RULE_METADATA_EXTENSION = "json";
-
-    private final Gson gson = new Gson();
-
     private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
         ImmutableMap.<Class<?>, RuleParamType>builder()
             .put(Integer.class, RuleParamType.INTEGER)
@@ -65,6 +61,12 @@ public class RulesLoader {
             .build(),
         RuleParamType.STRING
     );
+    private final Gson gson = new Gson();
+
+    @VisibleForTesting
+    static RuleParamType guessType(Class<?> type) {
+        return TYPE_FOR_CLASS.apply(type);
+    }
 
     public <T> void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends T>> annotatedClasses) {
         for (Class annotatedClass : annotatedClasses) {
@@ -150,11 +152,6 @@ public class RulesLoader {
                 param.setType(guessType(field.getType()));
             }
         }
-    }
-
-    @VisibleForTesting
-    static RuleParamType guessType(Class<?> type) {
-        return TYPE_FOR_CLASS.apply(type);
     }
 
     private static class RuleMetadata {

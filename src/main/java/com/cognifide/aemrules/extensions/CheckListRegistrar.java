@@ -42,55 +42,56 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
 public class CheckListRegistrar implements CheckRegistrar {
 
-  public static final String REPOSITORY_KEY = "AEM Rules";
+    public static final String REPOSITORY_KEY = "AEM Rules";
 
-  public static final String REPOSITORY_NAME = "AEM Rules";
+    public static final String REPOSITORY_NAME = "AEM Rules";
 
-	public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
-		= ImmutableList.<Class<? extends JavaCheck>>builder()
-		.add(AdministrativeAccessUsageCheck.class)
-		.add(AnnotationsConstantsCheck.class)
-		.add(ConstantsCheck.class)
-		.add(HttpConstantCheck.class)
-		.add(InjectorShouldBeClosedCheck.class)
-		.add(InjectorTryWithResourcesCheck.class)
-		.add(ModelsShouldNotUseSessionCheck.class)
-		.add(IteratingResourcesCheck.class)
-		.add(JcrPropertyFieldsInConstructorCheck.class)
-		.add(PreferSlingServletAnnotation.class)
-		.add(ResourceResolverShouldBeClosed.class)
-		.add(SessionShouldBeLoggedOut.class)
-		.add(SynchornizedKeywordUsageCheck.class)
-		.add(ThreadSafeFieldCheck.class)
-		.add(DefaultInjectionStrategyAnnotationCheck.class)
-		.add(ModifiableValueMapUsageCheck.class)
-		.build();
+    public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
+        = ImmutableList.<Class<? extends JavaCheck>>builder()
+        .add(AdministrativeAccessUsageCheck.class)
+        .add(AnnotationsConstantsCheck.class)
+        .add(ConstantsCheck.class)
+        .add(HttpConstantCheck.class)
+        .add(InjectorShouldBeClosedCheck.class)
+        .add(InjectorTryWithResourcesCheck.class)
+        .add(ModelsShouldNotUseSessionCheck.class)
+        .add(IteratingResourcesCheck.class)
+        .add(JcrPropertyFieldsInConstructorCheck.class)
+        .add(PreferSlingServletAnnotation.class)
+        .add(ResourceResolverShouldBeClosed.class)
+        .add(SessionShouldBeLoggedOut.class)
+        .add(SynchornizedKeywordUsageCheck.class)
+        .add(ThreadSafeFieldCheck.class)
+        .add(DefaultInjectionStrategyAnnotationCheck.class)
+        .add(ModifiableValueMapUsageCheck.class)
+        .build();
 
-  private final Settings settings;
+    private final Configuration configuration;
 
-  public CheckListRegistrar(Settings settings) {
-    this.settings = settings;
-  }
+    public CheckListRegistrar(Configuration settings) {
+        this.configuration = settings;
+    }
 
-  @Override
-  public void register(RegistrarContext registrarContext) {
-    String aemVersion = settings.getString(VersionSupportChecker.VERSION_PROPERTY);
-    List<Class<? extends JavaCheck>> checkClassesToRegister = CHECK_CLASSES.stream()
-        .filter(checkClass -> shouldRegister(aemVersion, checkClass))
-        .collect(Collectors.toList());
-    registrarContext.registerClassesForRepository(REPOSITORY_KEY, checkClassesToRegister,
-        Collections.emptyList());
-  }
+    @Override
+    public void register(RegistrarContext registrarContext) {
+        String aemVersion = configuration.get(VersionSupportChecker.VERSION_PROPERTY)
+            .orElse(VersionSupportChecker.DEFAULT_AEM_VERSION);
+        List<Class<? extends JavaCheck>> checkClassesToRegister = CHECK_CLASSES.stream()
+            .filter(checkClass -> shouldRegister(aemVersion, checkClass))
+            .collect(Collectors.toList());
+        registrarContext.registerClassesForRepository(REPOSITORY_KEY, checkClassesToRegister,
+            Collections.emptyList());
+    }
 
-  private boolean shouldRegister(String aemVersion, Class<? extends JavaCheck> checkClass) {
-    return Optional.ofNullable(checkClass.getAnnotation(AemVersion.class))
-        .map(supportedVersion -> VersionSupportChecker.create(supportedVersion).supports(aemVersion))
-        .orElse(true);
-  }
+    private boolean shouldRegister(String aemVersion, Class<? extends JavaCheck> checkClass) {
+        return Optional.ofNullable(checkClass.getAnnotation(AemVersion.class))
+            .map(supportedVersion -> VersionSupportChecker.create(supportedVersion).supports(aemVersion))
+            .orElse(true);
+    }
 }

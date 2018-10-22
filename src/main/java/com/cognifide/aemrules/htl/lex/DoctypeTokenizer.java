@@ -29,38 +29,38 @@ import org.sonar.plugins.html.node.Node;
 
 class DoctypeTokenizer extends AbstractTokenizer<List<Node>> {
 
-	DoctypeTokenizer(String startToken, String endToken) {
-		super(startToken, endToken);
-	}
+    DoctypeTokenizer(String startToken, String endToken) {
+        super(startToken, endToken);
+    }
 
-	private static void parseToken(DirectiveNode node) {
-		String code = node.getCode();
-		StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(code));
-		tokenizer.quoteChar('"');
-		try {
-			while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
-				if (tokenizer.sval != null) {
-					if (node.getNodeName() == null) {
-						node.setNodeName(tokenizer.sval);
-					} else {
-						node.getAttributes().add(new Attribute(tokenizer.sval));
-					}
-				}
-			}
-		} catch (IOException e) {
-			// ignore
-		}
-	}
+    private static void parseToken(DirectiveNode node) {
+        String code = node.getCode();
+        StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(code));
+        tokenizer.quoteChar('"');
+        try {
+            while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
+                if (tokenizer.sval != null) {
+                    if (node.getNodeName() == null) {
+                        node.setNodeName(tokenizer.sval);
+                    } else {
+                        node.getAttributes().add(new Attribute(tokenizer.sval));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // ignore
+        }
+    }
 
-	@Override
-	protected void addNode(List<Node> nodeList, Node node) {
-		super.addNode(nodeList, node);
+    @Override
+    protected void addNode(List<Node> nodeList, Node node) {
+        super.addNode(nodeList, node);
 
-		parseToken((DirectiveNode) node);
-	}
+        parseToken((DirectiveNode) node);
+    }
 
-	@Override
-	Node createNode() {
-		return new DirectiveNode();
-	}
+    @Override
+    Node createNode() {
+        return new DirectiveNode();
+    }
 }

@@ -24,13 +24,13 @@ import org.sonar.plugins.html.node.Node;
 
 class DirectiveTokenizer extends ElementTokenizer {
 
-	public DirectiveTokenizer(String startToken, String endToken) {
-		super(startToken, endToken);
-	}
+    public DirectiveTokenizer(String startToken, String endToken) {
+        super(startToken, endToken);
+    }
 
-	@Override
-	Node createNode() {
+    @Override
+    Node createNode() {
 
-		return new DirectiveNode();
-	}
+        return new DirectiveNode();
+    }
 }

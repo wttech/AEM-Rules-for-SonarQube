@@ -28,24 +28,24 @@ import org.sonar.check.Rule;
 
 public class HtlProfile implements BuiltInQualityProfilesDefinition {
 
-	private static final String QUALITY_PROFILE_NAME = "AEM HTL Profile";
+    private static final String QUALITY_PROFILE_NAME = "AEM HTL Profile";
 
-	@Override
-	public void define(Context context) {
-		NewBuiltInQualityProfile htl = context
-				.createBuiltInQualityProfile(QUALITY_PROFILE_NAME, Htl.KEY);
-		CheckClasses.getCheckClasses().stream()
-				.map(this::getRuleKey)
-				.filter(Objects::nonNull)
-				.forEach(ruleKey -> htl.activateRule(CheckClasses.REPOSITORY_KEY, ruleKey));
-		htl.done();
-	}
+    @Override
+    public void define(Context context) {
+        NewBuiltInQualityProfile htl = context
+            .createBuiltInQualityProfile(QUALITY_PROFILE_NAME, Htl.KEY);
+        CheckClasses.getCheckClasses().stream()
+            .map(this::getRuleKey)
+            .filter(Objects::nonNull)
+            .forEach(ruleKey -> htl.activateRule(CheckClasses.REPOSITORY_KEY, ruleKey));
+        htl.done();
+    }
 
-	private String getRuleKey(Class<? extends HtlCheck> clazz) {
-		return Optional.ofNullable(clazz)
-				.filter(c -> c.isAnnotationPresent(Rule.class))
-				.map(c -> c.getAnnotation(Rule.class))
-				.map(Rule::key)
-				.orElse(null);
-	}
+    private String getRuleKey(Class<? extends HtlCheck> clazz) {
+        return Optional.ofNullable(clazz)
+            .filter(c -> c.isAnnotationPresent(Rule.class))
+            .map(c -> c.getAnnotation(Rule.class))
+            .map(Rule::key)
+            .orElse(null);
+    }
 }

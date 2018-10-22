@@ -31,53 +31,53 @@ import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
 public class DefaultNodeVisitor {
 
-	private HtmlSourceCode htmlSourceCode;
+    private HtmlSourceCode htmlSourceCode;
 
-	public void init() {
-	}
+    public void init() {
+    }
 
-	public void characters(TextNode textNode) {
-	}
+    public void characters(TextNode textNode) {
+    }
 
-	public void comment(CommentNode node) {
-	}
+    public void comment(CommentNode node) {
+    }
 
-	void htlComment(CommentNode node) {
+    void htlComment(CommentNode node) {
 
-	}
+    }
 
-	public void directive(DirectiveNode node) {
-	}
+    public void directive(DirectiveNode node) {
+    }
 
-	public void endDocument() {
-	}
+    public void endDocument() {
+    }
 
-	public void endElement(TagNode node) {
-	}
+    public void endElement(TagNode node) {
+    }
 
-	public void expression(ExpressionNode node) {
-	}
+    public void expression(ExpressionNode node) {
+    }
 
-	public void htlExpression(Expression expression, Node node) {
+    public void htlExpression(Expression expression, Node node) {
 
-	}
+    }
 
-	public HtmlSourceCode getHtmlSourceCode() {
-		return htmlSourceCode;
-	}
+    public HtmlSourceCode getHtmlSourceCode() {
+        return htmlSourceCode;
+    }
 
-	public void setSourceCode(HtmlSourceCode sourceCode) {
-		this.htmlSourceCode = sourceCode;
-	}
+    public void setSourceCode(HtmlSourceCode sourceCode) {
+        this.htmlSourceCode = sourceCode;
+    }
 
-	public void startDocument(List<Node> nodes) {
-	}
+    public void startDocument(List<Node> nodes) {
+    }
 
-	public void startElement(TagNode node) {
-	}
+    public void startElement(TagNode node) {
+    }
 
-	public void startHtlElement(List<Expression> expressions, TagNode node) {
+    public void startHtlElement(List<Expression> expressions, TagNode node) {
 
-	}
+    }
 
 }

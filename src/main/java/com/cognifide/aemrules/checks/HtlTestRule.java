@@ -31,37 +31,37 @@ import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
 @Rule(
-		key = HtlTestRule.RULE_KEY,
-		name = HtlTestRule.RULE_MESSAGE,
-		priority = Priority.MINOR,
-		tags = Tags.AEM
+    key = HtlTestRule.RULE_KEY,
+    name = HtlTestRule.RULE_MESSAGE,
+    priority = Priority.MINOR,
+    tags = Tags.AEM
 )
 public class HtlTestRule extends AbstractHtlCheck {
 
-	public static final String RULE_KEY = "HTL-0";
+    public static final String RULE_KEY = "HTL-0";
 
-	static final String RULE_MESSAGE = "Always Place HTL Attributes After the Ones that are Part of the Markup";
+    static final String RULE_MESSAGE = "Always Place HTL Attributes After the Ones that are Part of the Markup";
 
-	@Override
-	public void startHtlElement(List<Expression> expressions, TagNode node) {
-		Boolean hasAttributesInWrongOrder = node.getAttributes().stream()
-				.map(Attribute::getName)
-				.map(Syntax::isPluginAttribute)
-				.mapToInt(value -> value == Boolean.TRUE ? 1 : 0)
-				.boxed()
-				.collect(Collectors.collectingAndThen(Collectors.toList(), list -> !isSorted(list)));
-		if (hasAttributesInWrongOrder) {
-			createViolation(node.getStartLinePosition(), "Move HTL Attributes to the end of the tag");
-		}
-		super.startHtlElement(expressions, node);
-	}
+    @Override
+    public void startHtlElement(List<Expression> expressions, TagNode node) {
+        Boolean hasAttributesInWrongOrder = node.getAttributes().stream()
+            .map(Attribute::getName)
+            .map(Syntax::isPluginAttribute)
+            .mapToInt(value -> value == Boolean.TRUE ? 1 : 0)
+            .boxed()
+            .collect(Collectors.collectingAndThen(Collectors.toList(), list -> !isSorted(list)));
+        if (hasAttributesInWrongOrder) {
+            createViolation(node.getStartLinePosition(), "Move HTL Attributes to the end of the tag");
+        }
+        super.startHtlElement(expressions, node);
+    }
 
-	private boolean isSorted(List<Integer> data) {
-		for (int i = 1; i < data.size(); i++) {
-			if (data.get(i - 1) > data.get(i)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private boolean isSorted(List<Integer> data) {
+        for (int i = 1; i < data.size(); i++) {
+            if (data.get(i - 1) > data.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

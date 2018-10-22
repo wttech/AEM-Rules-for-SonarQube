@@ -47,147 +47,146 @@ import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
 public class HtlScanner {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
 
-	private static final ExpressionParser expressionParser = new ExpressionParser();
+    private static final ExpressionParser expressionParser = new ExpressionParser();
 
-	private final List<DefaultNodeVisitor> metricVisitors;
-	private final List<DefaultNodeVisitor> checkVisitors = Lists.newArrayList();
+    private final List<DefaultNodeVisitor> metricVisitors;
+    private final List<DefaultNodeVisitor> checkVisitors = Lists.newArrayList();
 
-	public HtlScanner() {
-		this(Collections.emptyList());
-	}
+    public HtlScanner() {
+        this(Collections.emptyList());
+    }
 
-	public HtlScanner(List<DefaultNodeVisitor> metricVisitors) {
-		this.metricVisitors = metricVisitors;
-	}
+    public HtlScanner(List<DefaultNodeVisitor> metricVisitors) {
+        this.metricVisitors = metricVisitors;
+    }
 
-	private static void scanElementTag(DefaultNodeVisitor visitor, TagNode node) {
-		if (!node.isEndElement()) {
-			visitor.startElement(node);
-			if (isHtlTag(node)) {
-				List<Expression> expressions =
-						node.getAttributes().stream()
-								.map(Attribute::getValue)
-								.filter(HtlScanner::hasHtlExpression)
-								.flatMap(HtlScanner::getExpressions)
-								.peek(expression -> visitor.htlExpression(expression, node))
-								.collect(Collectors.toList());
-				visitor.startHtlElement(expressions, node);
-			}
-		}
-		if (node.isEndElement() || node.hasEnd()) {
-			visitor.endElement(node);
-		}
-	}
+    private static void scanElementTag(DefaultNodeVisitor visitor, TagNode node) {
+        if (!node.isEndElement()) {
+            visitor.startElement(node);
+            if (isHtlTag(node)) {
+                List<Expression> expressions =
+                    node.getAttributes().stream()
+                        .map(Attribute::getValue)
+                        .filter(HtlScanner::hasHtlExpression)
+                        .flatMap(HtlScanner::getExpressions)
+                        .peek(expression -> visitor.htlExpression(expression, node))
+                        .collect(Collectors.toList());
+                visitor.startHtlElement(expressions, node);
+            }
+        }
+        if (node.isEndElement() || node.hasEnd()) {
+            visitor.endElement(node);
+        }
+    }
 
-	private static boolean isHtlTag(TagNode node) {
-		boolean hasDataSlyAttribute = node.getAttributes().stream()
-				.map(Attribute::getName)
-				.anyMatch(Syntax::isPluginAttribute);
-		boolean isSlyTag = "sly".equalsIgnoreCase(node.getNodeName());
-		return isSlyTag || hasDataSlyAttribute;
-	}
+    private static boolean isHtlTag(TagNode node) {
+        boolean hasDataSlyAttribute = node.getAttributes().stream()
+            .map(Attribute::getName)
+            .anyMatch(Syntax::isPluginAttribute);
+        boolean isSlyTag = "sly".equalsIgnoreCase(node.getNodeName());
+        return isSlyTag || hasDataSlyAttribute;
+    }
 
-	private static Stream<Expression> getExpressions(String code) {
+    private static Stream<Expression> getExpressions(String code) {
 
-		Stream<Expression> expressionStream = Stream.empty();
+        Stream<Expression> expressionStream = Stream.empty();
 
-		Interpolation interpolation = null;
-		try {
-			interpolation = expressionParser.parseInterpolation(code);
-			expressionStream = StreamSupport
-					.stream(interpolation.getFragments().spliterator(), false)
-					.filter(Fragment::isExpression)
-					.map(Fragment::getExpression);
-		} catch (SightlyCompilerException ex) {
-			LOG.error("Could not parse expression", ex);
-		}
-		return expressionStream;
-	}
+        Interpolation interpolation = null;
+        try {
+            interpolation = expressionParser.parseInterpolation(code);
+            expressionStream = StreamSupport
+                .stream(interpolation.getFragments().spliterator(), false)
+                .filter(Fragment::isExpression)
+                .map(Fragment::getExpression);
+        } catch (SightlyCompilerException ex) {
+            LOG.error("Could not parse expression", ex);
+        }
+        return expressionStream;
+    }
 
-	private static boolean hasHtlExpression(String code) {
-		return getExpressions(code)
-				.findAny()
-				.isPresent();
-	}
+    private static boolean hasHtlExpression(String code) {
+        return getExpressions(code)
+            .findAny()
+            .isPresent();
+    }
 
-	/**
-	 * Add a visitor to the list of visitors.
-	 */
-	public void addVisitor(DefaultNodeVisitor visitor) {
-		checkVisitors.add(visitor);
-		visitor.init();
-	}
+    /**
+     * Add a visitor to the list of visitors.
+     */
+    public void addVisitor(DefaultNodeVisitor visitor) {
+        checkVisitors.add(visitor);
+        visitor.init();
+    }
 
-	/**
-	 * Scan a list of Nodes and send events to the visitors.
-	 */
-	public void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset) {
-		scan(nodeList, htmlSourceCode, charset, metricVisitors);
-		scan(nodeList, htmlSourceCode, charset, checkVisitors);
-	}
+    /**
+     * Scan a list of Nodes and send events to the visitors.
+     */
+    public void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset) {
+        scan(nodeList, htmlSourceCode, charset, metricVisitors);
+        scan(nodeList, htmlSourceCode, charset, checkVisitors);
+    }
 
-	private void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset,
-			List<DefaultNodeVisitor> visitors) {
-		// prepare the visitors
-		for (DefaultNodeVisitor visitor : visitors) {
-			visitor.setSourceCode(htmlSourceCode);
+    private void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset,
+        List<DefaultNodeVisitor> visitors) {
+        // prepare the visitors
+        for (DefaultNodeVisitor visitor : visitors) {
+            visitor.setSourceCode(htmlSourceCode);
 
-			if (visitor instanceof CharsetAwareVisitor) {
-				((CharsetAwareVisitor) visitor).setCharset(charset);
-			}
-		}
+            if (visitor instanceof CharsetAwareVisitor) {
+                ((CharsetAwareVisitor) visitor).setCharset(charset);
+            }
+        }
 
-		// notify visitors for a new document
-		for (DefaultNodeVisitor visitor : visitors) {
-			visitor.startDocument(nodeList);
-		}
+        // notify visitors for a new document
+        for (DefaultNodeVisitor visitor : visitors) {
+            visitor.startDocument(nodeList);
+        }
 
-		// notify the visitors for start and end of element
-		for (Node node : nodeList) {
-			for (DefaultNodeVisitor visitor : visitors) {
-				scanElement(visitor, node);
-			}
-		}
+        // notify the visitors for start and end of element
+        for (Node node : nodeList) {
+            for (DefaultNodeVisitor visitor : visitors) {
+                scanElement(visitor, node);
+            }
+        }
 
-		// notify visitors for end of document
-		for (DefaultNodeVisitor visitor : visitors) {
-			visitor.endDocument();
-		}
-	}
+        // notify visitors for end of document
+        for (DefaultNodeVisitor visitor : visitors) {
+            visitor.endDocument();
+        }
+    }
 
-	/**
-	 * Scan a single element and send appropriate event: start element, end element, characters,
-	 * comment, expression or directive.
-	 */
-	private void scanElement(DefaultNodeVisitor visitor, Node node) {
-		switch (node.getNodeType()) {
-			case TAG:
-				scanElementTag(visitor, (TagNode) node);
-				break;
-			case TEXT:
-				visitor.characters((TextNode) node);
-				break;
-			case COMMENT:
-				visitor.comment((CommentNode) node);
-				if (Syntax.isSightlyComment(node.getCode())) {
-					visitor.htlComment((CommentNode) node);
-				}
-				break;
-			case EXPRESSION:
-				visitor.expression((ExpressionNode) node);
-				if (hasHtlExpression(node.getCode())) {
-					getExpressions(node.getCode())
-							.forEach(expression -> visitor.htlExpression(expression, node));
-				}
-				break;
-			case DIRECTIVE:
-				visitor.directive((DirectiveNode) node);
-				break;
-			default:
-				break;
-		}
-	}
+    /**
+     * Scan a single element and send appropriate event: start element, end element, characters, comment, expression or directive.
+     */
+    private void scanElement(DefaultNodeVisitor visitor, Node node) {
+        switch (node.getNodeType()) {
+            case TAG:
+                scanElementTag(visitor, (TagNode) node);
+                break;
+            case TEXT:
+                visitor.characters((TextNode) node);
+                break;
+            case COMMENT:
+                visitor.comment((CommentNode) node);
+                if (Syntax.isSightlyComment(node.getCode())) {
+                    visitor.htlComment((CommentNode) node);
+                }
+                break;
+            case EXPRESSION:
+                visitor.expression((ExpressionNode) node);
+                if (hasHtlExpression(node.getCode())) {
+                    getExpressions(node.getCode())
+                        .forEach(expression -> visitor.htlExpression(expression, node));
+                }
+                break;
+            case DIRECTIVE:
+                visitor.directive((DirectiveNode) node);
+                break;
+            default:
+                break;
+        }
+    }
 
 }

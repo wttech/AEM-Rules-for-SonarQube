@@ -28,99 +28,99 @@ import org.sonar.plugins.html.node.Node;
 
 abstract class AbstractTokenizer<T extends List<Node>> extends Channel<T> {
 
-	private final char[] endChars;
-	private final char[] startChars;
+    private final char[] endChars;
+    private final char[] startChars;
 
-	public AbstractTokenizer(String startChars, String endChars) {
-		this.startChars = startChars.toCharArray();
-		this.endChars = endChars.toCharArray();
-	}
+    public AbstractTokenizer(String startChars, String endChars) {
+        this.startChars = startChars.toCharArray();
+        this.endChars = endChars.toCharArray();
+    }
 
-	private static boolean equalsIgnoreCase(char[] a, char[] b) {
-		if (a.length != b.length) {
-			return false;
-		}
+    private static boolean equalsIgnoreCase(char[] a, char[] b) {
+        if (a.length != b.length) {
+            return false;
+        }
 
-		for (int i = 0; i < a.length; i++) {
-			if (Character.toLowerCase(a[i]) != Character.toLowerCase(b[i])) {
-				return false;
-			}
-		}
+        for (int i = 0; i < a.length; i++) {
+            if (Character.toLowerCase(a[i]) != Character.toLowerCase(b[i])) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	protected void addNode(List<Node> nodeList, Node node) {
-		nodeList.add(node);
-	}
+    protected void addNode(List<Node> nodeList, Node node) {
+        nodeList.add(node);
+    }
 
-	@Override
-	public boolean consume(CodeReader codeReader, T nodeList) {
-		if (equalsIgnoreCase(codeReader.peek(startChars.length), startChars)) {
-			Node node = createNode();
-			setStartPosition(codeReader, node);
+    @Override
+    public boolean consume(CodeReader codeReader, T nodeList) {
+        if (equalsIgnoreCase(codeReader.peek(startChars.length), startChars)) {
+            Node node = createNode();
+            setStartPosition(codeReader, node);
 
-			StringBuilder stringBuilder = new StringBuilder();
-			codeReader.popTo(getEndMatcher(codeReader), stringBuilder);
-			for (int i = 0; i < endChars.length; i++) {
-				codeReader.pop(stringBuilder);
-			}
-			node.setCode(stringBuilder.toString());
-			setEndPosition(codeReader, node);
+            StringBuilder stringBuilder = new StringBuilder();
+            codeReader.popTo(getEndMatcher(codeReader), stringBuilder);
+            for (int i = 0; i < endChars.length; i++) {
+                codeReader.pop(stringBuilder);
+            }
+            node.setCode(stringBuilder.toString());
+            setEndPosition(codeReader, node);
 
-			addNode(nodeList, node);
+            addNode(nodeList, node);
 
-			return true;
-		} else {
-			return false;
-		}
-	}
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	abstract Node createNode();
+    abstract Node createNode();
 
-	protected final void setEndPosition(CodeReader code, Node node) {
-		node.setEndLinePosition(code.getLinePosition());
-		node.setEndColumnPosition(code.getColumnPosition());
-	}
+    protected final void setEndPosition(CodeReader code, Node node) {
+        node.setEndLinePosition(code.getLinePosition());
+        node.setEndColumnPosition(code.getColumnPosition());
+    }
 
-	protected final void setStartPosition(CodeReader code, Node node) {
-		node.setStartLinePosition(code.getLinePosition());
-		node.setStartColumnPosition(code.getColumnPosition());
-	}
+    protected final void setStartPosition(CodeReader code, Node node) {
+        node.setStartLinePosition(code.getLinePosition());
+        node.setStartColumnPosition(code.getColumnPosition());
+    }
 
-	protected EndMatcher getEndMatcher(CodeReader codeReader) {
-		return new EndTokenMatcher(codeReader);
-	}
+    protected EndMatcher getEndMatcher(CodeReader codeReader) {
+        return new EndTokenMatcher(codeReader);
+    }
 
-	private final class EndTokenMatcher implements EndMatcher {
+    private final class EndTokenMatcher implements EndMatcher {
 
-		private final CodeReader codeReader;
-		private boolean quoting;
-		private int nesting;
+        private final CodeReader codeReader;
+        private boolean quoting;
+        private int nesting;
 
-		private EndTokenMatcher(CodeReader codeReader) {
-			this.codeReader = codeReader;
-		}
+        private EndTokenMatcher(CodeReader codeReader) {
+            this.codeReader = codeReader;
+        }
 
-		@Override
-		public boolean match(int endFlag) {
-			if (endFlag == '"') {
-				quoting = !quoting;
-			}
-			if (!quoting) {
-				boolean started = equalsIgnoreCase(codeReader.peek(startChars.length), startChars);
-				if (started) {
-					nesting++;
-				} else {
-					boolean ended = ArrayUtils.isEquals(codeReader.peek(endChars.length), endChars);
-					if (ended) {
-						nesting--;
-						return nesting < 0;
-					}
-				}
-			}
-			return false;
-		}
-	}
+        @Override
+        public boolean match(int endFlag) {
+            if (endFlag == '"') {
+                quoting = !quoting;
+            }
+            if (!quoting) {
+                boolean started = equalsIgnoreCase(codeReader.peek(startChars.length), startChars);
+                if (started) {
+                    nesting++;
+                } else {
+                    boolean ended = ArrayUtils.isEquals(codeReader.peek(endChars.length), endChars);
+                    if (ended) {
+                        nesting--;
+                        return nesting < 0;
+                    }
+                }
+            }
+            return false;
+        }
+    }
 
 }

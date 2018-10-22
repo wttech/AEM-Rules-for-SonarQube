@@ -32,27 +32,27 @@ import org.sonar.api.resources.Qualifiers;
 
 public class AemRulesSonarPlugin implements Plugin {
 
+    private static ImmutableList<PropertyDefinition> pluginProperties() {
+        return ImmutableList.of(
+            PropertyDefinition.builder(HtlConstants.FILE_EXTENSIONS_PROP_KEY)
+                .name("File suffixes")
+                .description("List of file suffixes that will be scanned.")
+                .category(Htl.NAME)
+                .defaultValue(HtlConstants.FILE_EXTENSIONS_DEF_VALUE)
+                .onQualifiers(Qualifiers.PROJECT)
+                .multiValues(true)
+                .build()
+        );
+    }
+
     @Override
     public void define(Context context) {
         context.addExtensions(
-				Htl.class,
-				AemRulesRulesDefinition.class,
-				CheckListRegistrar.class,
-				HtlProfile.class,
-				HtlSensor.class);
-		context.addExtensions(pluginProperties());
-	}
-
-	private static ImmutableList<PropertyDefinition> pluginProperties() {
-		return ImmutableList.of(
-				PropertyDefinition.builder(HtlConstants.FILE_EXTENSIONS_PROP_KEY)
-						.name("File suffixes")
-						.description("List of file suffixes that will be scanned.")
-						.category(Htl.NAME)
-						.defaultValue(HtlConstants.FILE_EXTENSIONS_DEF_VALUE)
-						.onQualifiers(Qualifiers.PROJECT)
-						.multiValues(true)
-						.build()
-		);
-	}
+            Htl.class,
+            AemRulesRulesDefinition.class,
+            CheckListRegistrar.class,
+            HtlProfile.class,
+            HtlSensor.class);
+        context.addExtensions(pluginProperties());
+    }
 }

@@ -26,26 +26,26 @@ import org.sonar.plugins.html.checks.HtmlIssue;
 
 public class AbstractHtlCheck extends DefaultNodeVisitor implements HtlCheck {
 
-	private RuleKey ruleKey;
+    private RuleKey ruleKey;
 
-	@Override
-	public final void setRuleKey(RuleKey ruleKey) {
-		this.ruleKey = ruleKey;
-	}
+    @Override
+    public final void setRuleKey(RuleKey ruleKey) {
+        this.ruleKey = ruleKey;
+    }
 
-	@Override
-	public final void createViolation(int line, String message) {
-		getHtmlSourceCode().addIssue(
-				new HtmlIssue(ruleKey, line == 0 ? null : line, message)
-		);
-	}
+    @Override
+    public final void createViolation(int line, String message) {
+        getHtmlSourceCode().addIssue(
+            new HtmlIssue(ruleKey, line == 0 ? null : line, message)
+        );
+    }
 
-	@Override
-	public final void createViolation(int line, String message, Double cost) {
-		getHtmlSourceCode().addIssue(
-				new HtmlIssue(ruleKey, line == 0 ? null : line, message, cost)
-		);
-	}
+    @Override
+    public final void createViolation(int line, String message, Double cost) {
+        getHtmlSourceCode().addIssue(
+            new HtmlIssue(ruleKey, line == 0 ? null : line, message, cost)
+        );
+    }
 
 
 }

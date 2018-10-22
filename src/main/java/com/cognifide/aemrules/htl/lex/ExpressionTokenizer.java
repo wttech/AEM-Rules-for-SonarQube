@@ -25,13 +25,13 @@ import org.sonar.plugins.html.node.Node;
 
 class ExpressionTokenizer extends AbstractTokenizer<List<Node>> {
 
-	ExpressionTokenizer(String startChars, String endChars) {
-		super(startChars, endChars);
-	}
+    ExpressionTokenizer(String startChars, String endChars) {
+        super(startChars, endChars);
+    }
 
-	@Override
-	Node createNode() {
-		return new ExpressionNode();
-	}
+    @Override
+    Node createNode() {
+        return new ExpressionNode();
+    }
 
 }

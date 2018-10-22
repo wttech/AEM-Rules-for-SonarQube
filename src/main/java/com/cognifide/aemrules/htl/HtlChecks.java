@@ -32,43 +32,43 @@ import org.sonar.api.rule.RuleKey;
 
 public class HtlChecks {
 
-	private final CheckFactory checkFactory;
+    private final CheckFactory checkFactory;
 
-	private Set<Checks<HtlCheck>> checksByRepository = Sets.newHashSet();
+    private Set<Checks<HtlCheck>> checksByRepository = Sets.newHashSet();
 
-	private HtlChecks(CheckFactory checkFactory) {
-		this.checkFactory = checkFactory;
-	}
+    private HtlChecks(CheckFactory checkFactory) {
+        this.checkFactory = checkFactory;
+    }
 
-	public static HtlChecks createHtlCheck(CheckFactory checkFactory) {
-		return new HtlChecks(checkFactory);
-	}
+    public static HtlChecks createHtlCheck(CheckFactory checkFactory) {
+        return new HtlChecks(checkFactory);
+    }
 
-	public HtlChecks addChecks(String repositoryKey, Iterable<Class<? extends HtlCheck>> checkClass) {
-		checksByRepository.add(checkFactory
-				.<HtlCheck>create(repositoryKey)
-				.addAnnotatedChecks(checkClass));
-		return this;
-	}
+    public HtlChecks addChecks(String repositoryKey, Iterable<Class<? extends HtlCheck>> checkClass) {
+        checksByRepository.add(checkFactory
+            .<HtlCheck>create(repositoryKey)
+            .addAnnotatedChecks(checkClass));
+        return this;
+    }
 
-	@Nullable
-	public RuleKey ruleKeyFor(HtlCheck check) {
-		RuleKey ruleKey;
+    @Nullable
+    public RuleKey ruleKeyFor(HtlCheck check) {
+        RuleKey ruleKey;
 
-		for (Checks<HtlCheck> checks : checksByRepository) {
-			ruleKey = checks.ruleKey(check);
+        for (Checks<HtlCheck> checks : checksByRepository) {
+            ruleKey = checks.ruleKey(check);
 
-			if (ruleKey != null) {
-				return ruleKey;
-			}
-		}
-		return null;
-	}
+            if (ruleKey != null) {
+                return ruleKey;
+            }
+        }
+        return null;
+    }
 
-	public List<HtlCheck> getAll() {
-		return checksByRepository.stream()
-				.map(Checks::all)
-				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
-	}
+    public List<HtlCheck> getAll() {
+        return checksByRepository.stream()
+            .map(Checks::all)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+    }
 }

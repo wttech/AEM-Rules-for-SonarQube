@@ -23,28 +23,28 @@ import org.sonar.api.resources.AbstractLanguage;
 
 public class Htl extends AbstractLanguage {
 
-	/**
-	 * Language key
-	 */
-	public static final String KEY = "htl";
+    /**
+     * Language key
+     */
+    public static final String KEY = "htl";
 
-	/**
-	 * Language name
-	 */
-	public static final String NAME = "HTL";
+    /**
+     * Language name
+     */
+    public static final String NAME = "HTL";
 
 
-	/**
-	 * Default Htl files knows suffixes
-	 */
-	public static final String[] DEFAULT_FILE_SUFFIXES = new String[]{};
+    /**
+     * Default Htl files knows suffixes
+     */
+    public static final String[] DEFAULT_FILE_SUFFIXES = new String[]{};
 
-	public Htl() {
-		super(KEY, NAME);
-	}
+    public Htl() {
+        super(KEY, NAME);
+    }
 
-	@Override
-	public String[] getFileSuffixes() {
-		return DEFAULT_FILE_SUFFIXES;
-	}
+    @Override
+    public String[] getFileSuffixes() {
+        return DEFAULT_FILE_SUFFIXES;
+    }
 }

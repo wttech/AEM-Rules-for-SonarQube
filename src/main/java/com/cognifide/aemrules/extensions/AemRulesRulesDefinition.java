@@ -28,27 +28,27 @@ public class AemRulesRulesDefinition implements RulesDefinition {
 
     private static final RulesLoader rulesLoader = new RulesLoader();
 
-	@Override
-	public void define(Context context) {
-		defineJavaRepository(context);
-		defineHtlRepository(context);
-	}
+    @Override
+    public void define(Context context) {
+        defineJavaRepository(context);
+        defineHtlRepository(context);
+    }
 
-	private void defineHtlRepository(Context context) {
-		NewRepository repo = context
-				.createRepository(CheckClasses.REPOSITORY_KEY, Htl.KEY)
-				.setName(CheckClasses.REPOSITORY_NAME);
-		rulesLoader.load(repo, CheckClasses.getCheckClasses());
-		repo.done();
-	}
+    private void defineHtlRepository(Context context) {
+        NewRepository repo = context
+            .createRepository(CheckClasses.REPOSITORY_KEY, Htl.KEY)
+            .setName(CheckClasses.REPOSITORY_NAME);
+        rulesLoader.load(repo, CheckClasses.getCheckClasses());
+        repo.done();
+    }
 
-	private void defineJavaRepository(Context context) {
-		NewRepository repo = context
-				.createRepository(CheckListRegistrar.REPOSITORY_KEY, Java.KEY)
-				.setName(CheckListRegistrar.REPOSITORY_NAME);
-		rulesLoader.load(repo, CheckListRegistrar.CHECK_CLASSES);
-		repo.done();
+    private void defineJavaRepository(Context context) {
+        NewRepository repo = context
+            .createRepository(CheckListRegistrar.REPOSITORY_KEY, Java.KEY)
+            .setName(CheckListRegistrar.REPOSITORY_NAME);
+        rulesLoader.load(repo, CheckListRegistrar.CHECK_CLASSES);
+        repo.done();
 
-	}
+    }
 
 }

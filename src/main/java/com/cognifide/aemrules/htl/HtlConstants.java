@@ -21,8 +21,8 @@ package com.cognifide.aemrules.htl;
 
 public class HtlConstants {
 
-	public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
+    public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
 
-	public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
+    public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
 
 }

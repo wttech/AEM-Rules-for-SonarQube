@@ -27,19 +27,19 @@ import java.util.List;
 
 public final class CheckClasses {
 
-	public static final String REPOSITORY_KEY = Htl.KEY;
+    public static final String REPOSITORY_KEY = Htl.KEY;
 
-	public static final String REPOSITORY_NAME = "AEM Rules";
+    public static final String REPOSITORY_NAME = "AEM Rules";
 
-	private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
-			HtlTestRule.class
-	);
+    private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
+        HtlTestRule.class
+    );
 
-	private CheckClasses() {
-		//private constructor
-	}
+    private CheckClasses() {
+        //private constructor
+    }
 
-	public static List<Class<? extends HtlCheck>> getCheckClasses() {
-		return CLASSES;
-	}
+    public static List<Class<? extends HtlCheck>> getCheckClasses() {
+        return CLASSES;
+    }
 }

@@ -28,40 +28,40 @@ import org.sonar.plugins.html.node.Node;
 
 class CommentTokenizer<T extends List<Node>> extends AbstractTokenizer<T> {
 
-	private final Boolean html;
+    private final Boolean html;
 
-	private final char[] endChars;
+    private final char[] endChars;
 
-	CommentTokenizer(String startToken, String endToken, Boolean html) {
-		super(startToken, endToken);
-		this.html = html;
-		this.endChars = endToken.toCharArray();
-	}
+    CommentTokenizer(String startToken, String endToken, Boolean html) {
+        super(startToken, endToken);
+        this.html = html;
+        this.endChars = endToken.toCharArray();
+    }
 
-	@Override
-	protected EndMatcher getEndMatcher(CodeReader codeReader) {
-		return new EndTokenMatcher(codeReader);
-	}
+    @Override
+    protected EndMatcher getEndMatcher(CodeReader codeReader) {
+        return new EndTokenMatcher(codeReader);
+    }
 
-	@Override
-	Node createNode() {
-		CommentNode node = new CommentNode();
-		node.setHtml(html);
-		return node;
-	}
+    @Override
+    Node createNode() {
+        CommentNode node = new CommentNode();
+        node.setHtml(html);
+        return node;
+    }
 
-	private final class EndTokenMatcher implements EndMatcher {
+    private final class EndTokenMatcher implements EndMatcher {
 
-		private final CodeReader codeReader;
+        private final CodeReader codeReader;
 
-		private EndTokenMatcher(CodeReader codeReader) {
-			this.codeReader = codeReader;
-		}
+        private EndTokenMatcher(CodeReader codeReader) {
+            this.codeReader = codeReader;
+        }
 
-		@Override
-		public boolean match(int endFlag) {
-			return ArrayUtils.isEquals(codeReader.peek(endChars.length), endChars);
-		}
+        @Override
+        public boolean match(int endFlag) {
+            return ArrayUtils.isEquals(codeReader.peek(endChars.length), endChars);
+        }
 
-	}
+    }
 }

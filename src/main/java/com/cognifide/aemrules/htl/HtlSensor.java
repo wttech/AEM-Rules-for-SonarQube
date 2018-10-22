@@ -64,208 +64,205 @@ import org.sonar.squidbridge.api.AnalysisException;
 @Phase(name = Phase.Name.PRE)
 public class HtlSensor implements Sensor {
 
-	private static final Logger LOGGER = Loggers.get(HtlSensor.class);
+    private static final Logger LOGGER = Loggers.get(HtlSensor.class);
 
-	private final HtlLexer lexer = new HtlLexer();
+    private final HtlLexer lexer = new HtlLexer();
 
-	private final FileSystem fileSystem;
+    private final FileSystem fileSystem;
 
-	private final FilePredicate htlFilePredicate;
+    private final FilePredicate htlFilePredicate;
 
-	private final HtlChecks checks;
+    private final HtlChecks checks;
 
-	private RuleKey parsingErrorRuleKey = null;
+    private RuleKey parsingErrorRuleKey = null;
 
-	public HtlSensor(Configuration configuration, CheckFactory checkFactory, FileSystem fileSystem) {
-		this.checks = HtlChecks.createHtlCheck(checkFactory)
-				.addChecks(CheckClasses.REPOSITORY_KEY, CheckClasses.getCheckClasses());
-		this.fileSystem = fileSystem;
-		this.htlFilePredicate = createFilePredicate(configuration, fileSystem);
-	}
+    public HtlSensor(Configuration configuration, CheckFactory checkFactory, FileSystem fileSystem) {
+        this.checks = HtlChecks.createHtlCheck(checkFactory)
+            .addChecks(CheckClasses.REPOSITORY_KEY, CheckClasses.getCheckClasses());
+        this.fileSystem = fileSystem;
+        this.htlFilePredicate = createFilePredicate(configuration, fileSystem);
+    }
 
-	private static FilePredicate createFilePredicate(Configuration configuration, FileSystem fileSystem) {
-		FilePredicates predicates = fileSystem.predicates();
-		FilePredicate[] fileExtensions = Stream.of(configuration.getStringArray(HtlConstants.FILE_EXTENSIONS_PROP_KEY))
-				.filter(Objects::nonNull)
-				.map(extension -> StringUtils.removeStart(extension, "." ))
-				.map(predicates::hasExtension)
-				.toArray(FilePredicate[]::new);
+    private static FilePredicate createFilePredicate(Configuration configuration, FileSystem fileSystem) {
+        FilePredicates predicates = fileSystem.predicates();
+        FilePredicate[] fileExtensions = Stream.of(configuration.getStringArray(HtlConstants.FILE_EXTENSIONS_PROP_KEY))
+            .filter(Objects::nonNull)
+            .map(extension -> StringUtils.removeStart(extension, "."))
+            .map(predicates::hasExtension)
+            .toArray(FilePredicate[]::new);
 
-		return predicates.and(
-				predicates.hasType(InputFile.Type.MAIN),
-				predicates.or(
-						predicates.hasLanguages(Htl.KEY),
-						predicates.or(fileExtensions)
-				)
-		);
-	}
+        return predicates.and(
+            predicates.hasType(InputFile.Type.MAIN),
+            predicates.or(
+                predicates.hasLanguages(Htl.KEY),
+                predicates.or(fileExtensions)
+            )
+        );
+    }
 
-	private static void stopProgressReport(ProgressReport progressReport, boolean success) {
-		if (success) {
-			progressReport.stop();
-		} else {
-			progressReport.cancel();
-		}
-	}
+    private static void stopProgressReport(ProgressReport progressReport, boolean success) {
+        if (success) {
+            progressReport.stop();
+        } else {
+            progressReport.cancel();
+        }
+    }
 
-	private static void checkInterrupted(Exception e) {
-		Throwable cause = Throwables.getRootCause(e);
-		if (cause instanceof InterruptedException || cause instanceof InterruptedIOException) {
-			throw new AnalysisException("Analysis cancelled", e);
-		}
-	}
+    private static void checkInterrupted(Exception e) {
+        Throwable cause = Throwables.getRootCause(e);
+        if (cause instanceof InterruptedException || cause instanceof InterruptedIOException) {
+            throw new AnalysisException("Analysis cancelled", e);
+        }
+    }
 
-	private static void processException(Exception e, SensorContext sensorContext,
-			InputFile inputFile) {
-		sensorContext.newAnalysisError()
-				.onFile(inputFile)
-				.message(e.getMessage())
-				.save();
-	}
+    private static void processException(Exception e, SensorContext sensorContext,
+        InputFile inputFile) {
+        sensorContext.newAnalysisError()
+            .onFile(inputFile)
+            .message(e.getMessage())
+            .save();
+    }
 
-	private static void saveMetrics(SensorContext context, HtmlSourceCode sourceCode) {
-		InputFile inputFile = sourceCode.inputFile();
+    private static void saveMetrics(SensorContext context, HtmlSourceCode sourceCode) {
+        InputFile inputFile = sourceCode.inputFile();
 
-		for (Map.Entry<Metric<Integer>, Integer> entry : sourceCode.getMeasures().entrySet()) {
-			context.<Integer>newMeasure()
-					.on(inputFile)
-					.forMetric(entry.getKey())
-					.withValue(entry.getValue())
-					.save();
-		}
+        for (Map.Entry<Metric<Integer>, Integer> entry : sourceCode.getMeasures().entrySet()) {
+            context.<Integer>newMeasure()
+                .on(inputFile)
+                .forMetric(entry.getKey())
+                .withValue(entry.getValue())
+                .save();
+        }
 
-		for (HtmlIssue issue : sourceCode.getIssues()) {
-			NewIssue newIssue = context.newIssue()
-					.forRule(issue.ruleKey())
-					.gap(issue.cost());
-			Integer line = issue.line();
-			NewIssueLocation location = newIssue.newLocation()
-					.on(inputFile)
-					.message(issue.message());
-			if (line != null) {
-				location.at(inputFile.selectLine(line));
-			}
-			newIssue.at(location);
-			newIssue.save();
-		}
-	}
+        for (HtmlIssue issue : sourceCode.getIssues()) {
+            NewIssue newIssue = context.newIssue()
+                .forRule(issue.ruleKey())
+                .gap(issue.cost());
+            Integer line = issue.line();
+            NewIssueLocation location = newIssue.newLocation()
+                .on(inputFile)
+                .message(issue.message());
+            if (line != null) {
+                location.at(inputFile.selectLine(line));
+            }
+            newIssue.at(location);
+            newIssue.save();
+        }
+    }
 
-	@Override
-	public void describe(SensorDescriptor descriptor) {
-		descriptor
-				.name(Htl.NAME)
-				.onlyOnFileType(Type.MAIN);
-	}
+    @Override
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+            .name(Htl.NAME)
+            .onlyOnFileType(Type.MAIN);
+    }
 
-	@Override
-	public void execute(SensorContext context) {
-		Iterable<InputFile> inputFiles = fileSystem.inputFiles(htlFilePredicate);
+    @Override
+    public void execute(SensorContext context) {
+        Iterable<InputFile> inputFiles = fileSystem.inputFiles(htlFilePredicate);
 
-		Collection<File> files = StreamSupport.stream(inputFiles.spliterator(), false)
-				.map(InputFile::uri)
-				.map(File::new)
-				.collect(Collectors.toList());
+        Collection<File> files = StreamSupport.stream(inputFiles.spliterator(), false)
+            .map(InputFile::uri)
+            .map(File::new)
+            .collect(Collectors.toList());
 
-		ProgressReport progressReport = new ProgressReport("Report about progress of HTL analyzer",
-				TimeUnit.SECONDS.toMillis(10));
-		progressReport.start(files);
-		analyseFiles(context, inputFiles, progressReport);
-	}
+        ProgressReport progressReport = new ProgressReport("Report about progress of HTL analyzer",
+            TimeUnit.SECONDS.toMillis(10));
+        progressReport.start(files);
+        analyseFiles(context, inputFiles, progressReport);
+    }
 
-	private void analyseFiles(SensorContext context, Iterable<InputFile> inputFiles,
-			ProgressReport progressReport) {
-		boolean success = false;
-		try {
-			for (InputFile inputFile : inputFiles) {
-				if (context.isCancelled()) {
-					throw new CancellationException(
-							"Analysis interrupted because the SensorContext is in cancelled state");
-				}
-				analyse(context, inputFile);
-				progressReport.nextFile();
-			}
-			success = true;
-		} catch (CancellationException e) {
-			// do not propagate the exception
-			LOGGER.debug(e.toString());
-		} finally {
-			stopProgressReport(progressReport, success);
-		}
-	}
+    private void analyseFiles(SensorContext context, Iterable<InputFile> inputFiles, ProgressReport progressReport) {
+        boolean success = false;
+        try {
+            for (InputFile inputFile : inputFiles) {
+                if (context.isCancelled()) {
+                    throw new CancellationException(
+                        "Analysis interrupted because the SensorContext is in cancelled state");
+                }
+                analyse(context, inputFile);
+                progressReport.nextFile();
+            }
+            success = true;
+        } catch (CancellationException e) {
+            // do not propagate the exception
+            LOGGER.debug(e.toString());
+        } finally {
+            stopProgressReport(progressReport, success);
+        }
+    }
 
-	private void analyse(SensorContext sensorContext, InputFile inputFile) {
+    private void analyse(SensorContext sensorContext, InputFile inputFile) {
 
-		try {
-			scanFile(sensorContext, inputFile);
-		} catch (RecognitionException e) {
-			checkInterrupted(e);
-			LOGGER.error("Unable to parse file: " + inputFile.uri());
-			LOGGER.error(e.getMessage());
-			processRecognitionException(e, sensorContext, inputFile);
-		} catch (Exception e) {
-			checkInterrupted(e);
-			processException(e, sensorContext, inputFile);
-			LOGGER.error("Unable to analyse file: " + inputFile.uri(), e);
-		}
-	}
+        try {
+            scanFile(sensorContext, inputFile);
+        } catch (RecognitionException e) {
+            checkInterrupted(e);
+            LOGGER.error("Unable to parse file: " + inputFile.uri());
+            LOGGER.error(e.getMessage());
+            processRecognitionException(e, sensorContext, inputFile);
+        } catch (Exception e) {
+            checkInterrupted(e);
+            processException(e, sensorContext, inputFile);
+            LOGGER.error("Unable to analyse file: " + inputFile.uri(), e);
+        }
+    }
 
-	private void processRecognitionException(RecognitionException e, SensorContext sensorContext,
-			InputFile inputFile) {
-		if (parsingErrorRuleKey != null) {
-			NewIssue newIssue = sensorContext.newIssue();
+    private void processRecognitionException(RecognitionException e, SensorContext sensorContext, InputFile inputFile) {
+        if (parsingErrorRuleKey != null) {
+            NewIssue newIssue = sensorContext.newIssue();
 
-			NewIssueLocation primaryLocation = newIssue.newLocation()
-					.message("Parse error")
-					.on(inputFile)
-					.at(inputFile.selectLine(e.getOffendingToken().getLine()));
+            NewIssueLocation primaryLocation = newIssue.newLocation()
+                .message("Parse error")
+                .on(inputFile)
+                .at(inputFile.selectLine(e.getOffendingToken().getLine()));
 
-			newIssue
-					.forRule(parsingErrorRuleKey)
-					.at(primaryLocation)
-					.save();
-		}
+            newIssue
+                .forRule(parsingErrorRuleKey)
+                .at(primaryLocation)
+                .save();
+        }
 
-		sensorContext.newAnalysisError()
-				.onFile(inputFile)
-				.at(inputFile.newPointer(e.getOffendingToken().getLine(), 0))
-				.message(e.getMessage())
-				.save();
+        sensorContext.newAnalysisError()
+            .onFile(inputFile)
+            .at(inputFile.newPointer(e.getOffendingToken().getLine(), 0))
+            .message(e.getMessage())
+            .save();
 
-	}
+    }
 
-	private void scanFile(SensorContext sensorContext, InputFile inputFile) {
-		final HtlScanner scanner = setupScanner();
-		HtmlSourceCode sourceCode = new HtmlSourceCode(inputFile);
+    private void scanFile(SensorContext sensorContext, InputFile inputFile) {
+        final HtlScanner scanner = setupScanner();
+        HtmlSourceCode sourceCode = new HtmlSourceCode(inputFile);
 
-		try (Reader reader = new StringReader(inputFile.contents())) {
-			scanner.scan(lexer.parse(reader), sourceCode, fileSystem.encoding());
-			saveMetrics(sensorContext, sourceCode);
-			//saveLineLevelMeasures(inputFile, sourceCode);
+        try (Reader reader = new StringReader(inputFile.contents())) {
+            scanner.scan(lexer.parse(reader), sourceCode, fileSystem.encoding());
+            saveMetrics(sensorContext, sourceCode);
 
-		} catch (Exception e) {
-			LOGGER.error("Cannot analyze file " + inputFile, e);
-			sensorContext.newAnalysisError()
-					.onFile(inputFile)
-					.message(e.getMessage())
-					.save();
-		}
-	}
+        } catch (Exception e) {
+            LOGGER.error("Cannot analyze file " + inputFile, e);
+            sensorContext.newAnalysisError()
+                .onFile(inputFile)
+                .message(e.getMessage())
+                .save();
+        }
+    }
 
-	/**
-	 * Create PageScanner with Visitors.
-	 */
-	private HtlScanner setupScanner() {
-		HtlScanner scanner = new HtlScanner();
+    /**
+     * Create PageScanner with Visitors.
+     */
+    private HtlScanner setupScanner() {
+        HtlScanner scanner = new HtlScanner();
 
-		for (HtlCheck check : checks.getAll()) {
-			RuleKey ruleKey = checks.ruleKeyFor(check);
-			check.setRuleKey(ruleKey);
-			if (check instanceof DefaultNodeVisitor) {
-				DefaultNodeVisitor nodeVisitor = (DefaultNodeVisitor) check;
-				scanner.addVisitor(nodeVisitor);
-			}
-		}
-		return scanner;
-	}
+        for (HtlCheck check : checks.getAll()) {
+            RuleKey ruleKey = checks.ruleKeyFor(check);
+            check.setRuleKey(ruleKey);
+            if (check instanceof DefaultNodeVisitor) {
+                DefaultNodeVisitor nodeVisitor = (DefaultNodeVisitor) check;
+                scanner.addVisitor(nodeVisitor);
+            }
+        }
+        return scanner;
+    }
 
 }
