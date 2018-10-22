@@ -29,8 +29,6 @@ import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.ExpressionStatementTree;
-import org.sonar.plugins.java.api.tree.IdentifierTree;
-import org.sonar.plugins.java.api.tree.LambdaExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
@@ -64,15 +62,11 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private JavaFileScannerContext context;
 
-    private boolean insideLambdaExpression = false;
+    private boolean find = false;
 
-    private boolean isDollarSlingQuery = false;
+    private boolean search = false;
 
-    private boolean searchStrategyOccurredInLambdaExpression = false;
-
-    private boolean findOccurredInLambdaExpression = false;
-
-    private boolean issueReportedInThisLambdaExpression = false;
+    private boolean reported = false;
 
     @Override
     public void scanFile(JavaFileScannerContext context) {
@@ -92,10 +86,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
             slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
-
-            if (insideLambdaExpression) {
-                issueReportedInThisLambdaExpression = true;
-            }
+            reported = true;
         }
     }
 
@@ -105,6 +96,17 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
             slingQueries.replace(slingQueryName, SlingQueryStates.FIND_USED_WITHOUT_STRATEGY);
         } else if (isSearchStrategyMethod(tree)) {
             slingQueries.replace(slingQueryName, SlingQueryStates.STRATEGY_USED);
+            reported = true;
+        }
+        if ("$".equals(tree.methodSelect().firstToken().text()) && find && !search && !reported) {
+            context.reportIssue(this, tree, RULE_MESSAGE);
+            reported = true;
+        }
+        if (isFindMethod(tree)) {
+            find = true;
+        }
+        if (isSearchStrategyMethod(tree)) {
+            search = true;
         }
         super.visitMethodInvocation(tree);
     }
@@ -120,6 +122,7 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
             slingQueries.put(this.slingQueryName, SlingQueryStates.ISSUE_RETURNED);
+            reported = true;
         }
     }
 
@@ -128,23 +131,6 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         slingQueries.clear();
         cleanFlags();
         super.visitMethod(tree);
-    }
-
-    @Override
-    public void visitIdentifier(IdentifierTree tree) {
-        checkFlags(tree);
-        if (shouldIssueBeReported()) {
-            context.reportIssue(this, tree, RULE_MESSAGE);
-            issueReportedInThisLambdaExpression = true;
-        }
-        super.visitIdentifier(tree);
-    }
-
-    @Override
-    public void visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree) {
-        insideLambdaExpression = true;
-        super.visitLambdaExpression(lambdaExpressionTree);
-        cleanFlags();
     }
 
     private boolean isSlingQuery(VariableTree tree) {
@@ -171,28 +157,10 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
         return DOLLAR_SIGN.equals(slingQueryName) || SLING_QUERY.equals(slingQueryName);
     }
 
-    private boolean shouldIssueBeReported() {
-        return insideLambdaExpression && isDollarSlingQuery && !issueReportedInThisLambdaExpression && !searchStrategyOccurredInLambdaExpression &&
-            findOccurredInLambdaExpression;
-    }
-
     private void cleanFlags() {
-        insideLambdaExpression = false;
-        isDollarSlingQuery = false;
-        findOccurredInLambdaExpression = false;
-        searchStrategyOccurredInLambdaExpression = false;
-        issueReportedInThisLambdaExpression = false;
-    }
-
-    private void checkFlags(IdentifierTree tree) {
-        String identifier = tree.name();
-        if (DOLLAR_SIGN.equals(identifier)) {
-            isDollarSlingQuery = true;
-        } else if (SEARCH_STRATEGY_METHOD.equals(identifier)) {
-            searchStrategyOccurredInLambdaExpression = true;
-        } else if (FIND_METHOD.equals(identifier)) {
-            findOccurredInLambdaExpression = true;
-        }
+        find = false;
+        search = false;
+        reported = false;
     }
 
     private enum SlingQueryStates {
