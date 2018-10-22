@@ -43,6 +43,10 @@ public class SlingQueryImplicitStrategyCheck extends SlingAllMethodsServlet {
         Resource resource = request.getResource();
         strategyNotDefined(resource);
         strategyDefined(resource);
+        casesThatShouldBeIgnored();
+        testVer1();
+        testVer2();
+        test2();
     }
 
     private void strategyNotDefined(Resource resource) {
@@ -70,7 +74,7 @@ public class SlingQueryImplicitStrategyCheck extends SlingAllMethodsServlet {
             .map(r -> r.adaptTo(SlingQueryImplicitStrategyCheck.class).toString()).filter(StringUtils::isNotEmpty).iterator();
     }
 
-    public void casesThatShouldBeIgnored(ResourceResolver resourceResolver, ScriptFinder scriptFinder) {
+    public void casesThatShouldBeIgnored() {
         Script script = scriptFinder.find(PERMISSION_SCRIPT_PATH, resourceResolver);
 
         while (matcher.find()) {
