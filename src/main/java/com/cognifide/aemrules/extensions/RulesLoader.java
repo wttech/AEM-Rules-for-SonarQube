@@ -41,7 +41,7 @@ import org.sonar.api.server.rule.RulesDefinition.DebtRemediationFunctions;
 import org.sonar.api.utils.AnnotationUtils;
 import org.sonar.api.utils.FieldUtils2;
 import org.sonar.check.Rule;
-import org.sonar.plugins.java.api.JavaCheck;
+import org.sonar.check.RuleProperty;
 
 
 public class RulesLoader {
@@ -64,9 +64,9 @@ public class RulesLoader {
         RuleParamType.STRING
     );
 
-   private static RuleParamType guessType(Class<?> type) {
+    private static RuleParamType guessType(Class<?> type) {
         return TYPE_FOR_CLASS.apply(type);
-   }
+    }
 
     public <T> void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends T>> annotatedClasses) {
         for (Class annotatedClass : annotatedClasses) {
@@ -102,7 +102,7 @@ public class RulesLoader {
         return rule;
     }
 
-    private void setMetadata(RulesDefinition.NewRule rule, Class<? extends JavaCheck> clazz) {
+    private void setMetadata(RulesDefinition.NewRule rule, Class clazz) {
         Optional.ofNullable(AnnotationUtils.getAnnotation(clazz, Metadata.class))
             .ifPresent(metadataAnnotation -> setTechnicalDebt(rule, metadataAnnotation));
     }
@@ -132,7 +132,7 @@ public class RulesLoader {
     }
 
     private void loadParameters(RulesDefinition.NewRule rule, Field field) {
-        org.sonar.check.RuleProperty propertyAnnotation = field.getAnnotation(org.sonar.check.RuleProperty.class);
+        RuleProperty propertyAnnotation = field.getAnnotation(RuleProperty.class);
         if (propertyAnnotation != null) {
             String fieldKey = StringUtils.defaultIfEmpty(propertyAnnotation.key(), field.getName());
             RulesDefinition.NewParam param = rule.createParam(fieldKey)
