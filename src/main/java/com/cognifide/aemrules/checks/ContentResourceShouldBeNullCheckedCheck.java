@@ -19,6 +19,9 @@
  */
 package com.cognifide.aemrules.checks;
 
+import static org.sonar.plugins.java.api.tree.Tree.Kind.EQUAL_TO;
+import static org.sonar.plugins.java.api.tree.Tree.Kind.NOT_EQUAL_TO;
+
 import com.cognifide.aemrules.Constants;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
@@ -38,6 +41,8 @@ import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.ReturnStatementTree;
+import org.sonar.plugins.java.api.tree.SyntaxToken;
+import org.sonar.plugins.java.api.tree.Tree;
 import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
@@ -60,10 +65,6 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     public static final String RULE_MESSAGE = "Always null check the returned value of Page.getContentResource() method";
 
     public static final String GET_CONTENT_RESOURCE_METHOD = "getContentResource";
-
-    public static final String NOT_EQUAL = "NOT_EQUAL_TO";
-
-    public static final String EQUAL = "EQUAL_TO";
 
     public static final String NON_NULL_METHOD = "nonNull";
 
@@ -92,9 +93,9 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     @Override
     public void visitIfStatement(IfStatementTree tree) {
         insideIfStatement = true;
-        if (isThisAResourceNullCheck(tree, NOT_EQUAL)) {
+        if (isResourceNullCheckOfType(tree, NOT_EQUAL_TO.name())) {
             updateNullCheckedResources(tree, true);
-        } else if (isThisAResourceNullCheck(tree, EQUAL)) {
+        } else if (isResourceNullCheckOfType(tree, EQUAL_TO.name())) {
             insideEqualNullCheck = true;
         }
         super.visitIfStatement(tree);
@@ -162,11 +163,9 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     }
 
     private void updateNullCheckedResources(IfStatementTree tree, boolean value) {
-        if (isRightSideNullCheck(tree)) {
-            contentResources.replace(tree.condition().firstToken().text(), value);
-        } else {
-            contentResources.replace(tree.condition().lastToken().text(), value);
-        }
+        boolean rightOperandIsNull = Kind.NULL_LITERAL.equals(tree.condition().lastToken().parent().kind());
+        SyntaxToken variable = rightOperandIsNull ? tree.condition().firstToken() : tree.condition().lastToken();
+        contentResources.replace(variable.text(), value);
     }
 
     private void externalLibraryNullChecks(MethodInvocationTree tree) {
@@ -224,34 +223,35 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
         return Constants.PAGE.equals(name);
     }
 
-    private boolean isThisAResourceNullCheck(IfStatementTree tree, String ifType) {
+    private boolean isResourceNullCheckOfType(IfStatementTree tree, String ifType) {
         boolean result = false;
         if (ifType.equals(tree.condition().kind().name())) {
-            result = isThisANullCheck(tree);
+            result = isResourceNullCheck(tree);
         }
         return result;
     }
 
-    private boolean isRightSideNullCheck(IfStatementTree tree) {
-        return Kind.NULL_LITERAL.equals(tree.condition().lastToken().parent().kind());
+    private boolean isResourceNullCheck(IfStatementTree tree) {
+        SyntaxToken leftOperand = tree.condition().firstToken();
+        SyntaxToken rightOperand = tree.condition().lastToken();
+
+        if (leftOperand == null || rightOperand == null) {
+            return false;
+        }
+
+        return isResourceNullCheck(leftOperand, rightOperand) || isResourceNullCheck(rightOperand, leftOperand);
     }
 
-    private boolean isThisANullCheck(IfStatementTree tree) {
-        boolean result = false;
-        if (tree.condition().firstToken().parent() instanceof IdentifierTree &&
-            Constants.RESOURCE_TYPE
-                .equals(((IdentifierTree) tree.condition().firstToken().parent()).symbolType()
-                    .fullyQualifiedName()) &&
-            Kind.NULL_LITERAL.equals(tree.condition().lastToken().parent().kind())) {
-            result = true;
-        } else if (tree.condition().lastToken().parent() instanceof IdentifierTree &&
-            Constants.RESOURCE_TYPE
-                .equals(((IdentifierTree) tree.condition().lastToken().parent()).symbolType()
-                    .fullyQualifiedName()) &&
-            Kind.NULL_LITERAL.equals(tree.condition().firstToken().parent().kind())) {
-            result = true;
-        }
-        return result;
+    private boolean isResourceNullCheck(SyntaxToken operandA, SyntaxToken operandB) {
+        return isResourceType(operandA.parent()) && isNullLiteral(operandB.parent());
+    }
+
+    private boolean isNullLiteral(Tree operand) {
+        return Kind.NULL_LITERAL.equals(operand.kind());
+    }
+
+    private boolean isResourceType(Tree operand) {
+        return operand instanceof IdentifierTree && Constants.RESOURCE_TYPE.equals(((IdentifierTree)operand).symbolType().fullyQualifiedName());
     }
 
     private boolean isNonNullUsed(MethodInvocationTree tree) {
