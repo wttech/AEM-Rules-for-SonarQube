@@ -64,15 +64,17 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
 
     public static final String RULE_MESSAGE = "Always null check the returned value of Page.getContentResource() method";
 
-    public static final String GET_CONTENT_RESOURCE_METHOD = "getContentResource";
+    private static final String WCM_API_PAGE_QUALIFIED_NAME = "com.day.cq.wcm.api.Page";
 
-    public static final String NON_NULL_METHOD = "nonNull";
+    private static final String GET_CONTENT_RESOURCE_METHOD = "getContentResource";
 
-    public static final String ALL_NON_NULL_METHOD = "allNotNull";
+    private static final String NON_NULL_METHOD = "nonNull";
 
-    public static final String IS_NULL_METHOD = "isNull";
+    private static final String ALL_NON_NULL_METHOD = "allNotNull";
 
-    public static final int METHOD_FIRST_ARGUMENT = 0;
+    private static final String IS_NULL_METHOD = "isNull";
+
+    private static final int METHOD_FIRST_ARGUMENT = 0;
 
     private boolean returnOccurredInsideEqualNullCheck = false;
 
@@ -194,7 +196,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     }
 
     private boolean isResource(AssignmentExpressionTree tree) {
-        return Constants.RESOURCE_TYPE.equals(tree.variable().symbolType().fullyQualifiedName());
+        return Constants.SLING_RESOURCE_QUALIFIED_NAME.equals(tree.variable().symbolType().fullyQualifiedName());
     }
 
     private boolean isResourceInitialized(VariableTree tree) {
@@ -220,7 +222,7 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     }
 
     private boolean isPage(String name) {
-        return Constants.PAGE.equals(name);
+        return WCM_API_PAGE_QUALIFIED_NAME.equals(name);
     }
 
     private boolean isResourceNullCheckOfType(IfStatementTree tree, String ifType) {
@@ -251,7 +253,8 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     }
 
     private boolean isResourceType(Tree operand) {
-        return operand instanceof IdentifierTree && Constants.RESOURCE_TYPE.equals(((IdentifierTree)operand).symbolType().fullyQualifiedName());
+        return operand instanceof IdentifierTree && Constants.SLING_RESOURCE_QUALIFIED_NAME
+            .equals(((IdentifierTree) operand).symbolType().fullyQualifiedName());
     }
 
     private boolean isNonNullUsed(MethodInvocationTree tree) {

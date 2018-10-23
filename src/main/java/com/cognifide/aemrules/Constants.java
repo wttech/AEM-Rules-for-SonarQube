@@ -21,9 +21,7 @@ package com.cognifide.aemrules;
 
 public final class Constants {
 
-	public static final String RESOURCE_TYPE = "org.apache.sling.api.resource.Resource";
-
-	public static final String PAGE = "com.day.cq.wcm.api.Page";
+	public static final String SLING_RESOURCE_QUALIFIED_NAME = "org.apache.sling.api.resource.Resource";
 
 	private Constants() {
 		// private constructor to hide public one

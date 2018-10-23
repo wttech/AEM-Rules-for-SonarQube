@@ -46,7 +46,7 @@ class TypeTreeVisitor extends BaseTreeVisitor {
     }
 
     private void isResourceType(TypeTree typeTree) {
-        if (typeTree.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE)) {
+        if (typeTree.symbolType().isSubtypeOf(Constants.SLING_RESOURCE_QUALIFIED_NAME)) {
             resourceTypeInstance = true;
         }
     }
