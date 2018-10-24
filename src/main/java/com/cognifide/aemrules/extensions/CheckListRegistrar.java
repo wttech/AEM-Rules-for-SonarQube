@@ -32,6 +32,7 @@ import com.cognifide.aemrules.checks.SessionShouldBeLoggedOut;
 import com.cognifide.aemrules.checks.SynchronizedKeywordUsageCheck;
 import com.cognifide.aemrules.checks.ThreadSafeFieldCheck;
 import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
+import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverTryWithResourcesCheck;
 import com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck;
 import com.cognifide.aemrules.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
@@ -54,7 +55,6 @@ public class CheckListRegistrar implements CheckRegistrar {
     public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
         = ImmutableList.of(
         AdministrativeAccessUsageCheck.class,
-        AdministrativeAccessUsageCheck.class,
         AnnotationsConstantsCheck.class,
         ConstantsCheck.class,
         HttpConstantCheck.class,
@@ -70,7 +70,8 @@ public class CheckListRegistrar implements CheckRegistrar {
         ThreadSafeFieldCheck.class,
         DefaultInjectionStrategyAnnotationCheck.class,
         ModifiableValueMapUsageCheck.class,
-        ContentResourceShouldBeNullCheckedCheck.class
+        ContentResourceShouldBeNullCheckedCheck.class,
+        ResourceResolverTryWithResourcesCheck.class
     );
 
     private final Settings settings;
