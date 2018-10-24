@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,9 @@ import org.sonar.plugins.html.node.TagNode;
     name = HtlAttributesShouldBeAtTheEndCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
+)
+@Metadata(
+    technicalDebt = "5min"
 )
 public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
 
