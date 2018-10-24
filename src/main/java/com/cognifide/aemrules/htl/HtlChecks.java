@@ -53,16 +53,16 @@ public class HtlChecks {
 
     @Nullable
     public RuleKey ruleKeyFor(HtlCheck check) {
-        RuleKey ruleKey;
+        RuleKey ruleKey = null;
 
         for (Checks<HtlCheck> checks : checksByRepository) {
             ruleKey = checks.ruleKey(check);
 
             if (ruleKey != null) {
-                return ruleKey;
+                break;
             }
         }
-        return null;
+        return ruleKey;
     }
 
     public List<HtlCheck> getAll() {

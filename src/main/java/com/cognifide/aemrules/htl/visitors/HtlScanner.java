@@ -38,7 +38,6 @@ import org.sonar.plugins.html.node.ExpressionNode;
 import org.sonar.plugins.html.node.Node;
 import org.sonar.plugins.html.node.TagNode;
 import org.sonar.plugins.html.node.TextNode;
-import org.sonar.plugins.html.visitor.CharsetAwareVisitor;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
 public class HtlScanner {
@@ -118,10 +117,6 @@ public class HtlScanner {
         // prepare the visitors
         for (DefaultHtlVisitor visitor : visitors) {
             visitor.setSourceCode(htmlSourceCode);
-
-            if (visitor instanceof CharsetAwareVisitor) {
-                ((CharsetAwareVisitor) visitor).setCharset(charset);
-            }
         }
 
         // notify visitors for a new document
