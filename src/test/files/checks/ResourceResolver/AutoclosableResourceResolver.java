@@ -19,6 +19,7 @@
  */
 package com.example;
 
+import java.util.Map;
 import jdk.nashorn.internal.ir.annotations.Reference;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -28,6 +29,8 @@ public class AutoclosableResourceResolver {
 
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
+
+    private ResourceResolver resolver;
 
     protected void case1() {
         ResourceResolver resourceResolver = null;
@@ -51,7 +54,6 @@ public class AutoclosableResourceResolver {
     }
 
     public String case3(final String path) {
-        String name = "";
         ResourceResolver resourceResolver = null;
         try {
             resourceResolver = resourceResolverProducer.produce(); // Noncompliant
@@ -65,6 +67,7 @@ public class AutoclosableResourceResolver {
     }
 
     public String case4(final String path) {
+        ResourceResolver resourceResolver = null;
         try {
             String name = resourceResolver.getResource(path).getName();
             ResourceResolver resourceResolver = resourceResolverProducer.produce(); // Noncompliant
@@ -74,5 +77,13 @@ public class AutoclosableResourceResolver {
             }
         }
         return name;
+    }
+
+    protected void case5(final Map<String, Object> properties) {
+        try {
+            resolver = resourceResolverFactory.getAdministrativeResourceResolver(null); // Noncompliant
+            registerObservation();
+        } catch (LoginException x) {
+        }
     }
 }
