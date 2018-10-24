@@ -45,18 +45,18 @@ public class HtlScanner {
 
     private static final ExpressionParser expressionParser = new ExpressionParser();
 
-    private final List<DefaultNodeVisitor> metricVisitors;
-    private final List<DefaultNodeVisitor> checkVisitors = Lists.newArrayList();
+    private final List<DefaultHtlVisitor> metricVisitors;
+    private final List<DefaultHtlVisitor> checkVisitors = Lists.newArrayList();
 
     public HtlScanner() {
         this(Collections.emptyList());
     }
 
-    public HtlScanner(List<DefaultNodeVisitor> metricVisitors) {
+    public HtlScanner(List<DefaultHtlVisitor> metricVisitors) {
         this.metricVisitors = metricVisitors;
     }
 
-    private static void scanElementTag(DefaultNodeVisitor visitor, TagNode node) {
+    private static void scanElementTag(DefaultHtlVisitor visitor, TagNode node) {
         if (!node.isEndElement()) {
             visitor.startElement(node);
             if (isHtlTag(node)) {
@@ -100,7 +100,7 @@ public class HtlScanner {
     /**
      * Add a visitor to the list of visitors.
      */
-    public void addVisitor(DefaultNodeVisitor visitor) {
+    public void addVisitor(DefaultHtlVisitor visitor) {
         checkVisitors.add(visitor);
         visitor.init();
     }
@@ -114,9 +114,9 @@ public class HtlScanner {
     }
 
     private void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset,
-        List<DefaultNodeVisitor> visitors) {
+        List<DefaultHtlVisitor> visitors) {
         // prepare the visitors
-        for (DefaultNodeVisitor visitor : visitors) {
+        for (DefaultHtlVisitor visitor : visitors) {
             visitor.setSourceCode(htmlSourceCode);
 
             if (visitor instanceof CharsetAwareVisitor) {
@@ -125,19 +125,19 @@ public class HtlScanner {
         }
 
         // notify visitors for a new document
-        for (DefaultNodeVisitor visitor : visitors) {
+        for (DefaultHtlVisitor visitor : visitors) {
             visitor.startDocument(nodeList);
         }
 
         // notify the visitors for start and end of element
         for (Node node : nodeList) {
-            for (DefaultNodeVisitor visitor : visitors) {
+            for (DefaultHtlVisitor visitor : visitors) {
                 scanElement(visitor, node);
             }
         }
 
         // notify visitors for end of document
-        for (DefaultNodeVisitor visitor : visitors) {
+        for (DefaultHtlVisitor visitor : visitors) {
             visitor.endDocument();
         }
     }
@@ -145,7 +145,7 @@ public class HtlScanner {
     /**
      * Scan a single element and send appropriate event: start element, end element, characters, comment, expression or directive.
      */
-    private void scanElement(DefaultNodeVisitor visitor, Node node) {
+    private void scanElement(DefaultHtlVisitor visitor, Node node) {
         switch (node.getNodeType()) {
             case TAG:
                 scanElementTag(visitor, (TagNode) node);

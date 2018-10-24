@@ -22,8 +22,8 @@ package com.cognifide.aemrules.htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.api.ParsingErrorRule;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
-import com.cognifide.aemrules.htl.rules.CheckClasses;
-import com.cognifide.aemrules.htl.visitors.DefaultNodeVisitor;
+import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
+import com.cognifide.aemrules.htl.visitors.DefaultHtlVisitor;
 import com.cognifide.aemrules.htl.visitors.HtlScanner;
 import com.google.common.base.Throwables;
 import java.io.File;
@@ -85,7 +85,7 @@ public class HtlSensor implements Sensor {
 
     public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory, FileSystem fileSystem) {
         this.checks = HtlChecks.createHtlCheck(checkFactory)
-            .addChecks(CheckClasses.REPOSITORY_KEY, CheckClasses.getCheckClasses());
+            .addChecks(HtlCheckClasses.REPOSITORY_KEY, HtlCheckClasses.getCheckClasses());
         this.parsingErrorRuleKey = setupParsingErrorRuleKey(checks);
         this.fileSystem = fileSystem;
         this.htlFilePredicate = createFilePredicate(configuration, fileSystem);
@@ -277,8 +277,8 @@ public class HtlSensor implements Sensor {
         for (HtlCheck check : checks.getAll()) {
             RuleKey ruleKey = checks.ruleKeyFor(check);
             check.setRuleKey(ruleKey);
-            if (check instanceof DefaultNodeVisitor) {
-                DefaultNodeVisitor nodeVisitor = (DefaultNodeVisitor) check;
+            if (check instanceof DefaultHtlVisitor) {
+                DefaultHtlVisitor nodeVisitor = (DefaultHtlVisitor) check;
                 scanner.addVisitor(nodeVisitor);
             }
         }

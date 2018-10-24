@@ -22,8 +22,8 @@ package com.cognifide.aemrules.htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
-import com.cognifide.aemrules.htl.rules.CheckClasses;
-import com.cognifide.aemrules.htl.visitors.DefaultNodeVisitor;
+import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
+import com.cognifide.aemrules.htl.visitors.DefaultHtlVisitor;
 import com.cognifide.aemrules.htl.visitors.HtlScanner;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -71,8 +71,8 @@ public abstract class AbstractBaseTest {
         scanner.addVisitor(new ExpectedIssueCollector(htmlCheckVerifier));
         if (check != null) {
             Class<? extends HtlCheck> htlCheck = check.getClass();
-            Rule rule = CheckClasses.getRule(htlCheck);
-            RuleKey ruleKey = RuleKey.of(CheckClasses.REPOSITORY_KEY, rule.key());
+            Rule rule = HtlCheckClasses.getRule(htlCheck);
+            RuleKey ruleKey = RuleKey.of(HtlCheckClasses.REPOSITORY_KEY, rule.key());
             check.setRuleKey(ruleKey);
         }
         scanner.addVisitor(check);
@@ -82,7 +82,7 @@ public abstract class AbstractBaseTest {
         return result.getIssues();
     }
 
-    private static class ExpectedIssueCollector extends DefaultNodeVisitor {
+    private static class ExpectedIssueCollector extends DefaultHtlVisitor {
 
         private final HtmlCheckVerifier verifier;
 

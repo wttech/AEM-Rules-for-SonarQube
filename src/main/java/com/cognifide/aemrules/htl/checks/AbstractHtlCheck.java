@@ -20,11 +20,11 @@
 package com.cognifide.aemrules.htl.checks;
 
 import com.cognifide.aemrules.htl.api.HtlCheck;
-import com.cognifide.aemrules.htl.visitors.DefaultNodeVisitor;
+import com.cognifide.aemrules.htl.visitors.DefaultHtlVisitor;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.html.checks.HtmlIssue;
 
-public class AbstractHtlCheck extends DefaultNodeVisitor implements HtlCheck {
+public class AbstractHtlCheck extends DefaultHtlVisitor implements HtlCheck {
 
     private RuleKey ruleKey;
 

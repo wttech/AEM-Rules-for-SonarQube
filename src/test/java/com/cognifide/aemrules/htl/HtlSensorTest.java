@@ -24,12 +24,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.cognifide.aemrules.extensions.AemRulesRulesDefinition;
-import com.cognifide.aemrules.htl.lex.HtlLexer;
-import com.cognifide.aemrules.htl.rules.CheckClasses;
+import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +67,11 @@ public class HtlSensorTest {
         RulesDefinition rulesDefinition = new AemRulesRulesDefinition();
         RulesDefinition.Context context = new RulesDefinition.Context();
         rulesDefinition.define(context);
-        RulesDefinition.Repository htlRepository = context.repository(CheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository htlRepository = context.repository(HtlCheckClasses.REPOSITORY_KEY);
 
         List<NewActiveRule> ar = new ArrayList<>();
         for (RulesDefinition.Rule rule : htlRepository.rules()) {
-            ar.add(new ActiveRulesBuilder().create(RuleKey.of(CheckClasses.REPOSITORY_KEY, rule.key())));
+            ar.add(new ActiveRulesBuilder().create(RuleKey.of(HtlCheckClasses.REPOSITORY_KEY, rule.key())));
         }
         ActiveRules activeRules = new DefaultActiveRules(ar);
 

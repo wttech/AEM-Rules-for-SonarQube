@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import org.sonar.check.Rule;
 
-public final class CheckClasses {
+public final class HtlCheckClasses {
 
     public static final String REPOSITORY_KEY = Htl.KEY;
 
@@ -39,7 +39,7 @@ public final class CheckClasses {
         HtlAttributesShouldBeAtTheEndCheck.class
     );
 
-    private CheckClasses() {
+    private HtlCheckClasses() {
         //private constructor
     }
 

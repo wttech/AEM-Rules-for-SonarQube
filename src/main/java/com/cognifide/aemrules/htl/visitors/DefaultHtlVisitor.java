@@ -29,7 +29,7 @@ import org.sonar.plugins.html.node.TagNode;
 import org.sonar.plugins.html.node.TextNode;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
-public class DefaultNodeVisitor {
+public class DefaultHtlVisitor {
 
     private HtmlSourceCode htmlSourceCode;
 
