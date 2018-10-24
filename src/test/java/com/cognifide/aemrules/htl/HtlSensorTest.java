@@ -23,12 +23,13 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
 import com.cognifide.aemrules.extensions.AemRulesRulesDefinition;
+import com.cognifide.aemrules.htl.lex.HtlLexer;
 import com.cognifide.aemrules.htl.rules.CheckClasses;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +49,10 @@ import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.config.Configuration;
-import org.sonar.api.internal.SonarRuntimeImpl;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.server.rule.RulesDefinition;
-import org.sonar.api.utils.Version;
 import org.sonar.plugins.html.api.HtmlConstants;
 
 
@@ -130,6 +129,14 @@ public class HtlSensorTest {
     @Test
     public void compilationException() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "error.html");
+        tester.fileSystem().add(inputFile);
+        sensor.execute(tester);
+        assertThat(tester.allAnalysisErrors()).isNotEmpty();
+    }
+
+    @Test
+    public void expressionWithinHtmlComment() throws Exception {
+        DefaultInputFile inputFile = createInputFile(TEST_DIR, "comment.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
         assertThat(tester.allAnalysisErrors()).isNotEmpty();

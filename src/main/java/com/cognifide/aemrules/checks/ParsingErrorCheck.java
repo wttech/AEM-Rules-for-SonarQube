@@ -34,7 +34,7 @@ import org.sonar.check.Rule;
 )
 public class ParsingErrorCheck extends AbstractHtlCheck {
 
-    static final String RULE_KEY = "HTL-1";
+    static final String RULE_KEY = "HTL-0";
 
     static final String RULE_NAME = "Compilation error";
 }

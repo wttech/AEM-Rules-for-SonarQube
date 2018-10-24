@@ -34,12 +34,12 @@ import org.sonar.plugins.html.node.TagNode;
 public final class HtlLexer {
 
     private static List<Channel<List<Node>>> tokenizers = Arrays.asList(
+        /* HTL Comments */
+        new CommentTokenizer(Syntax.SLY_COMMENT_PREFIX, Syntax.SLY_COMMENT_SUFFIX, false),
         /* HTML Comments */
         new CommentTokenizer("<!--", "-->", true),
         /* JSP Comments */
         new CommentTokenizer("<%--", "--%>", false),
-        /* HTL Comments */
-        new CommentTokenizer(Syntax.SLY_COMMENT_PREFIX, Syntax.SLY_COMMENT_SUFFIX, false),
         /* HTML Directive */
         new DoctypeTokenizer("<!DOCTYPE", ">"),
         /* XML Directives */

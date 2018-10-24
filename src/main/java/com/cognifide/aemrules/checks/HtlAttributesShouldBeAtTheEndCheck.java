@@ -38,7 +38,7 @@ import org.sonar.plugins.html.node.TagNode;
 )
 public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
 
-    public static final String RULE_KEY = "HTL-0";
+    public static final String RULE_KEY = "HTL-1";
 
     static final String RULE_MESSAGE = "Always Place HTL Attributes After the Ones that are Part of the Markup";
 

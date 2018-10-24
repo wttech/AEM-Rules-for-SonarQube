@@ -161,16 +161,17 @@ public class HtlScanner {
                 break;
             case EXPRESSION:
                 visitor.expression((ExpressionNode) node);
-                if (hasHtlExpression(node.getCode())) {
-                    getExpressions(node.getCode())
-                        .forEach(expression -> visitor.htlExpression(expression, node));
-                }
                 break;
             case DIRECTIVE:
                 visitor.directive((DirectiveNode) node);
                 break;
             default:
                 break;
+        }
+
+        if (hasHtlExpression(node.getCode())) {
+            getExpressions(node.getCode())
+                .forEach(expression -> visitor.htlExpression(expression, node));
         }
     }
 
