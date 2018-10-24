@@ -22,6 +22,7 @@ package com.cognifide.aemrules.extensions;
 import com.cognifide.aemrules.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.checks.ConstantsCheck;
+import com.cognifide.aemrules.checks.ContentResourceShouldBeNullCheckedCheck;
 import com.cognifide.aemrules.checks.HttpConstantCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
@@ -53,24 +54,25 @@ public class CheckListRegistrar implements CheckRegistrar {
     public static final String REPOSITORY_NAME = "AEM Rules";
 
     public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
-        = ImmutableList.<Class<? extends JavaCheck>>builder()
-        .add(AdministrativeAccessUsageCheck.class)
-        .add(AnnotationsConstantsCheck.class)
-        .add(ConstantsCheck.class)
-        .add(HttpConstantCheck.class)
-        .add(InjectorShouldBeClosedCheck.class)
-        .add(InjectorTryWithResourcesCheck.class)
-        .add(ModelsShouldNotUseSessionCheck.class)
-        .add(IteratingResourcesCheck.class)
-        .add(JcrPropertyFieldsInConstructorCheck.class)
-        .add(PreferSlingServletAnnotation.class)
-        .add(ResourceResolverShouldBeClosed.class)
-        .add(SessionShouldBeLoggedOut.class)
-        .add(SynchronizedKeywordUsageCheck.class)
-        .add(ThreadSafeFieldCheck.class)
-        .add(DefaultInjectionStrategyAnnotationCheck.class)
-        .add(ModifiableValueMapUsageCheck.class)
-        .build();
+        = ImmutableList.of(
+        AdministrativeAccessUsageCheck.class,
+        AnnotationsConstantsCheck.class,
+        ConstantsCheck.class,
+        HttpConstantCheck.class,
+        InjectorShouldBeClosedCheck.class,
+        InjectorTryWithResourcesCheck.class,
+        ModelsShouldNotUseSessionCheck.class,
+        IteratingResourcesCheck.class,
+        JcrPropertyFieldsInConstructorCheck.class,
+        PreferSlingServletAnnotation.class,
+        ResourceResolverShouldBeClosed.class,
+        SessionShouldBeLoggedOut.class,
+        SynchronizedKeywordUsageCheck.class,
+        ThreadSafeFieldCheck.class,
+        DefaultInjectionStrategyAnnotationCheck.class,
+        ModifiableValueMapUsageCheck.class,
+        ContentResourceShouldBeNullCheckedCheck.class
+    );
 
     private final Configuration configuration;
 

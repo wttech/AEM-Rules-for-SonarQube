@@ -72,8 +72,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <htl.version>1.0.14</htl.version>
-        <sonar.version>6.7</sonar.version>
-        <sonar.html.version>3.0.1.1444</sonar.html.version>
+    <sonar.version>6.7</sonar.version>
+    <sonar.html.version>3.0.1.1444</sonar.html.version>
     <sonar.java.plugin>4.10.0.10260</sonar.java.plugin>
     <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
     <tagName>v${project.version}</tagName>
@@ -270,6 +270,7 @@
           <requirePlugins>java:4.10</requirePlugins>
           <basePlugin>java</basePlugin>
           <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+          <sonarLintSupported>true</sonarLintSupported>
         </configuration>
       </plugin>
       <plugin>
