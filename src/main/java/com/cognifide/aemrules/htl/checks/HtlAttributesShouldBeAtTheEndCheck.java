@@ -64,11 +64,13 @@ public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
     }
 
     private boolean isSorted(List<Integer> data) {
+        boolean result = true;
         for (int i = 1; i < data.size(); i++) {
             if (data.get(i - 1) > data.get(i)) {
-                return false;
+                result = false;
+                break;
             }
         }
-        return true;
+        return result;
     }
 }

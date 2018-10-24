@@ -141,6 +141,14 @@ public class HtlSensorTest {
     }
 
     @Test
+    public void checkNestedTags() throws IOException {
+        DefaultInputFile inputFile = createInputFile(TEST_DIR, "nestedTags.html");
+        tester.fileSystem().add(inputFile);
+        sensor.execute(tester);
+        assertThat(tester.allAnalysisErrors()).isEmpty();
+    }
+
+    @Test
     public void testDescriptor() {
         DefaultSensorDescriptor descriptor = new DefaultSensorDescriptor();
         sensor.describe(descriptor);

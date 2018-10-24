@@ -165,24 +165,24 @@ class ElementTokenizer extends AbstractTokenizer<List<Node>> {
     }
 
     private ParseMode parseToken(ParseMode mode, CodeReader codeReader, TagNode element) {
+        ParseMode result = ParseMode.BEFORE_NODE_NAME;
         switch (mode) {
             case BEFORE_NODE_NAME:
                 handleBeforeNodeName(codeReader, element);
-                return ParseMode.BEFORE_ATTRIBUTE_NAME;
-
+                result = ParseMode.BEFORE_ATTRIBUTE_NAME;
+                break;
             case BEFORE_ATTRIBUTE_NAME:
                 handleBeforeAttributeName(codeReader, element);
-                return ParseMode.BEFORE_ATTRIBUTE_NAME;
-
+                result = ParseMode.BEFORE_ATTRIBUTE_NAME;
+                break;
             case BEFORE_ATTRIBUTE_VALUE:
                 handleBeforeAttributeValue(codeReader, element);
-                return ParseMode.BEFORE_ATTRIBUTE_NAME;
-
+                result = ParseMode.BEFORE_ATTRIBUTE_NAME;
+                break;
             default:
                 break;
         }
-        // can't happen
-        return ParseMode.BEFORE_NODE_NAME;
+        return result;
     }
 
     private enum ParseMode {
