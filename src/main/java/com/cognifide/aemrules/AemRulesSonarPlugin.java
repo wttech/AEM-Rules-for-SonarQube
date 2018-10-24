@@ -22,7 +22,7 @@ package com.cognifide.aemrules;
 import com.cognifide.aemrules.extensions.AemRulesRulesDefinition;
 import com.cognifide.aemrules.extensions.CheckListRegistrar;
 import com.cognifide.aemrules.htl.Htl;
-import com.cognifide.aemrules.htl.HtlConstants;
+import com.cognifide.aemrules.htl.Constants;
 import com.cognifide.aemrules.htl.HtlProfile;
 import com.cognifide.aemrules.htl.HtlSensor;
 import com.google.common.collect.ImmutableList;
@@ -34,11 +34,11 @@ public class AemRulesSonarPlugin implements Plugin {
 
     private static ImmutableList<PropertyDefinition> pluginProperties() {
         return ImmutableList.of(
-            PropertyDefinition.builder(HtlConstants.FILE_EXTENSIONS_PROP_KEY)
+            PropertyDefinition.builder(Constants.FILE_EXTENSIONS_PROP_KEY)
                 .name("File suffixes")
                 .description("List of file suffixes that will be scanned.")
                 .category(Htl.NAME)
-                .defaultValue(HtlConstants.FILE_EXTENSIONS_DEF_VALUE)
+                .defaultValue(Constants.FILE_EXTENSIONS_DEF_VALUE)
                 .onQualifiers(Qualifiers.PROJECT)
                 .multiValues(true)
                 .build()

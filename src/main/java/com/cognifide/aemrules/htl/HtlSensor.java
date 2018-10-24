@@ -102,7 +102,7 @@ public class HtlSensor implements Sensor {
 
     private static FilePredicate createFilePredicate(Configuration configuration, FileSystem fileSystem) {
         FilePredicates predicates = fileSystem.predicates();
-        FilePredicate[] fileExtensions = Stream.of(configuration.getStringArray(HtlConstants.FILE_EXTENSIONS_PROP_KEY))
+        FilePredicate[] fileExtensions = Stream.of(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY))
             .filter(Objects::nonNull)
             .map(extension -> StringUtils.removeStart(extension, "."))
             .map(predicates::hasExtension)

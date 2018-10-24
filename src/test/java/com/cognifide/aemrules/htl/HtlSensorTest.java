@@ -83,7 +83,7 @@ public class HtlSensorTest {
         when(fileSystem.predicates()).thenReturn(new DefaultFilePredicates(null));
 
         Configuration configuration = mock(Configuration.class);
-        when(configuration.getStringArray(HtlConstants.FILE_EXTENSIONS_PROP_KEY)).thenReturn(HtlConstants.FILE_EXTENSIONS_DEF_VALUE.split(","));
+        when(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY)).thenReturn(Constants.FILE_EXTENSIONS_DEF_VALUE.split(","));
         sensor = new HtlSensor(fileLinesContextFactory, configuration, checkFactory, fileSystem);
         tester = SensorContextTester.create(TEST_DIR);
     }
