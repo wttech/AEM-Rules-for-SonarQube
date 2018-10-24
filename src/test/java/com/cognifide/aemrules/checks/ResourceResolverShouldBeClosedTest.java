@@ -19,9 +19,8 @@
  */
 package com.cognifide.aemrules.checks;
 
-import org.junit.Test;
-
 import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
+import org.junit.Test;
 
 public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
 
@@ -35,7 +34,7 @@ public class ResourceResolverShouldBeClosedTest extends AbstractBaseTest {
     @Test
     public void checkResourceResolverNotClosedInFinallyBlockWhenResourceResolverComesFromDifferentClass() {
         check = new ResourceResolverShouldBeClosed();
-        filename = "src/test/files/checks/ResourceResolverConsumer.java";
+        filename = "src/test/files/checks/ResourceResolver/ResourceResolverConsumer.java";
         verifyNoIssues();
     }
 
