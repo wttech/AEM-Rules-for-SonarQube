@@ -43,7 +43,6 @@ public class DefaultHtlVisitor {
     }
 
     void htlComment(CommentNode node) {
-
     }
 
     public void directive(DirectiveNode node) {
@@ -59,7 +58,6 @@ public class DefaultHtlVisitor {
     }
 
     public void htlExpression(Expression expression, Node node) {
-
     }
 
     public HtmlSourceCode getHtmlSourceCode() {
@@ -77,7 +75,6 @@ public class DefaultHtlVisitor {
     }
 
     public void startHtlElement(List<Expression> expressions, TagNode node) {
-
     }
 
 }
