@@ -17,16 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.htl;
+package com.cognifide.aemrules.htl.api;
 
-public class HtlConstants {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    private HtlConstants() {
-        //private constructor
-    }
-
-    public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
-
-    public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ParsingErrorRule {
 
 }

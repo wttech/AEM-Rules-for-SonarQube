@@ -17,16 +17,24 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.htl;
+package com.cognifide.aemrules.checks;
 
-public class HtlConstants {
+import com.cognifide.aemrules.htl.api.ParsingErrorRule;
+import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
+import com.cognifide.aemrules.tag.Tags;
+import org.sonar.check.Priority;
+import org.sonar.check.Rule;
 
-    private HtlConstants() {
-        //private constructor
-    }
+@ParsingErrorRule
+@Rule(
+    key = ParsingErrorCheck.RULE_KEY,
+    name = ParsingErrorCheck.RULE_NAME,
+    priority = Priority.MINOR,
+    tags = Tags.AEM
+)
+public class ParsingErrorCheck extends AbstractHtlCheck {
 
-    public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
+    static final String RULE_KEY = "HTL-1";
 
-    public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
-
+    static final String RULE_NAME = "Compilation error";
 }

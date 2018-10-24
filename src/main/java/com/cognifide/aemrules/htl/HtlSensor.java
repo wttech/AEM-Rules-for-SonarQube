@@ -20,12 +20,14 @@
 package com.cognifide.aemrules.htl;
 
 import com.cognifide.aemrules.htl.api.HtlCheck;
+import com.cognifide.aemrules.htl.api.ParsingErrorRule;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
 import com.cognifide.aemrules.htl.rules.CheckClasses;
 import com.cognifide.aemrules.htl.visitors.DefaultNodeVisitor;
 import com.cognifide.aemrules.htl.visitors.HtlScanner;
 import com.google.common.base.Throwables;
 import java.io.File;
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -37,8 +39,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.antlr.v4.runtime.RecognitionException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.sling.scripting.sightly.compiler.SightlyCompilerException;
 import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
@@ -52,6 +54,9 @@ import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.config.Configuration;
+import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.FileLinesContext;
+import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.log.Logger;
@@ -74,13 +79,25 @@ public class HtlSensor implements Sensor {
 
     private final HtlChecks checks;
 
+    private final FileLinesContextFactory fileLinesContextFactory;
+
     private RuleKey parsingErrorRuleKey = null;
 
-    public HtlSensor(Configuration configuration, CheckFactory checkFactory, FileSystem fileSystem) {
+    public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory, FileSystem fileSystem) {
         this.checks = HtlChecks.createHtlCheck(checkFactory)
             .addChecks(CheckClasses.REPOSITORY_KEY, CheckClasses.getCheckClasses());
+        this.parsingErrorRuleKey = setupParsingErrorRuleKey(checks);
         this.fileSystem = fileSystem;
         this.htlFilePredicate = createFilePredicate(configuration, fileSystem);
+        this.fileLinesContextFactory = fileLinesContextFactory;
+    }
+
+    private RuleKey setupParsingErrorRuleKey(HtlChecks checks) {
+        return checks.getAll().stream()
+            .filter(check -> check.getClass().isAnnotationPresent(ParsingErrorRule.class))
+            .findFirst()
+            .map(checks::ruleKeyFor)
+            .orElse(null);
     }
 
     private static FilePredicate createFilePredicate(Configuration configuration, FileSystem fileSystem) {
@@ -159,7 +176,7 @@ public class HtlSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        Iterable<InputFile> inputFiles = fileSystem.inputFiles(htlFilePredicate);
+        Iterable<InputFile> inputFiles = context.fileSystem().inputFiles(htlFilePredicate);
 
         Collection<File> files = StreamSupport.stream(inputFiles.spliterator(), false)
             .map(InputFile::uri)
@@ -196,7 +213,7 @@ public class HtlSensor implements Sensor {
 
         try {
             scanFile(sensorContext, inputFile);
-        } catch (RecognitionException e) {
+        } catch (SightlyCompilerException e) {
             checkInterrupted(e);
             LOGGER.error("Unable to parse file: " + inputFile.uri());
             LOGGER.error(e.getMessage());
@@ -208,14 +225,14 @@ public class HtlSensor implements Sensor {
         }
     }
 
-    private void processRecognitionException(RecognitionException e, SensorContext sensorContext, InputFile inputFile) {
+    private void processRecognitionException(SightlyCompilerException e, SensorContext sensorContext, InputFile inputFile) {
         if (parsingErrorRuleKey != null) {
             NewIssue newIssue = sensorContext.newIssue();
 
             NewIssueLocation primaryLocation = newIssue.newLocation()
-                .message("Parse error")
+                .message("Parse error: " + e.getMessage())
                 .on(inputFile)
-                .at(inputFile.selectLine(e.getOffendingToken().getLine()));
+                .at(inputFile.selectLine(e.getLine()));
 
             newIssue
                 .forRule(parsingErrorRuleKey)
@@ -225,27 +242,30 @@ public class HtlSensor implements Sensor {
 
         sensorContext.newAnalysisError()
             .onFile(inputFile)
-            .at(inputFile.newPointer(e.getOffendingToken().getLine(), 0))
+            .at(inputFile.newPointer(e.getLine(), 0))
             .message(e.getMessage())
             .save();
 
     }
 
-    private void scanFile(SensorContext sensorContext, InputFile inputFile) {
+    private void scanFile(SensorContext sensorContext, InputFile inputFile) throws IOException {
         final HtlScanner scanner = setupScanner();
         HtmlSourceCode sourceCode = new HtmlSourceCode(inputFile);
 
-        try (Reader reader = new StringReader(inputFile.contents())) {
-            scanner.scan(lexer.parse(reader), sourceCode, fileSystem.encoding());
-            saveMetrics(sensorContext, sourceCode);
+        Reader reader = new StringReader(inputFile.contents());
+        scanner.scan(lexer.parse(reader), sourceCode, fileSystem.encoding());
+        saveMetrics(sensorContext, sourceCode);
+        saveLineLevelMeasures(inputFile, sourceCode);
+    }
 
-        } catch (Exception e) {
-            LOGGER.error("Cannot analyze file " + inputFile, e);
-            sensorContext.newAnalysisError()
-                .onFile(inputFile)
-                .message(e.getMessage())
-                .save();
+    private void saveLineLevelMeasures(InputFile inputFile, HtmlSourceCode htmlSourceCode) {
+        FileLinesContext fileLinesContext = fileLinesContextFactory.createFor(inputFile);
+
+        for (Integer line : htmlSourceCode.getDetailedLinesOfCode()) {
+            fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, line, 1);
         }
+
+        fileLinesContext.save();
     }
 
     /**

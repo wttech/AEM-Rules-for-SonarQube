@@ -19,10 +19,8 @@
  */
 package com.cognifide.aemrules.htl;
 
-import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.rules.CheckClasses;
 import java.util.Objects;
-import java.util.Optional;
 import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.check.Rule;
 
@@ -35,17 +33,10 @@ public class HtlProfile implements BuiltInQualityProfilesDefinition {
         NewBuiltInQualityProfile htl = context
             .createBuiltInQualityProfile(QUALITY_PROFILE_NAME, Htl.KEY);
         CheckClasses.getCheckClasses().stream()
-            .map(this::getRuleKey)
+            .map(CheckClasses::getRule)
+            .map(Rule::key)
             .filter(Objects::nonNull)
             .forEach(ruleKey -> htl.activateRule(CheckClasses.REPOSITORY_KEY, ruleKey));
         htl.done();
-    }
-
-    private String getRuleKey(Class<? extends HtlCheck> clazz) {
-        return Optional.ofNullable(clazz)
-            .filter(c -> c.isAnnotationPresent(Rule.class))
-            .map(c -> c.getAnnotation(Rule.class))
-            .map(Rule::key)
-            .orElse(null);
     }
 }

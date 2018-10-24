@@ -56,7 +56,6 @@ class ElementTokenizer extends AbstractTokenizer<List<Node>> {
      * Parse a nested tag with PageLexer. The nested tag is added as an attribute to its parent element.
      */
     private static void parseNestedTag(CodeReader codeReader, TagNode element) {
-
         HtlLexer nestedPageLexer = new HtlLexer();
         List<Node> nodeList = nestedPageLexer.nestedParse(codeReader);
 

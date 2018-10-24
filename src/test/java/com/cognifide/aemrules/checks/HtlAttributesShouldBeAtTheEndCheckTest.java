@@ -17,16 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.htl;
+package com.cognifide.aemrules.checks;
 
-public class HtlConstants {
+import com.cognifide.aemrules.htl.AbstractBaseTest;
+import org.junit.Test;
 
-    private HtlConstants() {
-        //private constructor
+public class HtlAttributesShouldBeAtTheEndCheckTest extends AbstractBaseTest {
+
+    @Test
+    public void checkHtlAttributesOrder() {
+        check = new HtlAttributesShouldBeAtTheEndCheck();
+        filename = "src/test/files/checks/HtlAttributesShouldBeAtTheEndCheck.html";
+        verify();
     }
-
-    public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
-
-    public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
-
 }

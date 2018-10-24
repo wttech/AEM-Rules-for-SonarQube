@@ -17,16 +17,22 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.htl;
+package com.cognifide.aemrules.htl.lex;
 
-public class HtlConstants {
+import java.util.List;
+import org.sonar.plugins.html.node.Node;
+import org.sonar.plugins.html.node.TagNode;
 
-    private HtlConstants() {
-        //private constructor
+public class CdataTokenizer extends AbstractTokenizer<List<Node>> {
+
+    public CdataTokenizer() {
+        super("<![CDATA[", "]]>");
     }
 
-    public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
-
-    public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
-
+    @Override
+    Node createNode() {
+        TagNode node = new TagNode();
+        node.setNodeName("![CDATA[");
+        return node;
+    }
 }

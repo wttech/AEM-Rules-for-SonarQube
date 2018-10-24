@@ -31,12 +31,12 @@ import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
 @Rule(
-    key = HtlTestRule.RULE_KEY,
-    name = HtlTestRule.RULE_MESSAGE,
+    key = HtlAttributesShouldBeAtTheEndCheck.RULE_KEY,
+    name = HtlAttributesShouldBeAtTheEndCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
 )
-public class HtlTestRule extends AbstractHtlCheck {
+public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
 
     public static final String RULE_KEY = "HTL-0";
 

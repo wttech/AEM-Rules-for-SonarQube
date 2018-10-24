@@ -19,11 +19,14 @@
  */
 package com.cognifide.aemrules.htl.rules;
 
-import com.cognifide.aemrules.checks.HtlTestRule;
+import com.cognifide.aemrules.checks.HtlAttributesShouldBeAtTheEndCheck;
+import com.cognifide.aemrules.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Optional;
+import org.sonar.check.Rule;
 
 public final class CheckClasses {
 
@@ -32,7 +35,8 @@ public final class CheckClasses {
     public static final String REPOSITORY_NAME = "AEM Rules";
 
     private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
-        HtlTestRule.class
+        ParsingErrorCheck.class,
+        HtlAttributesShouldBeAtTheEndCheck.class
     );
 
     private CheckClasses() {
@@ -41,5 +45,12 @@ public final class CheckClasses {
 
     public static List<Class<? extends HtlCheck>> getCheckClasses() {
         return CLASSES;
+    }
+
+    public static Rule getRule(Class<? extends HtlCheck> clazz) {
+        return Optional.ofNullable(clazz)
+            .filter(c -> c.isAnnotationPresent(Rule.class))
+            .map(c -> c.getAnnotation(Rule.class))
+            .orElse(null);
     }
 }

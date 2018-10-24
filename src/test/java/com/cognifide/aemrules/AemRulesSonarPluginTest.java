@@ -17,16 +17,24 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.htl;
+package com.cognifide.aemrules;
 
-public class HtlConstants {
+import static org.fest.assertions.Assertions.assertThat;
 
-    private HtlConstants() {
-        //private constructor
+import org.junit.Test;
+import org.sonar.api.Plugin;
+import org.sonar.api.SonarQubeSide;
+import org.sonar.api.internal.SonarRuntimeImpl;
+import org.sonar.api.utils.Version;
+
+public class AemRulesSonarPluginTest {
+
+    @Test
+    public void webPluginTester() {
+        Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SERVER));
+
+        new AemRulesSonarPlugin().define(context);
+        assertThat(context.getExtensions()).hasSize(6);
     }
-
-    public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
-
-    public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
 
 }

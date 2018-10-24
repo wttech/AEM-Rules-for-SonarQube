@@ -19,14 +19,16 @@
  */
 package com.cognifide.aemrules.htl;
 
-public class HtlConstants {
 
-    private HtlConstants() {
-        //private constructor
+import static org.fest.assertions.Assertions.assertThat;
+
+import org.junit.Test;
+
+public class HtlTest {
+
+    @Test
+    public void testDefaultFileSuffixes() {
+        Htl htl = new Htl();
+        assertThat(htl.getFileSuffixes()).isEmpty();
     }
-
-    public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
-
-    public static final String FILE_EXTENSIONS_DEF_VALUE = ".html,.jsp";
-
 }

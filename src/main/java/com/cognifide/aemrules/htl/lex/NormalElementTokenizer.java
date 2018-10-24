@@ -19,17 +19,32 @@
  */
 package com.cognifide.aemrules.htl.lex;
 
-import org.sonar.plugins.html.node.DirectiveNode;
+import java.util.List;
+import org.sonar.channel.CodeReader;
 import org.sonar.plugins.html.node.Node;
 
-class DirectiveTokenizer extends ElementTokenizer {
+public class NormalElementTokenizer extends ElementTokenizer {
 
-    public DirectiveTokenizer(String startToken, String endToken) {
-        super(startToken, endToken);
+    public NormalElementTokenizer() {
+        super("<", ">");
     }
 
     @Override
-    Node createNode() {
-        return new DirectiveNode();
+    public boolean consume(CodeReader codeReader, List<Node> nodeList) {
+        if (codeReader.charAt(0) != '<') {
+            return false;
+        }
+        int i = 1;
+        while (Character.isWhitespace(codeReader.charAt(i))) {
+            i++;
+        }
+        if (codeReader.charAt(i) == '/' || codeReader.charAt(i) == '!') {
+            i++;
+        }
+        int elementNameIndex = i;
+        while (Character.isLetterOrDigit(codeReader.charAt(i))) {
+            i++;
+        }
+        return i > elementNameIndex && super.consume(codeReader, nodeList);
     }
 }

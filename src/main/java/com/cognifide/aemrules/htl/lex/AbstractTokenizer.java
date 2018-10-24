@@ -36,7 +36,7 @@ abstract class AbstractTokenizer<T extends List<Node>> extends Channel<T> {
         this.endChars = endChars.toCharArray();
     }
 
-    private static boolean equalsIgnoreCase(char[] a, char[] b) {
+    protected static boolean equalsIgnoreCase(char[] a, char[] b) {
         if (a.length != b.length) {
             return false;
         }

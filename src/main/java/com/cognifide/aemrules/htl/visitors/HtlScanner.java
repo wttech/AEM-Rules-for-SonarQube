@@ -19,7 +19,6 @@
  */
 package com.cognifide.aemrules.htl.visitors;
 
-import com.cognifide.aemrules.extensions.RulesLoader;
 import com.google.common.collect.Lists;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -27,14 +26,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.apache.sling.scripting.sightly.compiler.SightlyCompilerException;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.apache.sling.scripting.sightly.impl.compiler.frontend.ExpressionParser;
 import org.apache.sling.scripting.sightly.impl.compiler.frontend.Fragment;
 import org.apache.sling.scripting.sightly.impl.compiler.frontend.Interpolation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.CommentNode;
 import org.sonar.plugins.html.node.DirectiveNode;
@@ -46,8 +42,6 @@ import org.sonar.plugins.html.visitor.CharsetAwareVisitor;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
 public class HtlScanner {
-
-    private static final Logger LOG = LoggerFactory.getLogger(RulesLoader.class);
 
     private static final ExpressionParser expressionParser = new ExpressionParser();
 
@@ -90,20 +84,11 @@ public class HtlScanner {
     }
 
     private static Stream<Expression> getExpressions(String code) {
-
-        Stream<Expression> expressionStream = Stream.empty();
-
-        Interpolation interpolation = null;
-        try {
-            interpolation = expressionParser.parseInterpolation(code);
-            expressionStream = StreamSupport
-                .stream(interpolation.getFragments().spliterator(), false)
-                .filter(Fragment::isExpression)
-                .map(Fragment::getExpression);
-        } catch (SightlyCompilerException ex) {
-            LOG.error("Could not parse expression", ex);
-        }
-        return expressionStream;
+        Interpolation interpolation = expressionParser.parseInterpolation(code);
+        return StreamSupport
+            .stream(interpolation.getFragments().spliterator(), false)
+            .filter(Fragment::isExpression)
+            .map(Fragment::getExpression);
     }
 
     private static boolean hasHtlExpression(String code) {
