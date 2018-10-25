@@ -20,7 +20,10 @@
 package com.example;
 
 import java.util.Map;
+import java.util.List;
+import java.awt.Event;
 import jdk.nashorn.internal.ir.annotations.Reference;
+import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -84,6 +87,17 @@ public class AutoclosableResourceResolver {
             resolver = resourceResolverFactory.getAdministrativeResourceResolver(null); // Noncompliant
             registerObservation();
         } catch (LoginException x) {
+        }
+    }
+
+    private void case6(Event event, List<String> attributesList) {
+        if (attributesList.containsAll(ATTRIBUTES)) {
+            String path = (String) event.getProperty(SlingConstants.PROPERTY_PATH);
+            try {
+                SlingHelper.operate(resolverFactory, resolver -> processPackage(resolver, path));
+            } catch (OperateException e) {
+                System.out.println("something went wrong");
+            }
         }
     }
 }

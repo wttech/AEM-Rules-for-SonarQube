@@ -31,6 +31,7 @@ import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
+import org.sonar.plugins.java.api.tree.LambdaExpressionTree;
 import org.sonar.plugins.java.api.tree.TryStatementTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
@@ -57,6 +58,8 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
 
     private boolean insideTryStatement = false;
 
+    private boolean insideLambdaExpression = false;
+
     private JavaFileScannerContext context;
 
     private List<String> tryWithResourceResources = new ArrayList<>();
@@ -68,7 +71,7 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
 
     @Override
     public void visitVariable(VariableTree tree) {
-        if (insideTryStatement && isResourceResolver(tree) && !tryWithResourceResources.contains(getResourceResolver(tree))) {
+        if (insideTryStatement && !insideLambdaExpression && isResourceResolver(tree) && !tryWithResourceResources.contains(getResourceResolver(tree))) {
             context.reportIssue(this, tree, RULE_MESSAGE);
         }
         super.visitVariable(tree);
@@ -76,7 +79,7 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
 
     @Override
     public void visitAssignmentExpression(AssignmentExpressionTree tree) {
-        if (insideTryStatement && isResourceResolver(tree)) {
+        if (insideTryStatement && !insideLambdaExpression && isResourceResolver(tree)) {
             context.reportIssue(this, tree, RULE_MESSAGE);
         }
         super.visitAssignmentExpression(tree);
@@ -91,6 +94,13 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
         super.visitTryStatement(tree);
         tryWithResourceResources.clear();
         insideTryStatement = false;
+    }
+
+    @Override
+    public void visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree) {
+        insideLambdaExpression = true;
+        super.visitLambdaExpression(lambdaExpressionTree);
+        insideLambdaExpression = false;
     }
 
     private boolean isResourceResolver(AssignmentExpressionTree tree) {
