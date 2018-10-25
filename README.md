@@ -28,22 +28,25 @@ Go to your SonarQube instance administration console and open Update Center. Fin
 3. Restart SonarQube.
 4. Go to rules section and activate AEM rules in your profile.
 
-## Rule AEM version support
+## Usage
 
-Each rule is configured to be executed by Sonar Runner only for the AEM version which is supporting. By providing AEM version for the parameter `sonarRunner.aemVersion` we are informing Sonar Runner to use only set of rules supporting current AEM version. When the parameter is not provided then a default AEM version is used (currently 6.4)
+Usage of the plugin does not differ much from a regular SonarQube analysis. However, as rules are more often tied to certain AEM version and its components (Felix, Sling) we've introduced `aemVersion` analysis property. 
 
-### Running Sonar Runner
+Each rule defines supported AEM version or version range. Most of the rules are universal.
+By providing AEM version parameter, you're informing Sonar Runner to use only subset of rules supporting particular AEM version. When the parameter is not provided then a default AEM version is used (currently 6.4)
 
-When running Sonar Runner please add property `sonarRunner.aemVersion` with AEM version for which sonar analyzes should be run.
+### Running analysis
+
+When running analysis, pass `sonarRunner.aemVersion` property with your AEM version. The format is as follows:
 
 `sonarRunner.aemVersion=<MAJOR_VERSION>.<MINOR_VERSION>`
 
-- Example using maven
+Runing with Maven
 ```
 mvn sonar:sonar -DsonarRunner.aemVersion=6.4
 ```
 
-- Example using [Gradle AEM Plugin](https://github.com/Cognifide/gradle-aem-plugin)
+Runing with Gradle (See [Gradle AEM Plugin](https://github.com/Cognifide/gradle-aem-plugin))
 ```
 gradlew sonarQube -DsonarRunner.aemVersion=6.4
 ```
@@ -121,31 +124,7 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 # Release notes
 
-## 0.8
-
-* Improved AEM-1 & AEM-2 issues messages to be more verbose.
-* Increased unit test branch coverage.
-* Plugin adapted to meet requirements to be listed in [SonarQube Update Center](http://docs.sonarqube.org/display/PLUG/Plugin+Library)
-* Updated licensing info.
-
-## 0.7
-
-* Support for Java 8
-* Support for SonarQube 5.6.1+
-* Support for Java plugin 4.0+
-* Fixed multiple adaptables bug for AEM-16 rule.
-* Added more non-thread-safe classes to AEM-3 rule.
-
-## 0.6
-
-* Support for SQ 5.4+
-
-## 0.5
-
-* Support for Java 3.13.1 plugin
-* AEM-6 - fix for recurrsion issue
-* Constants reviewed - removed too common literals
-* Number of new AEM Rules
+Release notes for each version can be found in [releases section](https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases).
 
 # License
 
