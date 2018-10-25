@@ -21,12 +21,28 @@ package com.cognifide.aemrules.htl.checks;
 
 import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.visitors.DefaultHtlVisitor;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import org.apache.sling.scripting.sightly.compiler.expression.Expression;
+import org.apache.sling.scripting.sightly.impl.compiler.frontend.ExpressionParser;
+import org.apache.sling.scripting.sightly.impl.compiler.frontend.Fragment;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.html.checks.HtmlIssue;
 
 public class AbstractHtlCheck extends DefaultHtlVisitor implements HtlCheck {
 
+    private static final ExpressionParser EXPRESSION_PARSER = new ExpressionParser();
+
     private RuleKey ruleKey;
+
+    protected static List<Expression> getExpressions(String code) {
+        Iterable<Fragment> fragments = EXPRESSION_PARSER.parseInterpolation(code).getFragments();
+        return StreamSupport.stream(fragments.spliterator(), false)
+            .filter(Fragment::isExpression)
+            .map(Fragment::getExpression)
+            .collect(Collectors.toList());
+    }
 
     @Override
     public final void setRuleKey(RuleKey ruleKey) {
