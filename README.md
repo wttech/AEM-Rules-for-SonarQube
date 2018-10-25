@@ -119,6 +119,12 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **AEM-16** Optional is defined as ``DefaultInjectionStrategy``
   - Usage of ``@Optional`` annotation is redundant, when ``defaultInjectionStrategy`` is ``OPTIONAL``.
 
+## [HTL](https://github.com/Adobe-Marketing-Cloud/htl-spec/blob/master/SPECIFICATION.md) related
+
+- **HTL-4** Use Camel Case in identifiers:
+    - variable names
+    - template names
+
 # Release notes
 
 ## 0.8

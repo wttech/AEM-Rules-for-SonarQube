@@ -51,7 +51,7 @@ public class HtlProfileTest {
         profile.define(context);
         Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
 
-        assertThat(activeRules.size()).isEqualTo(2);
+        assertThat(activeRules.size()).isEqualTo(3);
 
         assertThat(activeRules.keySet()).contains("HTL-0");
 
