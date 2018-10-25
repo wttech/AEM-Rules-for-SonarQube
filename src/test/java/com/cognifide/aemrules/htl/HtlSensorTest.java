@@ -89,14 +89,6 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void jspFile() throws Exception {
-        DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.jsp");
-        tester.fileSystem().add(inputFile);
-        sensor.execute(tester);
-        assertThat(tester.allIssues()).isEmpty();
-    }
-
-    @Test
     public void htmlFile() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
