@@ -30,7 +30,7 @@ Go to your SonarQube instance administration console and open Update Center. Fin
 
 ## Usage
 
-Usage of the plugin does not differ much from a regular SonarQube analysis. However, as rules are more often tied to certain AEM version and its components (Felix, Sling) we've introduced `aemVersion` analysis property. 
+Use of the plugin does not differ much from regular SonarQube analysis. However, as rules are often tied to a certain AEM version and its components (Felix, Sling), we've introduced the `aemVersion` analysis property.
 
 Each rule defines supported AEM version or version range. Most of the rules are universal.
 By providing AEM version parameter, you're informing Sonar Runner to use only subset of rules supporting particular AEM version. When the parameter is not provided then a default AEM version is used (currently 6.4)
