@@ -37,12 +37,16 @@ import com.cognifide.aemrules.checks.slice.jcrproperty.JcrPropertyFieldsInConstr
 import com.cognifide.aemrules.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
 import com.cognifide.aemrules.checks.slingquery.SlingQueryImplicitStrategyCheck;
+import com.cognifide.aemrules.version.AemVersion;
+import com.cognifide.aemrules.version.VersionSupportChecker;
 import com.google.common.collect.ImmutableList;
-import org.sonar.plugins.java.api.CheckRegistrar;
-import org.sonar.plugins.java.api.JavaCheck;
-
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.sonar.api.config.Settings;
+import org.sonar.plugins.java.api.CheckRegistrar;
+import org.sonar.plugins.java.api.JavaCheck;
 
 public class CheckListRegistrar implements CheckRegistrar {
 
@@ -67,7 +71,7 @@ public class CheckListRegistrar implements CheckRegistrar {
         DefaultInjectionStrategyAnnotationCheck.class,
         ModifiableValueMapUsageCheck.class,
         ContentResourceShouldBeNullCheckedCheck.class,
-
+        SlingQueryImplicitStrategyCheck.class
     );
 
     private final Settings settings;
