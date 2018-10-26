@@ -6,9 +6,9 @@ import org.junit.Test;
 public class ExplicitNamesInLoopsCheckTest extends AbstractBaseTest {
 
     @Test
-    public void checkHtlAttributesOrder() {
-        check = new HtlAttributesShouldBeAtTheEndCheck();
-        filename = "src/test/files/checks/htl/HtlAttributesShouldBeAtTheEndCheck.html";
+    public void ExplicitNamesInLoopsCheck() {
+        check = new ExplicitNamesInLoopsCheck();
+        filename = "src/test/files/checks/htl/ExplicitNamesInLoopsCheck.html";
         verify();
     }
 }
