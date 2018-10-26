@@ -1,7 +1,7 @@
 The [`SlingQuery`](https://sling.apache.org/documentation/bundles/sling-query.html)
 is a Sling resource tree traversal tool inspired by the jQuery JavaScript API.
 
-SearchStrategy should be always defined before using 'find()' method
+`SearchStrategy` can have negative performance impact if mismatched. Therefore developer should always make informed decision and define strategy explicitly.
 
 == Noncompliant Code Example
 
