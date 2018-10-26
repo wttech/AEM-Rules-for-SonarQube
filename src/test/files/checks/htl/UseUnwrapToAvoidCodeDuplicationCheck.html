@@ -1,0 +1,4 @@
+<a href="${model.url}" data-sly-test="${model.url}">${model.text}</a> <!-- Non-Compliant -->
+<sly data-sly-test="${!model.url}">${model.text}</sly>
+
+<a href="${model.url}" data-sly-unwrap="${!model.url}">${model.text}</a>

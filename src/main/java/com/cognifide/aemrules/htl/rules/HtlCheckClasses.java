@@ -24,6 +24,7 @@ import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.checks.PlaceTemplatesInSeparateFilesCheck;
+import com.cognifide.aemrules.htl.checks.UseUnwrapToAvoidCodeDuplicationCheck;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,8 @@ public final class HtlCheckClasses {
     private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
         ParsingErrorCheck.class,
         HtlAttributesShouldBeAtTheEndCheck.class,
-        PlaceTemplatesInSeparateFilesCheck.class
+        PlaceTemplatesInSeparateFilesCheck.class,
+        UseUnwrapToAvoidCodeDuplicationCheck.class
     );
 
     private HtlCheckClasses() {
