@@ -76,10 +76,9 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     @Override
     public void visitVariable(VariableTree tree) {
-        String variableName = tree.simpleName().name();
         if (isSlingQuery(tree)) {
-            slingQueries.put(variableName, SlingQueryStates.NOT_USED);
-            slingQueryName = variableName;
+            slingQueries.put(tree.simpleName().name(), SlingQueryStates.NOT_USED);
+            slingQueryName = tree.simpleName().name();
         }
         super.visitVariable(tree);
         // This part of code will be executed directly after initialization

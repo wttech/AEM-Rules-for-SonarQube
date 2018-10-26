@@ -72,6 +72,10 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **AEM-17** No mutator methods invoked on ``ModifiableValueMap``
   - ``ModifiableValueMap`` should be replaced by ``ValueMap`` if no mutator methods are invoked.
 
+- **AEM-19** Implicit search strategy used in Sling Query
+  - `SearchStrategy` can have negative performance impact if mismatched.
+  Therefore developer should always make informed decision and define strategy explicitly.
+
 ## Possible bugs
 
 - **AEM-3** Non-thread safe object used as a field of Servlet / Filter etc.
