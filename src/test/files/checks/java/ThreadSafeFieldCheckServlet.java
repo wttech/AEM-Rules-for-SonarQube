@@ -54,5 +54,4 @@ public class ThreadSafeFieldCheckExample extends SlingSafeMethodsServlet {
         throws ServletException, IOException {
         // nothing here
     }
-
 }

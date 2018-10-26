@@ -19,10 +19,10 @@
  */
 package com.cognifide.aemrules.htl.rules;
 
-import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
-import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
+import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
+import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
