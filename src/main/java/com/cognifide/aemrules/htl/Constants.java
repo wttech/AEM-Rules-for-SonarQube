@@ -29,4 +29,8 @@ public class Constants {
 
     public static final String FILE_EXTENSIONS_DEF_VALUE = ".html";
 
+    public static final String HTL_FILES_RELATIVE_PATHS_KEY = "sonar.htl.file.paths";
+
+    public static final String HTL_FILES_RELATIVE_PATHS_DEF_VALUE = "src/main/content/jcr_root";
+
 }

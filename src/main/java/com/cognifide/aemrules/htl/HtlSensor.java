@@ -32,6 +32,7 @@ import java.io.InterruptedIOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CancellationException;
@@ -73,9 +74,7 @@ public class HtlSensor implements Sensor {
 
     private final HtlLexer lexer = new HtlLexer();
 
-    private final FileSystem fileSystem;
-
-    private final FilePredicate htlFilePredicate;
+    private Configuration configuration;
 
     private final HtlChecks checks;
 
@@ -83,12 +82,11 @@ public class HtlSensor implements Sensor {
 
     private RuleKey parsingErrorRuleKey = null;
 
-    public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory, FileSystem fileSystem) {
+    public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory) {
+        this.configuration = configuration;
         this.checks = HtlChecks.createHtlCheck(checkFactory)
             .addChecks(HtlCheckClasses.REPOSITORY_KEY, HtlCheckClasses.getCheckClasses());
         this.parsingErrorRuleKey = setupParsingErrorRuleKey(checks);
-        this.fileSystem = fileSystem;
-        this.htlFilePredicate = createFilePredicate(configuration, fileSystem);
         this.fileLinesContextFactory = fileLinesContextFactory;
     }
 
@@ -100,20 +98,26 @@ public class HtlSensor implements Sensor {
             .orElse(null);
     }
 
-    private static FilePredicate createFilePredicate(Configuration configuration, FileSystem fileSystem) {
-        FilePredicates predicates = fileSystem.predicates();
+    private static FilePredicate createFilePredicate(Configuration configuration, SensorContext sensorContext) {
+        FilePredicates predicates = sensorContext.fileSystem().predicates();
         FilePredicate[] fileExtensions = Stream.of(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY))
             .filter(Objects::nonNull)
             .map(extension -> StringUtils.removeStart(extension, "."))
             .map(predicates::hasExtension)
             .toArray(FilePredicate[]::new);
 
+        List<FilePredicate> relativePaths = Stream.of(configuration.getStringArray(Constants.HTL_FILES_RELATIVE_PATHS_KEY))
+            .filter(StringUtils::isNotEmpty)
+            .map(path -> path.concat("/**"))
+            .map(predicates::matchesPathPattern)
+            .collect(Collectors.toList());
         return predicates.and(
             predicates.hasType(InputFile.Type.MAIN),
             predicates.or(
                 predicates.hasLanguages(Htl.KEY),
                 predicates.or(fileExtensions)
-            )
+            ),
+            predicates.or(relativePaths)
         );
     }
 
@@ -176,6 +180,7 @@ public class HtlSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
+        FilePredicate htlFilePredicate = createFilePredicate(configuration, context);
         Iterable<InputFile> inputFiles = context.fileSystem().inputFiles(htlFilePredicate);
 
         Collection<File> files = StreamSupport.stream(inputFiles.spliterator(), false)
@@ -253,7 +258,7 @@ public class HtlSensor implements Sensor {
         HtmlSourceCode sourceCode = new HtmlSourceCode(inputFile);
 
         Reader reader = new StringReader(inputFile.contents());
-        scanner.scan(lexer.parse(reader), sourceCode, fileSystem.encoding());
+        scanner.scan(lexer.parse(reader), sourceCode, sensorContext.fileSystem().encoding());
         saveMetrics(sensorContext, sourceCode);
         saveLineLevelMeasures(inputFile, sourceCode);
     }

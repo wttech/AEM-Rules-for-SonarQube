@@ -34,9 +34,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.fs.internal.DefaultFilePredicates;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.rule.ActiveRules;
@@ -79,12 +77,11 @@ public class HtlSensorTest {
         FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
         when(fileLinesContextFactory.createFor(Mockito.any(InputFile.class))).thenReturn(mock(FileLinesContext.class));
 
-        FileSystem fileSystem = mock(FileSystem.class);
-        when(fileSystem.predicates()).thenReturn(new DefaultFilePredicates(null));
-
         Configuration configuration = mock(Configuration.class);
         when(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY)).thenReturn(Constants.FILE_EXTENSIONS_DEF_VALUE.split(","));
-        sensor = new HtlSensor(fileLinesContextFactory, configuration, checkFactory, fileSystem);
+        when(configuration.getStringArray(Constants.HTL_FILES_RELATIVE_PATHS_KEY)).thenReturn(new String[]{});
+
+        sensor = new HtlSensor(fileLinesContextFactory, configuration, checkFactory);
         tester = SensorContextTester.create(TEST_DIR);
     }
 

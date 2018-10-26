@@ -41,6 +41,14 @@ public class AemRulesSonarPlugin implements Plugin {
                 .defaultValue(Constants.FILE_EXTENSIONS_DEF_VALUE)
                 .onQualifiers(Qualifiers.PROJECT)
                 .multiValues(true)
+                .build(),
+            PropertyDefinition.builder(Constants.HTL_FILES_RELATIVE_PATHS_KEY)
+                .name("HTL files relative paths")
+                .description("List of relative paths that contains HTL files.")
+                .category(Htl.NAME)
+                .defaultValue(Constants.HTL_FILES_RELATIVE_PATHS_DEF_VALUE)
+                .onQualifiers(Qualifiers.PROJECT)
+                .multiValues(true)
                 .build()
         );
     }
