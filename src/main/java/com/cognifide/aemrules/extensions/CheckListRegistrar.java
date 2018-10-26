@@ -53,7 +53,7 @@ public class CheckListRegistrar implements CheckRegistrar {
 
     public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
         = ImmutableList.of(
-//        AdministrativeAccessUsageCheck.class, // need to be fixed, now sonar is not starting
+        AdministrativeAccessUsageCheck.class,
         AnnotationsConstantsCheck.class,
         ConstantsCheck.class,
         HttpConstantCheck.class,
