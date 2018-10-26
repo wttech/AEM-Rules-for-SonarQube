@@ -52,11 +52,13 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
 
     private static final String SEARCH_STRATEGY_METHOD = "searchStrategy";
 
+    private static final String APACHE_SLING_QUERY = "org.apache.sling.query.SlingQuery";
+
     private static final String SLING_QUERY = "SlingQuery";
 
     private static final String DOLLAR_SIGN = "$";
 
-    private String slingQueryName = null;
+    private String currentSlingQueryNameVariable = null;
 
     private Map<String, SlingQueryStates> slingQueries = new HashMap<>();
 
@@ -78,28 +80,43 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
     public void visitVariable(VariableTree tree) {
         if (isSlingQuery(tree)) {
             slingQueries.put(tree.simpleName().name(), SlingQueryStates.NOT_USED);
-            slingQueryName = tree.simpleName().name();
+            currentSlingQueryNameVariable = tree.simpleName().name();
         }
         super.visitVariable(tree);
         // This part of code will be executed directly after initialization
         if (findWithoutStrategyWasUsedOnSlingQuery()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
-            slingQueries.put(slingQueryName, SlingQueryStates.ISSUE_RETURNED);
+            slingQueries.put(currentSlingQueryNameVariable, SlingQueryStates.ISSUE_RETURNED);
+            ignoreIssues = true;
+        }
+    }
+
+    @Override
+    public void visitExpressionStatement(ExpressionStatementTree tree) {
+        currentSlingQueryNameVariable = tree.firstToken().text();
+        if (isThisANewSlingQuery()) {
+            slingQueries.putIfAbsent(currentSlingQueryNameVariable, SlingQueryStates.NOT_USED);
+        }
+        super.visitExpressionStatement(tree);
+        // This part of code will be executed directly after expression
+        if (findWithoutStrategyWasUsedOnSlingQuery()) {
+            context.reportIssue(this, tree, RULE_MESSAGE);
+            slingQueries.put(this.currentSlingQueryNameVariable, SlingQueryStates.ISSUE_RETURNED);
             ignoreIssues = true;
         }
     }
 
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {
+        // Method invocation from right to left
         if (isFindMethod(tree) && (slingQueryWasNotUsed() || isThisANewSlingQuery())) {
-            slingQueries.replace(slingQueryName, SlingQueryStates.FIND_USED_WITHOUT_STRATEGY);
+            slingQueries.replace(currentSlingQueryNameVariable, SlingQueryStates.FIND_USED_WITHOUT_STRATEGY);
         } else if (isSearchStrategyMethod(tree)) {
-            slingQueries.replace(slingQueryName, SlingQueryStates.STRATEGY_USED);
+            slingQueries.replace(currentSlingQueryNameVariable, SlingQueryStates.STRATEGY_USED);
             ignoreIssues = true;
         }
         if (DOLLAR_SIGN.equals(tree.methodSelect().firstToken().text()) && isDollarCase()) {
             context.reportIssue(this, tree, RULE_MESSAGE);
-            ignoreIssues = true;
         } else if (isFindMethod(tree)) {
             findMethodUsed = true;
         } else if (isSearchStrategyMethod(tree)) {
@@ -109,28 +126,13 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
     }
 
     @Override
-    public void visitExpressionStatement(ExpressionStatementTree tree) {
-        slingQueryName = tree.firstToken().text();
-        if (isThisANewSlingQuery()) {
-            slingQueries.putIfAbsent(slingQueryName, SlingQueryStates.NOT_USED);
-        }
-        super.visitExpressionStatement(tree);
-        // This part of code will be executed directly after expression
-        if (findWithoutStrategyWasUsedOnSlingQuery()) {
-            context.reportIssue(this, tree, RULE_MESSAGE);
-            slingQueries.put(this.slingQueryName, SlingQueryStates.ISSUE_RETURNED);
-            ignoreIssues = true;
-        }
-    }
-
-    @Override
     public void visitMethod(MethodTree tree) {
         clean();
         super.visitMethod(tree);
     }
 
     private boolean isSlingQuery(VariableTree tree) {
-        return SLING_QUERY.equals(tree.firstToken().text());
+        return APACHE_SLING_QUERY.equals(tree.type().symbolType().fullyQualifiedName());
     }
 
     private boolean isFindMethod(MethodInvocationTree tree) {
@@ -142,15 +144,15 @@ public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements 
     }
 
     private boolean slingQueryWasNotUsed() {
-        return slingQueries.getOrDefault(slingQueryName, SlingQueryStates.NOT_USED) == SlingQueryStates.NOT_USED;
+        return slingQueries.getOrDefault(currentSlingQueryNameVariable, SlingQueryStates.NOT_USED) == SlingQueryStates.NOT_USED;
     }
 
     private boolean findWithoutStrategyWasUsedOnSlingQuery() {
-        return slingQueries.getOrDefault(slingQueryName, SlingQueryStates.NOT_USED) == SlingQueryStates.FIND_USED_WITHOUT_STRATEGY;
+        return slingQueries.getOrDefault(currentSlingQueryNameVariable, SlingQueryStates.NOT_USED) == SlingQueryStates.FIND_USED_WITHOUT_STRATEGY;
     }
 
     private boolean isThisANewSlingQuery() {
-        return DOLLAR_SIGN.equals(slingQueryName) || SLING_QUERY.equals(slingQueryName);
+        return DOLLAR_SIGN.equals(currentSlingQueryNameVariable) || SLING_QUERY.equals(currentSlingQueryNameVariable);
     }
 
     private boolean isDollarCase() {
