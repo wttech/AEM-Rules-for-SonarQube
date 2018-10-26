@@ -81,7 +81,7 @@ public class AutoclosableResourceResolver {
         return name;
     }
 
-    private void resourceResolverShouldBeIgnoredInThisKindOfCase(Event event, List<String> attributesList) {
+    private void resourceResolverShouldBeIgnoredWhenResolverFactoryIsExecutedInMethodFromDifferentClass(Event event, List<String> attributesList) {
         if (attributesList.containsAll(ATTRIBUTES)) {
             String path = (String) event.getProperty(SlingConstants.PROPERTY_PATH);
             try {

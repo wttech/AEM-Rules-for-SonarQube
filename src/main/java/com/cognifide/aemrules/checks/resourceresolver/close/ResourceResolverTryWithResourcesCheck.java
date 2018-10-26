@@ -62,7 +62,7 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
 
     private JavaFileScannerContext context;
 
-    private List<String> ResourceResolversInTryWithResources = new ArrayList<>();
+    private List<String> resourceResolversInTryWithResources = new ArrayList<>();
 
     public void scanFile(JavaFileScannerContext javaFileScannerContext) {
         context = javaFileScannerContext;
@@ -71,7 +71,7 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
 
     @Override
     public void visitVariable(VariableTree tree) {
-        if (insideTryStatement && !insideLambdaExpression && isResourceResolver(tree) && !ResourceResolversInTryWithResources
+        if (insideTryStatement && !insideLambdaExpression && isResourceResolver(tree) && !resourceResolversInTryWithResources
             .contains(getResourceResolver(tree))) {
             context.reportIssue(this, tree, RULE_MESSAGE);
         }
@@ -89,11 +89,11 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
     @Override
     public void visitTryStatement(TryStatementTree tree) {
         insideTryStatement = true;
-        ResourceResolversInTryWithResources = tree.resources().stream()
+        resourceResolversInTryWithResources = tree.resources().stream()
             .map(resource -> resource.simpleName().name())
             .collect(Collectors.toList());
         super.visitTryStatement(tree);
-        ResourceResolversInTryWithResources.clear();
+        resourceResolversInTryWithResources.clear();
         insideTryStatement = false;
     }
 
