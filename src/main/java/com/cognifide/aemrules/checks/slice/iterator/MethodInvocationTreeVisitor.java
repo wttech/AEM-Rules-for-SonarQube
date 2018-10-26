@@ -19,6 +19,10 @@
  */
 package com.cognifide.aemrules.checks.slice.iterator;
 
+import static com.cognifide.aemrules.Constants.SLING_RESOURCE_QUALIFIED_NAME;
+
+import java.util.HashSet;
+import java.util.Set;
 import org.sonar.java.matcher.MethodMatcher;
 import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -27,11 +31,6 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static com.cognifide.aemrules.Constants.RESOURCE_TYPE;
-
 class MethodInvocationTreeVisitor extends BaseTreeVisitor {
 
     private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER = MethodMatcher
@@ -39,7 +38,7 @@ class MethodInvocationTreeVisitor extends BaseTreeVisitor {
         .typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
         .name("get")
         .addParameter(TypeCriteria.anyType())
-        .addParameter(RESOURCE_TYPE);
+        .addParameter(SLING_RESOURCE_QUALIFIED_NAME);
 
     private final Set<MethodInvocationTree> visitedMethodInvocationTrees;
 

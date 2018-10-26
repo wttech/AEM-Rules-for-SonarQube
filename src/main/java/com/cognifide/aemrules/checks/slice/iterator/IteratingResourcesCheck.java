@@ -21,6 +21,7 @@ package com.cognifide.aemrules.checks.slice.iterator;
 
 import static org.sonar.plugins.java.api.tree.Tree.Kind.IDENTIFIER;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import org.sonar.check.Priority;
@@ -48,6 +49,9 @@ import org.sonar.plugins.java.api.tree.WhileStatementTree;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "15min"
 )
 public class IteratingResourcesCheck extends BaseTreeVisitor implements JavaFileScanner {
 

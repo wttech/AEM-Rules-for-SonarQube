@@ -17,14 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules;
+package com.cognifide.aemrules.metadata;
 
-public final class Constants {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	public static final String SLING_RESOURCE_QUALIFIED_NAME = "org.apache.sling.api.resource.Resource";
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Metadata {
 
-	private Constants() {
-		// private constructor to hide public one
-	}
-
+    /**
+     * Sets a technical debt for the Rule.
+     */
+    String technicalDebt();
 }

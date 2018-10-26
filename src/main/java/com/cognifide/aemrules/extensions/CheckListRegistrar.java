@@ -22,13 +22,14 @@ package com.cognifide.aemrules.extensions;
 import com.cognifide.aemrules.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.checks.ConstantsCheck;
+import com.cognifide.aemrules.checks.ContentResourceShouldBeNullCheckedCheck;
 import com.cognifide.aemrules.checks.HttpConstantCheck;
 import com.cognifide.aemrules.checks.InjectorShouldBeClosedCheck;
 import com.cognifide.aemrules.checks.InjectorTryWithResourcesCheck;
 import com.cognifide.aemrules.checks.ModifiableValueMapUsageCheck;
 import com.cognifide.aemrules.checks.PreferSlingServletAnnotation;
 import com.cognifide.aemrules.checks.SessionShouldBeLoggedOut;
-import com.cognifide.aemrules.checks.SynchornizedKeywordUsageCheck;
+import com.cognifide.aemrules.checks.SynchronizedKeywordUsageCheck;
 import com.cognifide.aemrules.checks.ThreadSafeFieldCheck;
 import com.cognifide.aemrules.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
 import com.cognifide.aemrules.checks.slice.iterator.IteratingResourcesCheck;
@@ -45,32 +46,49 @@ import java.util.List;
 
 public class CheckListRegistrar implements CheckRegistrar {
 
-	public static final String REPOSITORY_KEY = "AEM Rules";
+    public static final String REPOSITORY_KEY = "AEM Rules";
 
-	public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
-		= ImmutableList.<Class<? extends JavaCheck>>builder()
-		.add(AdministrativeAccessUsageCheck.class)
-		.add(AnnotationsConstantsCheck.class)
-		.add(ConstantsCheck.class)
-		.add(HttpConstantCheck.class)
-		.add(InjectorShouldBeClosedCheck.class)
-		.add(InjectorTryWithResourcesCheck.class)
-		.add(ModelsShouldNotUseSessionCheck.class)
-		.add(IteratingResourcesCheck.class)
-		.add(JcrPropertyFieldsInConstructorCheck.class)
-		.add(PreferSlingServletAnnotation.class)
-		.add(ResourceResolverShouldBeClosed.class)
-		.add(SessionShouldBeLoggedOut.class)
-		.add(SynchornizedKeywordUsageCheck.class)
-		.add(ThreadSafeFieldCheck.class)
-		.add(DefaultInjectionStrategyAnnotationCheck.class)
-		.add(ModifiableValueMapUsageCheck.class)
-		.add(SlingQueryImplicitStrategyCheck.class)
-		.build();
+    public static final List<Class<? extends JavaCheck>> CHECK_CLASSES
+        = ImmutableList.of(
+        AdministrativeAccessUsageCheck.class,
+        AnnotationsConstantsCheck.class,
+        ConstantsCheck.class,
+        HttpConstantCheck.class,
+        InjectorShouldBeClosedCheck.class,
+        InjectorTryWithResourcesCheck.class,
+        ModelsShouldNotUseSessionCheck.class,
+        IteratingResourcesCheck.class,
+        JcrPropertyFieldsInConstructorCheck.class,
+        PreferSlingServletAnnotation.class,
+        ResourceResolverShouldBeClosed.class,
+        SessionShouldBeLoggedOut.class,
+        SynchronizedKeywordUsageCheck.class,
+        ThreadSafeFieldCheck.class,
+        DefaultInjectionStrategyAnnotationCheck.class,
+        ModifiableValueMapUsageCheck.class,
+        ContentResourceShouldBeNullCheckedCheck.class,
 
-	@Override
-	public void register(RegistrarContext registrarContext) {
-		registrarContext.registerClassesForRepository(REPOSITORY_KEY, CHECK_CLASSES,
-			Collections.<Class<? extends JavaCheck>>emptyList());
-	}
+    );
+
+    private final Settings settings;
+
+    public CheckListRegistrar(Settings settings) {
+        this.settings = settings;
+    }
+
+    @Override
+    public void register(RegistrarContext registrarContext) {
+        String aemVersion = settings.getString(VersionSupportChecker.VERSION_PROPERTY);
+        List<Class<? extends JavaCheck>> checkClassesToRegister = CHECK_CLASSES.stream()
+            .filter(checkClass -> shouldRegister(aemVersion, checkClass))
+            .collect(Collectors.toList());
+        registrarContext.registerClassesForRepository(REPOSITORY_KEY, checkClassesToRegister,
+            Collections.emptyList());
+    }
+
+    private boolean shouldRegister(String aemVersion, Class<? extends JavaCheck> checkClass) {
+        return Optional.ofNullable(checkClass.getAnnotation(AemVersion.class))
+            .map(supportedVersion -> VersionSupportChecker.create(supportedVersion).supports(aemVersion))
+            .orElse(true);
+    }
 }

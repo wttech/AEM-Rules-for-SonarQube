@@ -22,6 +22,7 @@ package com.cognifide.aemrules.checks;
 import com.cognifide.aemrules.checks.visitors.CheckLoggedOutVisitor;
 import com.cognifide.aemrules.checks.visitors.FinallyBlockVisitor;
 import com.cognifide.aemrules.checks.visitors.FindSessionDeclarationVisitor;
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Sets;
@@ -47,6 +48,9 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "10min"
 )
 public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFileScanner {
 

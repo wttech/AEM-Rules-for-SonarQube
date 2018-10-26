@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.checks.slingmodels;
 
+import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import java.util.List;
@@ -44,6 +45,9 @@ import org.sonar.plugins.java.api.tree.Tree;
 )
 @AemVersion(
     all = true
+)
+@Metadata(
+    technicalDebt = "5min"
 )
 public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor implements JavaFileScanner {
 

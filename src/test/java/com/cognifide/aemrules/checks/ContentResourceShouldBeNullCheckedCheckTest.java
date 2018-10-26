@@ -21,13 +21,12 @@ package com.cognifide.aemrules.checks;
 
 import org.junit.Test;
 
-public class SynchornizedKeywordUsageCheckTest extends AbstractBaseTest {
+public class ContentResourceShouldBeNullCheckedCheckTest extends AbstractBaseTest  {
 
-    @Test
-    public void checkThreadSafeFieldsInServlet() {
-        check = new SynchornizedKeywordUsageCheck();
-        filename = "src/test/files/checks/SynchornizedKeywordUsageCheck.java";
-        verify();
-    }
-
+  @Test
+  public void checkIfContentResourceIsNotNull() {
+    check = new ContentResourceShouldBeNullCheckedCheck();
+    filename = "src/test/files/checks/ContentResourceShouldBeNullCheckedCheck.java";
+    verify();
+  }
 }

@@ -44,7 +44,7 @@ class DoWhileBinaryExpressionVisitor extends BaseTreeVisitor {
     }
 
     private boolean isResource(ExpressionTree operand) {
-        return !operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(Constants.RESOURCE_TYPE);
+        return !operand.is(Tree.Kind.NULL_LITERAL) && operand.symbolType().isSubtypeOf(Constants.SLING_RESOURCE_QUALIFIED_NAME);
     }
 
 }

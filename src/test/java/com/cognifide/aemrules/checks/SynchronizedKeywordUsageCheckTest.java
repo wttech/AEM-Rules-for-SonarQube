@@ -17,14 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules;
+package com.cognifide.aemrules.checks;
 
-public final class Constants {
+import org.junit.Test;
 
-	public static final String SLING_RESOURCE_QUALIFIED_NAME = "org.apache.sling.api.resource.Resource";
+public class SynchronizedKeywordUsageCheckTest extends AbstractBaseTest {
 
-	private Constants() {
-		// private constructor to hide public one
-	}
+    @Test
+    public void checkThreadSafeFieldsInServlet() {
+        check = new SynchronizedKeywordUsageCheck();
+        filename = "src/test/files/checks/SynchronizedKeywordUsageCheck.java";
+        verify();
+    }
 
 }
