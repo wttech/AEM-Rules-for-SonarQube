@@ -35,7 +35,7 @@ public class AutoclosableResourceResolver {
 
     private ResourceResolver resolver;
 
-    protected void case1() {
+    protected void resourceResolverInitialisedInTryBlockAndNotClosed() {
         ResourceResolver resourceResolver = null;
         try {
             resourceResolver = resourceResolverFactory.getServiceResourceResolver(null); // Noncompliant
@@ -43,12 +43,11 @@ public class AutoclosableResourceResolver {
             System.out.println("something went wrong");
         } finally {
             if (resourceResolver != null) {
-                //resourceResolver.close();
             }
         }
     }
 
-    private void case2() {
+    private void resourceResolverInitialisedInTryWithResourcesBlock() {
         try (ResourceResolver resourceResolver = resourceResolverFactory.getServiceResourceResolver(null)) {
             resourceResolver.getResource("path/to/resource");
         } catch (LoginException e) {
@@ -56,7 +55,7 @@ public class AutoclosableResourceResolver {
         }
     }
 
-    public String case3(final String path) {
+    public String resourceResolverInitialisedByResourceResolverProducerInTryBlockAndClosed(final String path) {
         ResourceResolver resourceResolver = null;
         try {
             resourceResolver = resourceResolverProducer.produce(); // Noncompliant
@@ -69,7 +68,7 @@ public class AutoclosableResourceResolver {
         return name;
     }
 
-    public String case4(final String path) {
+    public String resourceResolverDeclaredAndInitialisedInTryBlockAndClosed(final String path) {
         ResourceResolver resourceResolver = null;
         try {
             String name = resourceResolver.getResource(path).getName();
@@ -82,15 +81,7 @@ public class AutoclosableResourceResolver {
         return name;
     }
 
-    protected void case5(final Map<String, Object> properties) {
-        try {
-            resolver = resourceResolverFactory.getAdministrativeResourceResolver(null); // Noncompliant
-            registerObservation();
-        } catch (LoginException x) {
-        }
-    }
-
-    private void case6(Event event, List<String> attributesList) {
+    private void resourceResolverShouldBeIgnoredInThisKindOfCase(Event event, List<String> attributesList) {
         if (attributesList.containsAll(ATTRIBUTES)) {
             String path = (String) event.getProperty(SlingConstants.PROPERTY_PATH);
             try {
