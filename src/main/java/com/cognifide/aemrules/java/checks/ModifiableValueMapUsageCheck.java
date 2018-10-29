@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Set;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.ast.parser.ArgumentListTreeImpl;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.tree.Arguments;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
@@ -102,7 +102,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
     }
 
     private void visitMethodWithMVM(IdentifierTree modifiableValueMapUsageIdentifier, Tree usageOfMVM) {
-        int argumentNumber = ((ArgumentListTreeImpl) usageOfMVM).indexOf(modifiableValueMapUsageIdentifier);
+        int argumentNumber = ((Arguments) usageOfMVM).indexOf(modifiableValueMapUsageIdentifier);
         MethodInvocationTree methodInvocationWithMVM = (MethodInvocationTree) usageOfMVM.parent();
         if (methodInvocationWithMVM != null) {
             MethodTree methodWithMVM = (MethodTree) methodInvocationWithMVM.symbol().declaration();
