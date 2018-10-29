@@ -50,6 +50,7 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
     public void comment(CommentNode node) {
         if (!isHTLComment(node)) {
             createViolation(node.getStartLinePosition(), RULE_MESSAGE);
+            System.out.println("nie dziala: " + node.getCode());
         }
     }
 
