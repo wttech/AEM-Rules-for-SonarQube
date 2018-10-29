@@ -23,13 +23,10 @@ import java.util.function.Predicate;
 import org.sonar.plugins.java.api.semantic.Type;
 
 @FunctionalInterface
-public interface TypePredicate extends Predicate<Type> {
+public interface OwnerTypePredicate extends Predicate<Type> {
 
-    static TypePredicate is(String fullyQualifiedTypeName) {
-        return type -> type.is(fullyQualifiedTypeName);
+    static OwnerTypePredicate is(String fullyQualifiedOwnerTypeName) {
+        return type -> type.is(fullyQualifiedOwnerTypeName);
     }
 
-    static TypePredicate anyType() {
-        return type -> true;
-    }
 }

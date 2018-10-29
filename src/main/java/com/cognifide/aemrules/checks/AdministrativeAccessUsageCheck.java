@@ -21,7 +21,8 @@ package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.matcher.MethodMatcher;
 import com.cognifide.aemrules.matcher.MethodNamePredicate;
-import com.cognifide.aemrules.matcher.TypePredicate;
+import com.cognifide.aemrules.matcher.OwnerTypePredicate;
+import com.cognifide.aemrules.matcher.ParameterTypePredicate;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
@@ -63,12 +64,12 @@ public class AdministrativeAccessUsageCheck extends IssuableSubscriptionVisitor 
     private static final List<MethodMatcher> matchers = ImmutableList.of(
         MethodMatcher.create(
             MethodNamePredicate.is("loginAdministrative"),
-            TypePredicate.is("org.apache.sling.jcr.api.SlingRepository"),
-            TypePredicate.is("java.lang.String")),
+            OwnerTypePredicate.is("org.apache.sling.jcr.api.SlingRepository"),
+            ParameterTypePredicate.is("java.lang.String")),
         MethodMatcher.create(
             MethodNamePredicate.is("getAdministrativeResourceResolver"),
-            TypePredicate.is("org.apache.sling.api.resource.ResourceResolverFactory"),
-            TypePredicate.is("java.util.Map"))
+            OwnerTypePredicate.is("org.apache.sling.api.resource.ResourceResolverFactory"),
+            ParameterTypePredicate.is("java.util.Map"))
     );
 
     @Override

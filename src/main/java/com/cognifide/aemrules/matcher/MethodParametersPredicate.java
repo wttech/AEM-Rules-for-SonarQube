@@ -26,11 +26,11 @@ import org.sonar.plugins.java.api.semantic.Type;
 @FunctionalInterface
 public interface MethodParametersPredicate extends Predicate<List<Type>> {
 
-    static MethodParametersPredicate of(List<TypePredicate> expectedParameterTypes) {
+    static MethodParametersPredicate of(List<ParameterTypePredicate> expectedParameterTypes) {
         return actualParameterTypes -> allParameterTypesMatch(actualParameterTypes, expectedParameterTypes);
     }
 
-    static boolean allParameterTypesMatch(List<Type> actualParameterTypes, List<TypePredicate> expectedParameterTypes) {
+    static boolean allParameterTypesMatch(List<Type> actualParameterTypes, List<ParameterTypePredicate> expectedParameterTypes) {
         if (actualParameterTypes.size() != expectedParameterTypes.size()) {
             return false;
         }

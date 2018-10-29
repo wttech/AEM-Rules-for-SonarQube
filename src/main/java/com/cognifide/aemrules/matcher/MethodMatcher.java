@@ -30,20 +30,21 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 public final class MethodMatcher {
 
-    private TypePredicate methodOwnerTypePredicate;
+    private OwnerTypePredicate methodOwnerTypePredicate;
 
     private MethodNamePredicate methodNamePredicate;
 
     private MethodParametersPredicate methodParametersPredicate;
 
-    private MethodMatcher(MethodNamePredicate methodNamePredicate, TypePredicate methodOwnerTypePredicate, List<TypePredicate> methodParameterTypePredicates) {
+    private MethodMatcher(MethodNamePredicate methodNamePredicate, OwnerTypePredicate methodOwnerTypePredicate,
+        List<ParameterTypePredicate> methodParameterTypePredicates) {
         this.methodNamePredicate = methodNamePredicate;
         this.methodOwnerTypePredicate = methodOwnerTypePredicate;
         this.methodParametersPredicate = MethodParametersPredicate.of(methodParameterTypePredicates);
     }
 
-    public static MethodMatcher create(MethodNamePredicate methodNamePredicate, TypePredicate methodOwnerTypePredicate,
-        TypePredicate... methodParameterTypePredicates) {
+    public static MethodMatcher create(MethodNamePredicate methodNamePredicate, OwnerTypePredicate methodOwnerTypePredicate,
+        ParameterTypePredicate... methodParameterTypePredicates) {
         return new MethodMatcher(methodNamePredicate, methodOwnerTypePredicate, Arrays.asList(methodParameterTypePredicates));
     }
 

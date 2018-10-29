@@ -65,83 +65,83 @@ public class MethodMatcherTest {
     private MethodInvocationTree methodInvocationTree;
 
     @Test
-    public void shouldMatchMethodWhenMethodNameOwnerClassAndMethodParametersAgree() {
+    public void shouldMatchMethodWhenMethodNameAndOwnerClassAndMethodParametersMatch() {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
             MethodNamePredicate.is("test"),
-            TypePredicate.is("com.cognifide.test.TestClass"),
-            TypePredicate.is("com.cognifide.test.MyClass1"),
-            TypePredicate.is("com.cognifide.test.MyClass2")
+            OwnerTypePredicate.is("com.cognifide.test.TestClass"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass1"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass2")
         );
 
         Assert.assertThat(methodMatcher.matches(methodInvocationTree), is(true));
     }
 
     @Test
-    public void shouldMatchMethodWhenMethodNameOwnerClassAndOneParameterAnyAndSecondStrict() {
+    public void shouldMatchMethodWhenMethodNameAndOwnerClassAndOnlySecondParameterMatch() {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
             MethodNamePredicate.is("test"),
-            TypePredicate.is("com.cognifide.test.TestClass"),
-            TypePredicate.anyType(),
-            TypePredicate.is("com.cognifide.test.MyClass2")
+            OwnerTypePredicate.is("com.cognifide.test.TestClass"),
+            ParameterTypePredicate.anyParameterType(),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass2")
         );
 
         Assert.assertThat(methodMatcher.matches(methodInvocationTree), is(true));
     }
 
     @Test
-    public void shouldNotMatchMethodWhenMethodNameDifferent() {
+    public void shouldNotMatchMethodWhenMethodNameDoesNotMatch() {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
             MethodNamePredicate.is("different"),
-            TypePredicate.is("com.cognifide.test.TestClass"),
-            TypePredicate.is("com.cognifide.test.MyClass1"),
-            TypePredicate.is("com.cognifide.test.MyClass2")
+            OwnerTypePredicate.is("com.cognifide.test.TestClass"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass1"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass2")
         );
 
         Assert.assertThat(methodMatcher.matches(methodInvocationTree), is(false));
     }
 
     @Test
-    public void shouldNotMatchMethodWhenNumberOfMethodParametersDifferent() {
+    public void shouldNotMatchMethodWhenNumberOfMethodParametersDoesNotMatch() {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
             MethodNamePredicate.is("test"),
-            TypePredicate.is("com.cognifide.test.TestClass"),
-            TypePredicate.is("com.cognifide.test.MyClass1")
+            OwnerTypePredicate.is("com.cognifide.test.TestClass"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass1")
         );
 
         Assert.assertThat(methodMatcher.matches(methodInvocationTree), is(false));
     }
 
     @Test
-    public void shouldNotMatchMethodWhenMethodOwnerClassDifferent() {
+    public void shouldNotMatchMethodWhenMethodOwnerClassDoesNotMatch() {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
             MethodNamePredicate.is("test"),
-            TypePredicate.is("com.cognifide.test.Different"),
-            TypePredicate.is("com.cognifide.test.MyClass1"),
-            TypePredicate.is("com.cognifide.test.MyClass2")
+            OwnerTypePredicate.is("com.cognifide.test.Different"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass1"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass2")
         );
 
         Assert.assertThat(methodMatcher.matches(methodInvocationTree), is(false));
     }
 
     @Test
-    public void shouldNotMatchMethodWhenMethodParametersDifferent() {
+    public void shouldNotMatchMethodWhenMethodParameterTypesDoNotMatch() {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
             MethodNamePredicate.is("test"),
-            TypePredicate.is("com.cognifide.test.TestClass"),
-            TypePredicate.is("com.cognifide.test.Different1"),
-            TypePredicate.is("com.cognifide.test.MyClass2")
+            OwnerTypePredicate.is("com.cognifide.test.TestClass"),
+            ParameterTypePredicate.is("com.cognifide.test.Different1"),
+            ParameterTypePredicate.is("com.cognifide.test.MyClass2")
         );
 
         Assert.assertThat(methodMatcher.matches(methodInvocationTree), is(false));
