@@ -64,7 +64,6 @@ public class HtlScanner {
                         .map(Attribute::getValue)
                         .filter(HtlScanner::hasHtlExpression)
                         .flatMap(HtlScanner::getExpressions)
-                        .peek(expression -> visitor.htlExpression(expression, node))
                         .collect(Collectors.toList());
                 visitor.startHtlElement(expressions, node);
             }

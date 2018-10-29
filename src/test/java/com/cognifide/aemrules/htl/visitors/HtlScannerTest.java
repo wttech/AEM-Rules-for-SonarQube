@@ -22,42 +22,44 @@ package com.cognifide.aemrules.htl.visitors;
 import static org.junit.Assert.assertEquals;
 
 import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
+import com.cognifide.aemrules.htl.lex.HtlLexer;
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.junit.Before;
 import org.junit.Test;
-import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
+import org.sonar.api.internal.google.common.io.Files;
 import org.sonar.plugins.html.api.HtmlConstants;
-import org.sonar.plugins.html.node.CommentNode;
-import org.sonar.plugins.html.node.DirectiveNode;
-import org.sonar.plugins.html.node.ExpressionNode;
 import org.sonar.plugins.html.node.Node;
-import org.sonar.plugins.html.node.TagNode;
-import org.sonar.plugins.html.node.TextNode;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
 public class HtlScannerTest {
 
-    private CounterVisitor counterVisitor;
+    private ExpressionCounterVisitor counterVisitor;
 
     private HtlScanner htlScanner;
 
+    private HtlLexer lexer;
+
     @Before
     public void setUp() {
+        lexer = new HtlLexer();
         htlScanner = new HtlScanner();
-        this.counterVisitor = new CounterVisitor();
+        counterVisitor = new ExpressionCounterVisitor();
         htlScanner.addVisitor(counterVisitor);
     }
 
     @Test
     public void checkVisitedNode() {
-        List<Node> nodes = new ArrayList<>();
-        HtmlSourceCode htmlSourceCode = createHtmlSourceCode("test/testFile.html");
+        List<Node> nodes = lexer.parse(readFile("scanner/testFile.html"));
+        HtmlSourceCode htmlSourceCode = createHtmlSourceCode("scanner/testFile.html");
         htlScanner.scan(nodes, htmlSourceCode);
-        assertEquals(3, counterVisitor.getCounter());
+        assertEquals(3, counterVisitor.getExpressionCounter());
     }
 
     private HtmlSourceCode createHtmlSourceCode(String relativePath) {
@@ -68,72 +70,27 @@ public class HtlScannerTest {
         );
     }
 
-    private class CounterVisitor extends AbstractHtlCheck {
-
-        private int counter = 0;
-
-        @Override
-        public void init() {
-            counter++;
+    private Reader readFile(String fileName) {
+        File root = new File("src/test/resources");
+        File file = new File(root, fileName);
+        try {
+            return new StringReader(Files.toString(file, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Cannot read " + fileName, e);
         }
+    }
 
-        @Override
-        public void characters(TextNode textNode) {
-            counter++;
-        }
+    private class ExpressionCounterVisitor extends AbstractHtlCheck {
 
-        @Override
-        public void comment(CommentNode node) {
-            counter++;
-        }
-
-        @Override
-        public void htlComment(CommentNode node) {
-            counter++;
-        }
-
-        @Override
-        public void directive(DirectiveNode node) {
-            counter++;
-        }
-
-        @Override
-        public void endDocument() {
-            counter++;
-        }
-
-        @Override
-        public void endElement(TagNode node) {
-            counter++;
-        }
-
-        @Override
-        public void expression(ExpressionNode node) {
-            counter++;
-        }
+        private int expressionCounter = 0;
 
         @Override
         public void htlExpression(Expression expression, Node node) {
-            counter++;
+            expressionCounter++;
         }
 
-        @Override
-        public void startDocument(List<Node> nodes) {
-            counter++;
-        }
-
-        @Override
-        public void startElement(TagNode node) {
-            counter++;
-        }
-
-        @Override
-        public void startHtlElement(List<Expression> expressions, TagNode node) {
-            counter++;
-        }
-
-        public int getCounter() {
-            return counter;
+        public int getExpressionCounter() {
+            return expressionCounter;
         }
     }
 }
