@@ -317,6 +317,7 @@
             <exclude>src/main/resources/**</exclude>
             <exclude>**/LICENSE.txt</exclude>
             <exclude>**.xml</exclude>
+            <exclude>**.html</exclude>
             <exclude>assets/**</exclude>
           </excludes>
         </configuration>
