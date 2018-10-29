@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.cognifide.aemrules</groupId>
   <artifactId>aemrules</artifactId>
-  <version>0.11-SNAPSHOT</version>
+  <version>0.11-RC1</version>
 
   <name>AEM Rules for SonarQube</name>
   <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific
@@ -48,7 +46,7 @@
     <url>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</url>
     <developerConnection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git
     </developerConnection>
-    <tag>HEAD</tag>
+    <tag>v0.11-RC1</tag>
   </scm>
 
   <issueManagement>
