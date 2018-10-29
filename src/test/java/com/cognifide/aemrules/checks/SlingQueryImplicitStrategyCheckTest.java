@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.checks;
 
 import com.cognifide.aemrules.checks.slingquery.SlingQueryImplicitStrategyCheck;
+import com.cognifide.aemrules.java.checks.AbstractBaseTest;
 import org.junit.Test;
 
 public class SlingQueryImplicitStrategyCheckTest extends AbstractBaseTest {
