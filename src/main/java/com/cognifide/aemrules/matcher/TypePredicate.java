@@ -25,14 +25,11 @@ import org.sonar.plugins.java.api.semantic.Type;
 @FunctionalInterface
 public interface TypePredicate extends Predicate<Type> {
 
-    String ANY_TYPE = "ANY_TYPE";
-
     static TypePredicate is(String fullyQualifiedTypeName) {
-        if (ANY_TYPE.equals(fullyQualifiedTypeName)) {
-            return type -> true;
-        } else {
-            return type -> type.is(fullyQualifiedTypeName);
-        }
+        return type -> type.is(fullyQualifiedTypeName);
     }
 
+    static TypePredicate anyType() {
+        return type -> true;
+    }
 }

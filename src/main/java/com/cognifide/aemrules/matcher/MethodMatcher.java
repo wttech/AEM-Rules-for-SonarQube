@@ -19,6 +19,8 @@
  */
 package com.cognifide.aemrules.matcher;
 
+import java.util.Arrays;
+import java.util.List;
 import org.sonar.plugins.java.api.semantic.Symbol;
 import org.sonar.plugins.java.api.semantic.Symbol.MethodSymbol;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
@@ -34,14 +36,15 @@ public final class MethodMatcher {
 
     private MethodParametersPredicate methodParametersPredicate;
 
-    private MethodMatcher(String methodName, String fullyQualifiedMethodOwnerTypeName, String... fullyQualifiedMethodParameterTypeNames) {
-        this.methodNamePredicate = MethodNamePredicate.is(methodName);
-        this.methodOwnerTypePredicate = TypePredicate.is(fullyQualifiedMethodOwnerTypeName);
-        this.methodParametersPredicate = MethodParametersPredicate.of(fullyQualifiedMethodParameterTypeNames);
+    private MethodMatcher(MethodNamePredicate methodNamePredicate, TypePredicate methodOwnerTypePredicate, List<TypePredicate> methodParameterTypePredicates) {
+        this.methodNamePredicate = methodNamePredicate;
+        this.methodOwnerTypePredicate = methodOwnerTypePredicate;
+        this.methodParametersPredicate = MethodParametersPredicate.of(methodParameterTypePredicates);
     }
 
-    public static MethodMatcher create(String methodName, String fullyQualifiedMethodOwnerTypeName, String... fullyQualifiedMethodParameterTypeNames) {
-        return new MethodMatcher(methodName, fullyQualifiedMethodOwnerTypeName, fullyQualifiedMethodParameterTypeNames);
+    public static MethodMatcher create(MethodNamePredicate methodNamePredicate, TypePredicate methodOwnerTypePredicate,
+        TypePredicate... methodParameterTypePredicates) {
+        return new MethodMatcher(methodNamePredicate, methodOwnerTypePredicate, Arrays.asList(methodParameterTypePredicates));
     }
 
     private static IdentifierTree getIdentifier(MethodInvocationTree methodInvocationTree) {

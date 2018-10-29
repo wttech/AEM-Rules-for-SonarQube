@@ -19,19 +19,14 @@
  */
 package com.cognifide.aemrules.matcher;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.sonar.plugins.java.api.semantic.Type;
 
 @FunctionalInterface
 public interface MethodParametersPredicate extends Predicate<List<Type>> {
 
-    static MethodParametersPredicate of(String... fullyQualifiedMethodParameterTypeNames) {
-        List<TypePredicate> expectedParameterTypes = Arrays.stream(fullyQualifiedMethodParameterTypeNames)
-            .map(TypePredicate::is)
-            .collect(Collectors.toList());
+    static MethodParametersPredicate of(List<TypePredicate> expectedParameterTypes) {
         return actualParameterTypes -> allParameterTypesMatch(actualParameterTypes, expectedParameterTypes);
     }
 
