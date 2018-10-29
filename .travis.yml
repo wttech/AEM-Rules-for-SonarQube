@@ -15,3 +15,7 @@ addons:
         Fng0JHydAYJlnXAOuY2NPwGjUtF2cq57K4MlgD3k/ws5gdI8HIITWgKMcosh1gpws8C4PSxHicqy17beNbIE46zSkYtPhwvHOV8zkL4iYwpn3KP9Ar66oWQy44PaEfI4fVI4IQ1CDoukX0+tyVCE4DNnzqif8/AFO2xB+RWqKkqA=
 
 script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package cobertura:cobertura coveralls:report sonar:sonar
+
+cache:
+  directories:
+  - $HOME/.m2
