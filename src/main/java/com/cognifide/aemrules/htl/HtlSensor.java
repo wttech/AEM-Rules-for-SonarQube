@@ -72,7 +72,7 @@ public class HtlSensor implements Sensor {
 
     private static final Logger LOGGER = Loggers.get(HtlSensor.class);
 
-    private final HtlLexer lexer = new HtlLexer();
+    private static final HtlLexer lexer = new HtlLexer();
 
     private Configuration configuration;
 
@@ -215,7 +215,6 @@ public class HtlSensor implements Sensor {
     }
 
     private void analyse(SensorContext sensorContext, InputFile inputFile) {
-
         try {
             scanFile(sensorContext, inputFile);
         } catch (SightlyCompilerException e) {

@@ -26,6 +26,12 @@ import com.cognifide.aemrules.version.AemVersion;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 
+@Rule(
+    key = ParsingErrorCheck.RULE_KEY,
+    name = ParsingErrorCheck.RULE_NAME,
+    priority = Priority.MINOR,
+    tags = Tags.AEM
+)
 @AemVersion(
     from = "6.0"
 )
@@ -33,12 +39,6 @@ import org.sonar.check.Rule;
     technicalDebt = "5min"
 )
 @ParsingErrorRule
-@Rule(
-    key = ParsingErrorCheck.RULE_KEY,
-    name = ParsingErrorCheck.RULE_NAME,
-    priority = Priority.MINOR,
-    tags = Tags.AEM
-)
 public class ParsingErrorCheck extends AbstractHtlCheck {
 
     static final String RULE_KEY = "HTL-0";
