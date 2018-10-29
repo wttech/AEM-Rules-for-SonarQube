@@ -32,7 +32,7 @@ import org.sonar.plugins.html.checks.HtmlIssue;
 
 public class HtmlCheckVerifier {
 
-    public static final String ISSUE_MARKER = "<!-- Non-Compliant -->";
+    public static final String ISSUE_MARKER = "<!--/* Non-Compliant */-->";
     private Set<Integer> expectedIssuesLines;
 
     public HtmlCheckVerifier() {
@@ -53,9 +53,9 @@ public class HtmlCheckVerifier {
 
         for (HtmlIssue issue : issues) {
             assertThat("No issues expected in line: " + issue.line() + ", but got: " + issue.ruleKey(), expectedIssuesLines, hasItem(issue.line()));
-            expectedIssuesLines.remove(issue.line());
-            issuesLines.remove(issue.line());
         }
+        expectedIssuesLines.removeAll(issuesLines);
+        issuesLines.clear();
 
         for (Integer expectedIssueLine : expectedIssuesLines) {
             assertThat("Non-Compliant declared, but no issues present at line: " + expectedIssueLine, issuesLines, hasItem(expectedIssueLine));

@@ -258,7 +258,7 @@ public class HtlSensor implements Sensor {
         HtmlSourceCode sourceCode = new HtmlSourceCode(inputFile);
 
         Reader reader = new StringReader(inputFile.contents());
-        scanner.scan(lexer.parse(reader), sourceCode, sensorContext.fileSystem().encoding());
+        scanner.scan(lexer.parse(reader), sourceCode);
         saveMetrics(sensorContext, sourceCode);
         saveLineLevelMeasures(inputFile, sourceCode);
     }
