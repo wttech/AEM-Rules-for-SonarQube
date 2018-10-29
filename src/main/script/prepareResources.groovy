@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
  * limitations under the License.
  * #L%
  */
-
-
 def engine = new groovy.text.SimpleTemplateEngine();
 def template = engine.createTemplate('\t\texistingValues.put("${key}", "${value}");\n')
 
