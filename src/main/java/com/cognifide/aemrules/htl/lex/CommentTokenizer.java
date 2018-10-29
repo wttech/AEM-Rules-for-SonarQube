@@ -29,11 +29,10 @@ import org.sonar.plugins.html.node.Node;
 class CommentTokenizer<T extends List<Node>> extends AbstractTokenizer<T> {
 
     private final Boolean html;
-
     private final char[] endChars;
-
-    CommentTokenizer(String startToken, String endToken, Boolean html) {
+    public CommentTokenizer(String startToken, String endToken, Boolean html) {
         super(startToken, endToken);
+
         this.html = html;
         this.endChars = endToken.toCharArray();
     }
@@ -45,6 +44,7 @@ class CommentTokenizer<T extends List<Node>> extends AbstractTokenizer<T> {
 
     @Override
     Node createNode() {
+
         CommentNode node = new CommentNode();
         node.setHtml(html);
         return node;

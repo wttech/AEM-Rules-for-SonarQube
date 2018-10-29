@@ -25,7 +25,7 @@ import org.sonar.plugins.html.node.Node;
 
 class ExpressionTokenizer extends AbstractTokenizer<List<Node>> {
 
-    ExpressionTokenizer(String startChars, String endChars) {
+    public ExpressionTokenizer(String startChars, String endChars) {
         super(startChars, endChars);
     }
 

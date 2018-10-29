@@ -111,8 +111,7 @@ class TextTokenizer extends AbstractTokenizer<List<Node>> {
             }
 
             // check for end script
-            return (char) endFlag == '<' && END_SCRIPT
-                .equalsIgnoreCase(new String(codeReader.peek(END_SCRIPT.length())));
+            return (char) endFlag == '<' && END_SCRIPT.equalsIgnoreCase(new String(codeReader.peek(END_SCRIPT.length())));
         }
     }
 

@@ -50,10 +50,8 @@ public final class HtlLexer {
         new ExpressionTokenizer("<%", "%>"),
         /* HTL Expressions */
         new ExpressionTokenizer("${", "}"),
-        /* CDATA */
-        new CdataTokenizer(),
         /* XML and HTML Tags */
-        new NormalElementTokenizer(),
+        new ElementTokenizer("<", ">"),
         /* Text (for everything else) */
         new TextTokenizer());
 
@@ -83,6 +81,7 @@ public final class HtlLexer {
     /**
      * Parse a nested node.
      */
+    @SuppressWarnings("rawtypes")
     public List<Node> nestedParse(CodeReader reader) {
         List<Node> nodeList = new ArrayList<>();
         for (Channel<List<Node>> tokenizer : tokenizers) {

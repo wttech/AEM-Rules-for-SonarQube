@@ -29,7 +29,7 @@ import org.sonar.plugins.html.node.Node;
 
 class DoctypeTokenizer extends AbstractTokenizer<List<Node>> {
 
-    DoctypeTokenizer(String startToken, String endToken) {
+    public DoctypeTokenizer(String startToken, String endToken) {
         super(startToken, endToken);
     }
 
