@@ -107,12 +107,12 @@ public class HtlScanner {
     /**
      * Scan a list of Nodes and send events to the visitors.
      */
-    public void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset) {
-        scan(nodeList, htmlSourceCode, charset, metricVisitors);
-        scan(nodeList, htmlSourceCode, charset, checkVisitors);
+    public void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode) {
+        scan(nodeList, htmlSourceCode, metricVisitors);
+        scan(nodeList, htmlSourceCode, checkVisitors);
     }
 
-    private void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset,
+    private void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode,
         List<DefaultHtlVisitor> visitors) {
         // prepare the visitors
         for (DefaultHtlVisitor visitor : visitors) {

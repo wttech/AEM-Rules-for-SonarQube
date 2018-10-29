@@ -76,7 +76,7 @@ public abstract class AbstractBaseTest {
             check.setRuleKey(ruleKey);
         }
         scanner.addVisitor(check);
-        scanner.scan(new HtlLexer().parse(fileReader), result, Charsets.UTF_8);
+        scanner.scan(new HtlLexer().parse(fileReader), result);
 
         htmlCheckVerifier.checkIssues(result.getIssues());
         return result.getIssues();

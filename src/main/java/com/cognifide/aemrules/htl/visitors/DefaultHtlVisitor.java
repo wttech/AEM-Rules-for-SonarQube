@@ -42,7 +42,7 @@ public class DefaultHtlVisitor {
     public void comment(CommentNode node) {
     }
 
-    void htlComment(CommentNode node) {
+    public void htlComment(CommentNode node) {
     }
 
     public void directive(DirectiveNode node) {
