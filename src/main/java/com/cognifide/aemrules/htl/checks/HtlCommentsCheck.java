@@ -48,17 +48,13 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
 
     @Override
     public void comment(CommentNode node) {
-        if (!isHTLComment(node) && !isALicenseComment(node) && !isNonCompliantComment(node)) {
+        if (!isHTLComment(node) && !isNonCompliantComment(node)) {
             createViolation(node.getStartLinePosition(), RULE_MESSAGE);
         }
     }
 
     private boolean isHTLComment(CommentNode node) {
         return node.getCode().startsWith("<!--/*") && node.getCode().endsWith("*/-->");
-    }
-
-    private boolean isALicenseComment(CommentNode node) {
-        return node.getCode().contains("#%L") && node.getCode().contains("#L%");
     }
 
     private boolean isNonCompliantComment(CommentNode node) {
