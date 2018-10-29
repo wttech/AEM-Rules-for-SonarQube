@@ -54,6 +54,7 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
     }
 
     private boolean isHTLComment(CommentNode node) {
-        return node.getCode().startsWith("<!--/*") && node.getCode().endsWith("*/-->");
+        String code = node.getCode().trim();
+        return code.startsWith("<!--/*") && code.endsWith("*/-->");
     }
 }
