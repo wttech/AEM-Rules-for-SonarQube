@@ -23,8 +23,11 @@ import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.visitors.DefaultHtlVisitor;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.html.checks.HtmlIssue;
+import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
-public class AbstractHtlCheck extends DefaultHtlVisitor implements HtlCheck {
+public class AbstractHtlCheck implements DefaultHtlVisitor, HtlCheck {
+
+    private HtmlSourceCode htmlSourceCode;
 
     private RuleKey ruleKey;
 
@@ -45,6 +48,16 @@ public class AbstractHtlCheck extends DefaultHtlVisitor implements HtlCheck {
         getHtmlSourceCode().addIssue(
             new HtmlIssue(ruleKey, line == 0 ? null : line, message, cost)
         );
+    }
+
+    @Override
+    public HtmlSourceCode getHtmlSourceCode() {
+        return htmlSourceCode;
+    }
+
+    @Override
+    public void setSourceCode(HtmlSourceCode sourceCode) {
+        this.htmlSourceCode = sourceCode;
     }
 
 

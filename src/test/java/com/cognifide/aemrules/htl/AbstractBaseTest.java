@@ -82,7 +82,7 @@ public abstract class AbstractBaseTest {
         return result.getIssues();
     }
 
-    private static class ExpectedIssueCollector extends DefaultHtlVisitor {
+    private static class ExpectedIssueCollector extends AbstractHtlCheck {
 
         private final HtmlCheckVerifier verifier;
 

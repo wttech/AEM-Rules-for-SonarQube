@@ -36,7 +36,7 @@ import com.cognifide.aemrules.java.checks.slice.iterator.IteratingResourcesCheck
 import com.cognifide.aemrules.java.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.java.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.java.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
-import com.cognifide.aemrules.checks.slingquery.SlingQueryImplicitStrategyCheck;
+import com.cognifide.aemrules.java.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import com.cognifide.aemrules.version.AemVersion;
 import com.cognifide.aemrules.version.VersionSupportChecker;
 import com.google.common.collect.ImmutableList;
