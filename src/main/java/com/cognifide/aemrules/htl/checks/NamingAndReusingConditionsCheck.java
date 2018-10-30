@@ -57,6 +57,7 @@ public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
     public void startHtlElement(List<Expression> expressions, TagNode node) {
         if (isANewTest(node) && isRepeatedCondition(expressions)) {
             createViolation(node.getStartLinePosition(), RULE_MESSAGE);
+            System.out.println("not working: " + node.getCode());
         }
         conditions.addAll(expressions.stream().map(Expression::getRawText).collect(Collectors.toSet()));
         super.startHtlElement(expressions, node);
