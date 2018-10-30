@@ -1,0 +1,15 @@
+<span class="uber-mode__top-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}">
+    <div class="my-component">
+        Text
+    </div>
+</span>
+<span class="uber-mode__bottom-bar"
+      data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}"></span> <!--/* Non-Compliant */-->
+
+<span class="uber-mode__top-bar"
+      data-sly-test.uberMode="${uberModeHelper.uberModeEnabled || forceUberMode}">
+    <div class="my-component">
+        Text
+    </div>
+</span>
+<span class="uber-mode__bottom-bar" data-sly-test="${uberMode}"></span>
