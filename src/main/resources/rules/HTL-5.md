@@ -3,22 +3,23 @@ It's easier to understand HTL code if the attributes processed server-side are v
 
 == Noncompliant Code Example
 ``
-    <!--/* Bad - the same condition is evaluated multiple times */-->
+<!--/* Bad - the same condition is evaluated multiple times */-->
 <span class="uber-mode__top-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}">
-<div class="my-component">
-    Blah blah blah
-</div>
-<span class="uber-mode__bottom-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}">
+    <div class="my-component">
+        Blah blah blah
+    </div>
+</span>
+<span class="uber-mode__bottom-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}"></span>
 ``
  
  
     
 == Compliant Solution
 ``
-    <!--/* Good - condition defined in one place */-->
-    <span class="uber-mode__top-bar" data-sly-test.uberMode="${uberModeHelper.uberModeEnabled || forceUberMode}">
-    <div class="my-component">
-        Blah blah blah
-    </div>
-    <span class="uber-mode__bottom-bar" data-sly-test="${uberMode}">L-specific attributes grouped at the end of the element
+<span class="uber-mode__top-bar" data-sly-test.uberMode="${uberModeHelper.uberModeEnabled || forceUberMode}">
+<div class="my-component">
+Blah blah blah
+</div>
+</span>
+<span class="uber-mode__bottom-bar" data-sly-test="${uberMode}"></span>
 ``
