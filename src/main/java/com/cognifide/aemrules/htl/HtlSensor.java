@@ -45,7 +45,6 @@ import org.apache.sling.scripting.sightly.compiler.SightlyCompilerException;
 import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -80,7 +79,7 @@ public class HtlSensor implements Sensor {
 
     private final FileLinesContextFactory fileLinesContextFactory;
 
-    private RuleKey parsingErrorRuleKey = null;
+    private RuleKey parsingErrorRuleKey;
 
     public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory) {
         this.configuration = configuration;
@@ -100,17 +99,10 @@ public class HtlSensor implements Sensor {
 
     private static FilePredicate createFilePredicate(Configuration configuration, SensorContext sensorContext) {
         FilePredicates predicates = sensorContext.fileSystem().predicates();
-        FilePredicate[] fileExtensions = Stream.of(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY))
-            .filter(Objects::nonNull)
-            .map(extension -> StringUtils.removeStart(extension, "."))
-            .map(predicates::hasExtension)
-            .toArray(FilePredicate[]::new);
 
-        List<FilePredicate> relativePaths = Stream.of(configuration.getStringArray(Constants.HTL_FILES_RELATIVE_PATHS_KEY))
-            .filter(StringUtils::isNotEmpty)
-            .map(path -> path.concat("/**"))
-            .map(predicates::matchesPathPattern)
-            .collect(Collectors.toList());
+        List<FilePredicate> fileExtensions = getFileExtensionsPredicates(predicates, configuration);
+        List<FilePredicate> relativePaths = getPathsPredicate(predicates, configuration);
+
         return predicates.and(
             predicates.hasType(InputFile.Type.MAIN),
             predicates.or(
@@ -119,6 +111,22 @@ public class HtlSensor implements Sensor {
             ),
             predicates.or(relativePaths)
         );
+    }
+
+    private static List<FilePredicate> getFileExtensionsPredicates(FilePredicates predicates, Configuration configuration) {
+        return Stream.of(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY))
+            .filter(Objects::nonNull)
+            .map(extension -> StringUtils.removeStart(extension, "."))
+            .map(predicates::hasExtension)
+            .collect(Collectors.toList());
+    }
+
+    private static List<FilePredicate> getPathsPredicate(FilePredicates predicates, Configuration configuration) {
+        return Stream.of(configuration.getStringArray(Constants.HTL_FILES_RELATIVE_PATHS_KEY))
+            .filter(StringUtils::isNotEmpty)
+            .map(path -> path.concat("/**"))
+            .map(predicates::matchesPathPattern)
+            .collect(Collectors.toList());
     }
 
     private static void stopProgressReport(ProgressReport progressReport, boolean success) {
