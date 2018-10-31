@@ -20,7 +20,6 @@
 package com.cognifide.aemrules.htl.lex;
 
 import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
 import org.sonar.channel.CodeReader;
 import org.sonar.channel.EndMatcher;
 import org.sonar.plugins.html.node.CommentNode;
