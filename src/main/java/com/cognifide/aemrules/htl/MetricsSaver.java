@@ -48,7 +48,7 @@ public final class MetricsSaver {
             NewIssueLocation location = newIssue.newLocation()
                 .on(inputFile)
                 .message(issue.message());
-            if (line != null) {
+            if (line != null && line > 0) {
                 location.at(inputFile.selectLine(line));
             }
             newIssue.at(location);

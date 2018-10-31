@@ -25,8 +25,8 @@ public interface HtlCheck {
 
     void setRuleKey(RuleKey ruleKey);
 
-    void createViolation(int line, String message);
+    void createViolation(Integer line, String message);
 
-    void createViolation(int line, String message, Double cost);
+    void createViolation(Integer line, String message, Double cost);
 
 }
