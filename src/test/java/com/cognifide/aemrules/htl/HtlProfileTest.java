@@ -43,7 +43,6 @@ public class HtlProfileTest {
     public void setUp() {
         profile = new HtlProfile();
         this.context = new BuiltInQualityProfilesDefinition.Context();
-
     }
 
     @Test
@@ -52,9 +51,7 @@ public class HtlProfileTest {
         Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
 
         assertThat(activeRules.size()).isEqualTo(2);
-
         assertThat(activeRules.keySet()).contains("HTL-0");
-
     }
 
     @Test
