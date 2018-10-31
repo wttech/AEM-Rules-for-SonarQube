@@ -78,8 +78,8 @@ public class CheckListRegistrar implements CheckRegistrar {
 
     private final Configuration configuration;
 
-    public CheckListRegistrar(Configuration settings) {
-        this.configuration = settings;
+    public CheckListRegistrar(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Override

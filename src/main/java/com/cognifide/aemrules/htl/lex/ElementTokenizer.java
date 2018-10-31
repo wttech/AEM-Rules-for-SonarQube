@@ -24,7 +24,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.sonar.channel.CodeReader;
 import org.sonar.channel.EndMatcher;
 import org.sonar.plugins.html.node.Attribute;
@@ -116,7 +116,6 @@ class ElementTokenizer extends AbstractTokenizer<List<Node>> {
     @Override
     protected void addNode(List<Node> nodeList, Node node) {
         super.addNode(nodeList, node);
-
         parseToken(node);
     }
 

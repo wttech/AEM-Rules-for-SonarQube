@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.scripting.sightly.compiler.SightlyCompilerException;
 import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -72,13 +72,9 @@ public class HtlSensor implements Sensor {
     private static final Logger LOGGER = Loggers.get(HtlSensor.class);
 
     private static final HtlLexer lexer = new HtlLexer();
-
-    private Configuration configuration;
-
     private final HtlChecks checks;
-
     private final FileLinesContextFactory fileLinesContextFactory;
-
+    private Configuration configuration;
     private RuleKey parsingErrorRuleKey;
 
     public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory) {
@@ -87,14 +83,6 @@ public class HtlSensor implements Sensor {
             .addChecks(HtlCheckClasses.REPOSITORY_KEY, HtlCheckClasses.getCheckClasses());
         this.parsingErrorRuleKey = setupParsingErrorRuleKey(checks);
         this.fileLinesContextFactory = fileLinesContextFactory;
-    }
-
-    private RuleKey setupParsingErrorRuleKey(HtlChecks checks) {
-        return checks.getAll().stream()
-            .filter(check -> check.getClass().isAnnotationPresent(ParsingErrorRule.class))
-            .findFirst()
-            .map(checks::ruleKeyFor)
-            .orElse(null);
     }
 
     private static FilePredicate createFilePredicate(Configuration configuration, SensorContext sensorContext) {
@@ -144,24 +132,15 @@ public class HtlSensor implements Sensor {
         }
     }
 
-    private static void processException(Exception e, SensorContext sensorContext,
-        InputFile inputFile) {
+    private static void processException(Exception e, SensorContext sensorContext, InputFile inputFile) {
         sensorContext.newAnalysisError()
             .onFile(inputFile)
             .message(e.getMessage())
             .save();
     }
 
-    private static void saveMetrics(SensorContext context, HtmlSourceCode sourceCode) {
+    private static void saveIssues(SensorContext context, HtmlSourceCode sourceCode) {
         InputFile inputFile = sourceCode.inputFile();
-
-        for (Map.Entry<Metric<Integer>, Integer> entry : sourceCode.getMeasures().entrySet()) {
-            context.<Integer>newMeasure()
-                .on(inputFile)
-                .forMetric(entry.getKey())
-                .withValue(entry.getValue())
-                .save();
-        }
 
         for (HtmlIssue issue : sourceCode.getIssues()) {
             NewIssue newIssue = context.newIssue()
@@ -177,6 +156,25 @@ public class HtlSensor implements Sensor {
             newIssue.at(location);
             newIssue.save();
         }
+    }
+
+    private static void saveMeasures(SensorContext context, HtmlSourceCode sourceCode) {
+        InputFile inputFile = sourceCode.inputFile();
+        for (Map.Entry<Metric<Integer>, Integer> entry : sourceCode.getMeasures().entrySet()) {
+            context.<Integer>newMeasure()
+                .on(inputFile)
+                .forMetric(entry.getKey())
+                .withValue(entry.getValue())
+                .save();
+        }
+    }
+
+    private RuleKey setupParsingErrorRuleKey(HtlChecks checks) {
+        return checks.getAll().stream()
+            .filter(check -> check.getClass().isAnnotationPresent(ParsingErrorRule.class))
+            .findFirst()
+            .map(checks::ruleKeyFor)
+            .orElse(null);
     }
 
     @Override
@@ -239,25 +237,29 @@ public class HtlSensor implements Sensor {
 
     private void processRecognitionException(SightlyCompilerException e, SensorContext sensorContext, InputFile inputFile) {
         if (parsingErrorRuleKey != null) {
-            NewIssue newIssue = sensorContext.newIssue();
-
-            NewIssueLocation primaryLocation = newIssue.newLocation()
-                .message("Parse error: " + e.getMessage())
-                .on(inputFile)
-                .at(inputFile.selectLine(e.getLine()));
-
-            newIssue
-                .forRule(parsingErrorRuleKey)
-                .at(primaryLocation)
-                .save();
+            processRecognitionExceptionForCustomRule(e, sensorContext, inputFile);
         }
 
+        int lineOffset = 0;
         sensorContext.newAnalysisError()
             .onFile(inputFile)
-            .at(inputFile.newPointer(e.getLine(), 0))
+            .at(inputFile.newPointer(e.getLine(), lineOffset))
             .message(e.getMessage())
             .save();
+    }
 
+    private void processRecognitionExceptionForCustomRule(SightlyCompilerException e, SensorContext sensorContext, InputFile inputFile) {
+        NewIssue newIssue = sensorContext.newIssue();
+
+        NewIssueLocation primaryLocation = newIssue.newLocation()
+            .message("Parse error: " + e.getMessage())
+            .on(inputFile)
+            .at(inputFile.selectLine(e.getLine()));
+
+        newIssue
+            .forRule(parsingErrorRuleKey)
+            .at(primaryLocation)
+            .save();
     }
 
     private void scanFile(SensorContext sensorContext, InputFile inputFile) throws IOException {
@@ -266,15 +268,17 @@ public class HtlSensor implements Sensor {
 
         Reader reader = new StringReader(inputFile.contents());
         scanner.scan(lexer.parse(reader), sourceCode);
-        saveMetrics(sensorContext, sourceCode);
+        saveIssues(sensorContext, sourceCode);
+        saveMeasures(sensorContext, sourceCode);
         saveLineLevelMeasures(inputFile, sourceCode);
     }
 
     private void saveLineLevelMeasures(InputFile inputFile, HtmlSourceCode htmlSourceCode) {
         FileLinesContext fileLinesContext = fileLinesContextFactory.createFor(inputFile);
+        final int lineContainsCode = 1;
 
         for (Integer line : htmlSourceCode.getDetailedLinesOfCode()) {
-            fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, line, 1);
+            fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, line, lineContainsCode);
         }
 
         fileLinesContext.save();

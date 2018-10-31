@@ -20,8 +20,8 @@
 package com.example;
 
 import com.cognifide.slice.mapper.annotation.SliceResource;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.WordUtils;
 
 @SliceResource
 public class NoJcrPropertyModel {

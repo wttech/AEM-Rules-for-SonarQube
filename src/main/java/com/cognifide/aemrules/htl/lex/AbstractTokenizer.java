@@ -20,7 +20,6 @@
 package com.cognifide.aemrules.htl.lex;
 
 import java.util.List;
-import org.apache.commons.lang.ArrayUtils;
 import org.sonar.channel.Channel;
 import org.sonar.channel.CodeReader;
 import org.sonar.channel.EndMatcher;
@@ -104,22 +103,20 @@ abstract class AbstractTokenizer<T extends List<Node>> extends Channel<T> {
 
         @Override
         public boolean match(int endFlag) {
+            boolean result = false;
             if (endFlag == '"') {
                 quoting = !quoting;
             }
             if (!quoting) {
-                boolean started = equalsIgnoreCase(codeReader.peek(startChars.length), startChars);
-                if (started) {
+                if (equalsIgnoreCase(codeReader.peek(startChars.length), startChars)) {
                     nesting++;
-                } else {
-                    boolean ended = ArrayUtils.isEquals(codeReader.peek(endChars.length), endChars);
-                    if (ended) {
-                        nesting--;
-                        return nesting < 0;
-                    }
+                } else if (equalsIgnoreCase(codeReader.peek(endChars.length), endChars)) {
+                    nesting--;
+                    result = nesting < 0;
                 }
             }
-            return false;
+
+            return result;
         }
     }
 

@@ -22,6 +22,7 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import com.google.common.collect.Ordering;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
@@ -49,15 +50,8 @@ public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
 
     static final String RULE_MESSAGE = "Always Place HTL Attributes After the Ones that are Part of the Markup";
 
-    private static boolean isSorted(List<Integer> list) {
-        boolean result = true;
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i - 1) > list.get(i)) {
-                result = false;
-                break;
-            }
-        }
-        return result;
+    private static boolean isOrdered(Iterable<Integer> list) {
+        return Ordering.natural().isOrdered(list);
     }
 
     @Override
@@ -67,7 +61,7 @@ public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
             .map(Syntax::isPluginAttribute)
             .mapToInt(value -> value == Boolean.TRUE ? 1 : 0)
             .boxed()
-            .collect(Collectors.collectingAndThen(Collectors.toList(), listOfAttributes -> !isSorted(listOfAttributes)));
+            .collect(Collectors.collectingAndThen(Collectors.toList(), listOfAttributes -> !isOrdered(listOfAttributes)));
         if (hasAttributesInWrongOrder) {
             createViolation(node.getStartLinePosition(), "Move HTL Attributes to the end of the tag");
         }
