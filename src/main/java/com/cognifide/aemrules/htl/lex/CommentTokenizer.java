@@ -58,7 +58,7 @@ class CommentTokenizer<T extends List<Node>> extends AbstractTokenizer<T> {
 
         @Override
         public boolean match(int endFlag) {
-            return ArrayUtils.isEquals(codeReader.peek(endChars.length), endChars);
+            return equalsIgnoreCase(codeReader.peek(endChars.length), endChars);
         }
 
     }

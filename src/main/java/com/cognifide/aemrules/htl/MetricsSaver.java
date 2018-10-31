@@ -33,6 +33,10 @@ import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
 public final class MetricsSaver {
 
+    private MetricsSaver() {
+        // private constructor to hide public one
+    }
+
     public static void saveIssues(SensorContext context, HtmlSourceCode sourceCode) {
         InputFile inputFile = sourceCode.inputFile();
 

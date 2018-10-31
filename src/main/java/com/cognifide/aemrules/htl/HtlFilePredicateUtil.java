@@ -32,7 +32,7 @@ import org.sonar.api.config.Configuration;
 
 public final class HtlFilePredicateUtil {
 
-    public HtlFilePredicateUtil() {
+    private HtlFilePredicateUtil() {
         // private constructor to hide public one
     }
 
