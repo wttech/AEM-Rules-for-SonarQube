@@ -48,7 +48,7 @@ public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
 
     public static final String RULE_KEY = "HTL-1";
 
-    static final String RULE_MESSAGE = "Always Place HTL Attributes After the Ones that are Part of the Markup";
+    static final String RULE_MESSAGE = "Always place HTL attributes at the end";
 
     private static boolean isOrdered(Iterable<Integer> list) {
         return Ordering.natural().isOrdered(list);
