@@ -24,6 +24,9 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.FileLinesContext;
+import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.measures.Metric;
 import org.sonar.plugins.html.checks.HtmlIssue;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
@@ -58,6 +61,17 @@ public final class MetricsSaver {
                 .withValue(entry.getValue())
                 .save();
         }
+    }
+
+    public static void saveLineLevelMeasures(InputFile inputFile, HtmlSourceCode htmlSourceCode, FileLinesContextFactory fileLinesContextFactory) {
+        FileLinesContext fileLinesContext = fileLinesContextFactory.createFor(inputFile);
+        final int lineContainsCode = 1;
+
+        for (Integer line : htmlSourceCode.getDetailedLinesOfCode()) {
+            fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, line, lineContainsCode);
+        }
+
+        fileLinesContext.save();
     }
 
 }

@@ -41,8 +41,6 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Configuration;
-import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.html.node.Node;
@@ -97,7 +95,7 @@ public class HtlSensor extends AbstractHtlFilesAnalyzer implements Sensor {
             scanner.scan(nodeList, sourceCode);
             MetricsSaver.saveIssues(sensorContext, sourceCode);
             MetricsSaver.saveMeasures(sensorContext, sourceCode);
-            saveLineLevelMeasures(inputFile, sourceCode);
+            MetricsSaver.saveLineLevelMeasures(inputFile, sourceCode, fileLinesContextFactory);
         }
     }
 
@@ -116,17 +114,6 @@ public class HtlSensor extends AbstractHtlFilesAnalyzer implements Sensor {
             }
         }
         return scanner;
-    }
-
-    private void saveLineLevelMeasures(InputFile inputFile, HtmlSourceCode htmlSourceCode) {
-        FileLinesContext fileLinesContext = fileLinesContextFactory.createFor(inputFile);
-        final int lineContainsCode = 1;
-
-        for (Integer line : htmlSourceCode.getDetailedLinesOfCode()) {
-            fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, line, lineContainsCode);
-        }
-
-        fileLinesContext.save();
     }
 
 }
