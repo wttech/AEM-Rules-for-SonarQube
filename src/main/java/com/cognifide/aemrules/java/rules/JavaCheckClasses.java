@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.extensions;
+package com.cognifide.aemrules.java.rules;
 
 import com.cognifide.aemrules.java.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.java.checks.AnnotationsConstantsCheck;
@@ -48,7 +48,7 @@ import org.sonar.api.config.Configuration;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
-public class CheckListRegistrar implements CheckRegistrar {
+public class JavaCheckClasses implements CheckRegistrar {
 
     public static final String REPOSITORY_KEY = "AEM Rules";
 
@@ -78,7 +78,7 @@ public class CheckListRegistrar implements CheckRegistrar {
 
     private final Configuration configuration;
 
-    public CheckListRegistrar(Configuration configuration) {
+    public JavaCheckClasses(Configuration configuration) {
         this.configuration = configuration;
     }
 

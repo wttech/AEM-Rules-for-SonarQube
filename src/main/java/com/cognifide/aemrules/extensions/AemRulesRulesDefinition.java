@@ -21,6 +21,7 @@ package com.cognifide.aemrules.extensions;
 
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
+import com.cognifide.aemrules.java.rules.JavaCheckClasses;
 import org.sonar.api.server.rule.RulesDefinition;
 
 public class AemRulesRulesDefinition implements RulesDefinition {
@@ -43,9 +44,9 @@ public class AemRulesRulesDefinition implements RulesDefinition {
 
     private void defineJavaRepository(Context context) {
         NewRepository repo = context
-            .createRepository(CheckListRegistrar.REPOSITORY_KEY, "java")
-            .setName(CheckListRegistrar.REPOSITORY_NAME);
-        rulesLoader.load(repo, CheckListRegistrar.CHECK_CLASSES);
+            .createRepository(JavaCheckClasses.REPOSITORY_KEY, "java")
+            .setName(JavaCheckClasses.REPOSITORY_NAME);
+        rulesLoader.load(repo, JavaCheckClasses.CHECK_CLASSES);
         repo.done();
 
     }

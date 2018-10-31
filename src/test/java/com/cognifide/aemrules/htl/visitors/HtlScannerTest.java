@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
+import com.google.common.base.Throwables;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -35,12 +36,15 @@ import org.junit.Test;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.internal.google.common.io.Files;
 import org.sonar.plugins.html.api.HtmlConstants;
+import org.sonar.plugins.html.node.CommentNode;
+import org.sonar.plugins.html.node.ExpressionNode;
 import org.sonar.plugins.html.node.Node;
+import org.sonar.plugins.html.node.TagNode;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
 public class HtlScannerTest {
 
-    private ExpressionCounterVisitor counterVisitor;
+    private HtlNodeCounterVisitor counterVisitor;
 
     private HtlScanner htlScanner;
 
@@ -50,16 +54,22 @@ public class HtlScannerTest {
     public void setUp() {
         lexer = new HtlLexer();
         htlScanner = new HtlScanner();
-        counterVisitor = new ExpressionCounterVisitor();
+        counterVisitor = new HtlNodeCounterVisitor();
         htlScanner.addVisitor(counterVisitor);
     }
 
     @Test
     public void checkVisitedNode() {
-        List<Node> nodes = lexer.parse(readFile("scanner/testFile.html"));
         HtmlSourceCode htmlSourceCode = createHtmlSourceCode("scanner/testFile.html");
-        htlScanner.scan(nodes, htmlSourceCode);
-        assertEquals(3, counterVisitor.getExpressionCounter());
+        try (Reader reader = readFile("scanner/testFile.html")) {
+            List<Node> nodes = lexer.parse(reader);
+            htlScanner.scan(nodes, htmlSourceCode);
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
+        assertEquals(1, counterVisitor.getCounter(CommentNode.class).intValue());
+        assertEquals(7, counterVisitor.getCounter(TagNode.class).intValue());
+        assertEquals(3, counterVisitor.getCounter(Expression.class).intValue());
     }
 
     private HtmlSourceCode createHtmlSourceCode(String relativePath) {
@@ -77,20 +87,6 @@ public class HtlScannerTest {
             return new StringReader(Files.toString(file, StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot read " + fileName, e);
-        }
-    }
-
-    private class ExpressionCounterVisitor extends AbstractHtlCheck {
-
-        private int expressionCounter = 0;
-
-        @Override
-        public void htlExpression(Expression expression, Node node) {
-            expressionCounter++;
-        }
-
-        public int getExpressionCounter() {
-            return expressionCounter;
         }
     }
 }

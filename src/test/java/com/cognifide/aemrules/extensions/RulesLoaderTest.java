@@ -22,6 +22,7 @@ package com.cognifide.aemrules.extensions;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 
+import com.cognifide.aemrules.java.rules.JavaCheckClasses;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
@@ -66,15 +67,15 @@ public class RulesLoaderTest {
     @Before
     public void setUp() {
         context = new RulesDefinition.Context();
-        repo = context.createRepository(CheckListRegistrar.REPOSITORY_KEY, "java");
-        repo.setName(CheckListRegistrar.REPOSITORY_KEY);
+        repo = context.createRepository(JavaCheckClasses.REPOSITORY_KEY, "java");
+        repo.setName(JavaCheckClasses.REPOSITORY_KEY);
     }
 
     @Test
     public void shouldLoadRuleWithAllSettings() {
         givenRulesLoaded(ImmutableList.of(RuleWithAllSettings.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(CheckListRegistrar.REPOSITORY_KEY);
+        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule.markdownDescription(), is(RULE_MARKDOWN_TEST_DESCRIPTION));
@@ -88,7 +89,7 @@ public class RulesLoaderTest {
     public void shouldNotSetTechnicalDebtWhenAnnotationNotPresent() {
         givenRulesLoaded(ImmutableList.of(RuleWithoutMetadataAnnotation.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(CheckListRegistrar.REPOSITORY_KEY);
+        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule.markdownDescription(), is(RULE_MARKDOWN_TEST_DESCRIPTION));
@@ -102,7 +103,7 @@ public class RulesLoaderTest {
     public void shouldNotSetTechnicalDebtWhenTechnicalDebtNotSetInMetadata() {
         givenRulesLoaded(ImmutableList.of(RuleWithEmptyTechnicalDebt.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(CheckListRegistrar.REPOSITORY_KEY);
+        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule.markdownDescription(), is(RULE_MARKDOWN_TEST_DESCRIPTION));
@@ -116,7 +117,7 @@ public class RulesLoaderTest {
     public void shouldNotLoadRuleWhenRuleAnnotationIsNotPresent() {
         givenRulesLoaded(ImmutableList.of(RuleWithoutRuleAnnotation.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(CheckListRegistrar.REPOSITORY_KEY);
+        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule, is(nullValue()));
@@ -127,7 +128,7 @@ public class RulesLoaderTest {
     public void shouldSetDefaultValuesWhenRuleAttributeWithNameOnly() {
         givenRulesLoaded(ImmutableList.of(RuleWithOnlyNameAttribute.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(CheckListRegistrar.REPOSITORY_KEY);
+        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule("com.cognifide.aemrules.extensions.RulesLoaderTest.RuleWithOnlyNameAttribute");
 
         Assert.assertThat(rule.markdownDescription(), is("No description yet."));
@@ -146,7 +147,7 @@ public class RulesLoaderTest {
     public void shouldLoadRuleWithProperty() {
         givenRulesLoaded(ImmutableList.of(RuleWithRuleProperty.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(CheckListRegistrar.REPOSITORY_KEY);
+        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
         RulesDefinition.Param param = rule.param(RULE_PROPERTY_KEY);
 
@@ -159,7 +160,7 @@ public class RulesLoaderTest {
     public void shouldLoadRuleWithPropertyWithoutAttributes() {
         givenRulesLoaded(ImmutableList.of(RuleWithRulePropertyWithoutAttributes.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(CheckListRegistrar.REPOSITORY_KEY);
+        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
         RulesDefinition.Param param = rule.param("testProperty");
 
