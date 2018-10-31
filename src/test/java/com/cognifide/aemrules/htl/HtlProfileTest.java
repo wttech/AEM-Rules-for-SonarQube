@@ -38,20 +38,10 @@ public class HtlProfileTest {
 
     private Context context;
 
-
     @Before
     public void setUp() {
         profile = new HtlProfile();
         this.context = new BuiltInQualityProfilesDefinition.Context();
-    }
-
-    @Test
-    public void sanity() {
-        profile.define(context);
-        Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
-
-        assertThat(activeRules.size()).isEqualTo(2);
-        assertThat(activeRules.keySet()).contains("HTL-0");
     }
 
     @Test
@@ -60,7 +50,7 @@ public class HtlProfileTest {
         Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
 
         assertThat(activeRules.size()).isGreaterThan(0);
-
+        assertThat(activeRules.keySet()).contains("HTL-0");
     }
 
     private Map<String, BuiltInActiveRule> getActiveRulesByRuleKey(Context context) {

@@ -30,9 +30,9 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.config.Configuration;
 
-public final class HtlFilePredicateUtil {
+public final class HtlFilePredicateProvider {
 
-    private HtlFilePredicateUtil() {
+    private HtlFilePredicateProvider() {
         // private constructor to hide public one
     }
 

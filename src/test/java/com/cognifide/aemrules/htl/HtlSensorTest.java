@@ -37,7 +37,6 @@ import org.mockito.Mockito;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
-import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.rule.internal.DefaultActiveRules;
@@ -49,6 +48,7 @@ import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.api.server.rule.RulesDefinition.Repository;
 import org.sonar.plugins.html.api.HtmlConstants;
 
 
@@ -67,26 +67,37 @@ public class HtlSensorTest {
         rulesDefinition.define(context);
         RulesDefinition.Repository htlRepository = context.repository(HtlCheckClasses.REPOSITORY_KEY);
 
-        List<NewActiveRule> ar = new ArrayList<>();
-        for (RulesDefinition.Rule rule : htlRepository.rules()) {
-            ar.add(new ActiveRulesBuilder().create(RuleKey.of(HtlCheckClasses.REPOSITORY_KEY, rule.key())));
-        }
-        ActiveRules activeRules = new DefaultActiveRules(ar);
-
-        CheckFactory checkFactory = new CheckFactory(activeRules);
-        FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
-        when(fileLinesContextFactory.createFor(Mockito.any(InputFile.class))).thenReturn(mock(FileLinesContext.class));
-
-        Configuration configuration = mock(Configuration.class);
-        when(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY)).thenReturn(Constants.FILE_EXTENSIONS_DEF_VALUE.split(","));
-        when(configuration.getStringArray(Constants.HTL_FILES_RELATIVE_PATHS_KEY)).thenReturn(new String[]{});
+        FileLinesContextFactory fileLinesContextFactory = getMockedFileLinesContextFactory();
+        Configuration configuration = getMockedConfiguration();
+        CheckFactory checkFactory = getCheckFactory(htlRepository);
 
         sensor = new HtlSensor(fileLinesContextFactory, configuration, checkFactory);
         tester = SensorContextTester.create(TEST_DIR);
     }
 
+    private CheckFactory getCheckFactory(Repository htlRepository) {
+        List<NewActiveRule> ar = new ArrayList<>();
+        for (RulesDefinition.Rule rule : htlRepository.rules()) {
+            ar.add(new ActiveRulesBuilder().create(RuleKey.of(HtlCheckClasses.REPOSITORY_KEY, rule.key())));
+        }
+        return new CheckFactory(new DefaultActiveRules(ar));
+    }
+
+    private Configuration getMockedConfiguration() {
+        Configuration configuration = mock(Configuration.class);
+        when(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY)).thenReturn(Constants.FILE_EXTENSIONS_DEF_VALUE.split(","));
+        when(configuration.getStringArray(Constants.HTL_FILES_RELATIVE_PATHS_KEY)).thenReturn(new String[]{});
+        return configuration;
+    }
+
+    private FileLinesContextFactory getMockedFileLinesContextFactory() {
+        FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
+        when(fileLinesContextFactory.createFor(Mockito.any(InputFile.class))).thenReturn(mock(FileLinesContext.class));
+        return fileLinesContextFactory;
+    }
+
     @Test
-    public void htmlFile() throws Exception {
+    public void fileCheck_expectIssues() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);

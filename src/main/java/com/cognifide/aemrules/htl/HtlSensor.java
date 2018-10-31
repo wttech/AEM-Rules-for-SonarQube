@@ -71,7 +71,7 @@ public class HtlSensor extends AbstractHtlFilesAnalyzer implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        FilePredicate htlFilePredicate = HtlFilePredicateUtil.createFilePredicate(configuration, context);
+        FilePredicate htlFilePredicate = HtlFilePredicateProvider.createFilePredicate(configuration, context);
         Iterable<InputFile> inputFiles = context.fileSystem().inputFiles(htlFilePredicate);
 
         Collection<File> files = StreamSupport.stream(inputFiles.spliterator(), false)

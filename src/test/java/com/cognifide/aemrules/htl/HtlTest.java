@@ -27,7 +27,7 @@ import org.junit.Test;
 public class HtlTest {
 
     @Test
-    public void testDefaultFileSuffixes() {
+    public void shouldReturnEmptyArrayOfDefaultFileSuffixes() {
         Htl htl = new Htl();
         assertThat(htl.getFileSuffixes()).isEmpty();
     }

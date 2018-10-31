@@ -45,7 +45,7 @@ public class HtmlCheckVerifierTest {
     }
 
     @Test()
-    public void checkMultipleIssuesInTheSameLine() {
+    public void checkMultipleExpectedIssuesInTheSameLine() {
         List<HtmlIssue> htmlIssues = new ArrayList<>();
         htmlIssues.add(createLineIssue(1));
         htmlIssues.add(createLineIssue(1));
