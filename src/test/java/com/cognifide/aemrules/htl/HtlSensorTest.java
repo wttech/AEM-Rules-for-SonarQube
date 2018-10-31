@@ -20,10 +20,12 @@
 package com.cognifide.aemrules.htl;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.cognifide.aemrules.extensions.AemRulesRulesDefinition;
+import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
 import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
 import com.google.common.io.Files;
 import java.io.File;
@@ -43,6 +45,7 @@ import org.sonar.api.batch.rule.internal.DefaultActiveRules;
 import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.config.Configuration;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
@@ -102,6 +105,7 @@ public class HtlSensorTest {
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
         assertThat(tester.allIssues()).isNotEmpty();
+        assertEquals(HtlAttributesShouldBeAtTheEndCheck.RULE_KEY, tester.allIssues().toArray(new Issue[]{})[0].ruleKey().rule());
     }
 
     @Test
