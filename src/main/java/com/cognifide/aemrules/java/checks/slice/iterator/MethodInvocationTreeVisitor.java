@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,12 @@ package com.cognifide.aemrules.java.checks.slice.iterator;
 
 import static com.cognifide.aemrules.java.Constants.SLING_RESOURCE_QUALIFIED_NAME;
 
+import com.cognifide.aemrules.matcher.MethodMatcher;
+import com.cognifide.aemrules.matcher.MethodNamePredicate;
+import com.cognifide.aemrules.matcher.OwnerTypePredicate;
+import com.cognifide.aemrules.matcher.ParameterTypePredicate;
 import java.util.HashSet;
 import java.util.Set;
-import org.sonar.java.matcher.MethodMatcher;
-import org.sonar.java.matcher.TypeCriteria;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
@@ -33,19 +35,18 @@ import org.sonar.plugins.java.api.tree.Tree;
 
 class MethodInvocationTreeVisitor extends BaseTreeVisitor {
 
-    private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER = MethodMatcher
-        .create()
-        .typeDefinition("com.cognifide.slice.api.provider.ModelProvider")
-        .name("get")
-        .addParameter(TypeCriteria.anyType())
-        .addParameter(SLING_RESOURCE_QUALIFIED_NAME);
+    private static final MethodMatcher MODEL_PROVIDER_GET_MATCHER = MethodMatcher.create(
+        MethodNamePredicate.is("get"),
+        OwnerTypePredicate.is("com.cognifide.slice.api.provider.ModelProvider"),
+        ParameterTypePredicate.anyParameterType(),
+        ParameterTypePredicate.is(SLING_RESOURCE_QUALIFIED_NAME));
 
     private final Set<MethodInvocationTree> visitedMethodInvocationTrees;
 
     private boolean modelProviderGetCalled;
 
     MethodInvocationTreeVisitor() {
-        this(new HashSet<MethodInvocationTree>(16));
+        this(new HashSet<>(16));
     }
 
     MethodInvocationTreeVisitor(Set<MethodInvocationTree> visitedMethodInvocationTrees) {

@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,11 @@
  */
 package com.example;
 
-import org.apache.commons.lang.StringUtils;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.sling.jcr.api.SlingRepository;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 @Component(immediate = true)
 public class SessionLogout {

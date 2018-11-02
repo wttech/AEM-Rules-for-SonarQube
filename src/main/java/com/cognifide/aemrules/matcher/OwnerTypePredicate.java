@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.htl.lex;
+package com.cognifide.aemrules.matcher;
 
-import java.util.List;
-import org.sonar.plugins.html.node.Node;
-import org.sonar.plugins.html.node.TagNode;
+import java.util.function.Predicate;
+import org.sonar.plugins.java.api.semantic.Type;
 
-public class CdataTokenizer extends AbstractTokenizer<List<Node>> {
+@FunctionalInterface
+public interface OwnerTypePredicate extends Predicate<Type> {
 
-    public CdataTokenizer() {
-        super("<![CDATA[", "]]>");
+    static OwnerTypePredicate is(String fullyQualifiedOwnerTypeName) {
+        return type -> type.is(fullyQualifiedOwnerTypeName);
     }
 
-    @Override
-    Node createNode() {
-        TagNode node = new TagNode();
-        node.setNodeName("![CDATA[");
-        return node;
-    }
 }

@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.sonar.channel.CodeReader;
 import org.sonar.channel.EndMatcher;
 import org.sonar.plugins.html.node.Attribute;
@@ -75,9 +75,7 @@ class ElementTokenizer extends AbstractTokenizer<List<Node>> {
             if (isQuote((char) ch)) {
                 codeReader.pop();
                 if (codeReader.peek() != ch) {
-                    QuoteMatcher quoteMatcher = new QuoteMatcher((char) ch);
-                    quoteMatcher.match(codeReader.peek());
-                    codeReader.popTo(quoteMatcher, sbValue);
+                    codeReader.popTo(new QuoteMatcher((char) ch), sbValue);
                     attribute.setValue(unescapeQuotes(sbValue.toString(), (char) ch));
                 }
                 codeReader.pop();
@@ -118,7 +116,6 @@ class ElementTokenizer extends AbstractTokenizer<List<Node>> {
     @Override
     protected void addNode(List<Node> nodeList, Node node) {
         super.addNode(nodeList, node);
-
         parseToken(node);
     }
 

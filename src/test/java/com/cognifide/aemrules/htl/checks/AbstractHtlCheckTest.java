@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ package com.cognifide.aemrules.htl.checks;
 
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.util.List;
@@ -34,25 +36,47 @@ public class AbstractHtlCheckTest {
 
     private AbstractHtlCheck check;
 
+    private HtmlSourceCode htmlSourceCode;
+
+    private static HtmlSourceCode createHtmlSourceCode(String relativePath) {
+        return new HtmlSourceCode(new TestInputFileBuilder("key", relativePath).setModuleBaseDir(new File(".").toPath()).build());
+    }
+
     @Before
     public void setUp() {
         this.check = new AbstractHtlCheck();
+        this.htmlSourceCode = createHtmlSourceCode("/");
+        check.setSourceCode(htmlSourceCode);
     }
 
     @Test
-    public void checkIssues() {
-        HtmlSourceCode htmlSourceCode = createHtmlSourceCode("/");
-        check.setSourceCode(htmlSourceCode);
+    public void creatingViolationWithoutCost() {
         check.createViolation(0, "Issue 0");
-        check.createViolation(1, "Issue 1", 1d);
+        List<HtmlIssue> issues = check.getHtmlSourceCode().getIssues();
 
+        assertThat(issues).hasSize(1);
+        assertNull(issues.get(0).cost());
+    }
+
+    @Test
+    public void creatingViolationWithCost() {
+        check.createViolation(1, "Issue 0", 1d);
+        List<HtmlIssue> issues = check.getHtmlSourceCode().getIssues();
+
+        assertThat(issues).hasSize(1);
+        assertEquals(1d, issues.get(0).cost(), 0d);
+    }
+
+    @Test
+    public void creatingViolations() {
+        check.createViolation(0, "Issue 0", 1d);
+        check.createViolation(1, "Issue 1");
         List<HtmlIssue> issues = check.getHtmlSourceCode().getIssues();
 
         assertThat(issues).hasSize(2);
-        assertThat(issues.get(1).cost()).isEqualTo(1);
+        assertEquals(1d, issues.get(0).cost(), 0d);
+        assertNull(issues.get(1).cost());
     }
 
-    private HtmlSourceCode createHtmlSourceCode(String relativePath) {
-        return new HtmlSourceCode(new TestInputFileBuilder("key", relativePath).setModuleBaseDir(new File(".").toPath()).build());
-    }
+
 }
