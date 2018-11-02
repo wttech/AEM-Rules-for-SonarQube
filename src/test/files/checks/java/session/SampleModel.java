@@ -22,7 +22,7 @@ package com.example;
 import com.cognifide.slice.api.model.InitializableModel;
 import com.cognifide.slice.mapper.annotation.JcrProperty;
 import com.cognifide.slice.mapper.annotation.SliceResource;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ResourceResolver;
 
 /**

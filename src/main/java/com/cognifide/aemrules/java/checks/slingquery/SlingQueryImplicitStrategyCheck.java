@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.checks.slingquery;
+package com.cognifide.aemrules.java.checks.slingquery;
 
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;

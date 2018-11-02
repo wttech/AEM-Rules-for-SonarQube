@@ -20,7 +20,7 @@
 package com.example;
 
 import java.util.Iterator;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 
 public class RecursionCheck {

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.extensions;
+package com.cognifide.aemrules.java.rules;
 
 import com.cognifide.aemrules.java.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.java.checks.AnnotationsConstantsCheck;
@@ -36,7 +36,7 @@ import com.cognifide.aemrules.java.checks.slice.iterator.IteratingResourcesCheck
 import com.cognifide.aemrules.java.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.java.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.java.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
-import com.cognifide.aemrules.checks.slingquery.SlingQueryImplicitStrategyCheck;
+import com.cognifide.aemrules.java.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import com.cognifide.aemrules.version.AemVersion;
 import com.cognifide.aemrules.version.VersionSupportChecker;
 import com.google.common.collect.ImmutableList;
@@ -48,7 +48,7 @@ import org.sonar.api.config.Configuration;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
-public class CheckListRegistrar implements CheckRegistrar {
+public class JavaCheckClasses implements CheckRegistrar {
 
     public static final String REPOSITORY_KEY = "AEM Rules";
 
@@ -78,8 +78,8 @@ public class CheckListRegistrar implements CheckRegistrar {
 
     private final Configuration configuration;
 
-    public CheckListRegistrar(Configuration settings) {
-        this.configuration = settings;
+    public JavaCheckClasses(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Override

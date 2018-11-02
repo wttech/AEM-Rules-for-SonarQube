@@ -20,7 +20,6 @@
 package com.cognifide.aemrules.htl.lex;
 
 import java.util.List;
-import org.apache.commons.lang.ArrayUtils;
 import org.sonar.channel.CodeReader;
 import org.sonar.channel.EndMatcher;
 import org.sonar.plugins.html.node.CommentNode;
@@ -28,12 +27,11 @@ import org.sonar.plugins.html.node.Node;
 
 class CommentTokenizer<T extends List<Node>> extends AbstractTokenizer<T> {
 
-    private final Boolean html;
+    private final Boolean isHtml;
     private final char[] endChars;
-    public CommentTokenizer(String startToken, String endToken, Boolean html) {
+    public CommentTokenizer(String startToken, String endToken, Boolean isHtml) {
         super(startToken, endToken);
-
-        this.html = html;
+        this.isHtml = isHtml;
         this.endChars = endToken.toCharArray();
     }
 
@@ -44,9 +42,8 @@ class CommentTokenizer<T extends List<Node>> extends AbstractTokenizer<T> {
 
     @Override
     Node createNode() {
-
         CommentNode node = new CommentNode();
-        node.setHtml(html);
+        node.setHtml(isHtml);
         return node;
     }
 
@@ -60,7 +57,7 @@ class CommentTokenizer<T extends List<Node>> extends AbstractTokenizer<T> {
 
         @Override
         public boolean match(int endFlag) {
-            return ArrayUtils.isEquals(codeReader.peek(endChars.length), endChars);
+            return equalsIgnoreCase(codeReader.peek(endChars.length), endChars);
         }
 
     }

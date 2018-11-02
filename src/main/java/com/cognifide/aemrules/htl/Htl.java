@@ -34,7 +34,7 @@ public class Htl extends AbstractLanguage {
     public static final String NAME = "HTL";
 
     /**
-     * Default Htl files knows suffixes
+     * Default Htl files known suffixes
      */
     public static final String[] DEFAULT_FILE_SUFFIXES = new String[]{};
 

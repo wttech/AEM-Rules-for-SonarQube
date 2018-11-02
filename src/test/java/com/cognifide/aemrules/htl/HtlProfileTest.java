@@ -39,7 +39,6 @@ public class HtlProfileTest {
 
     private Context context;
 
-
     @Before
     public void setUp() {
         profile = new HtlProfile();
@@ -64,7 +63,7 @@ public class HtlProfileTest {
         Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
 
         assertThat(activeRules.size()).isGreaterThan(0);
-
+        assertThat(activeRules.keySet()).contains("HTL-0");
     }
 
     private Map<String, BuiltInActiveRule> getActiveRulesByRuleKey(Context context) {

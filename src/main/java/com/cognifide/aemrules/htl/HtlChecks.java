@@ -45,9 +45,10 @@ public class HtlChecks {
     }
 
     public HtlChecks addChecks(String repositoryKey, Iterable<Class<? extends HtlCheck>> checkClass) {
-        checksByRepository.add(checkFactory
+        Checks<HtlCheck> htlChecks = checkFactory
             .<HtlCheck>create(repositoryKey)
-            .addAnnotatedChecks(checkClass));
+            .addAnnotatedChecks(checkClass);
+        checksByRepository.add(htlChecks);
         return this;
     }
 

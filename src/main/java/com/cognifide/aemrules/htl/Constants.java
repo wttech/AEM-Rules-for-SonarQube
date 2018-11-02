@@ -19,7 +19,7 @@
  */
 package com.cognifide.aemrules.htl;
 
-public class Constants {
+public final class Constants {
 
     private Constants() {
         //private constructor

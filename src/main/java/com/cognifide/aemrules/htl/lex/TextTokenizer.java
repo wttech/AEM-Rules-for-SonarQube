@@ -79,14 +79,12 @@ class TextTokenizer extends AbstractTokenizer<List<Node>> {
 
         @Override
         public boolean match(int endFlag) {
-            if ('<' == endFlag) {
-                return true;
-            }
-            if (equalsIgnoreCase(codeReader.peek("${".length()), "${".toCharArray())) {
-                return true;
+            boolean match = false;
+            if ('<' == endFlag || equalsIgnoreCase(codeReader.peek("${".length()), "${".toCharArray())) {
+                match = true;
             }
 
-            return false;
+            return match;
         }
     }
 

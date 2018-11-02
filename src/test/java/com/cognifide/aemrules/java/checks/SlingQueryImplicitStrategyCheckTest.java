@@ -17,10 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.checks;
+package com.cognifide.aemrules.java.checks;
 
-import com.cognifide.aemrules.checks.slingquery.SlingQueryImplicitStrategyCheck;
-import com.cognifide.aemrules.java.checks.AbstractBaseTest;
+import com.cognifide.aemrules.java.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import org.junit.Test;
 
 public class SlingQueryImplicitStrategyCheckTest extends AbstractBaseTest {
