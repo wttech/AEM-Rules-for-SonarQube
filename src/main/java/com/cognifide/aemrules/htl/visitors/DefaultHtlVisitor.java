@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,52 +29,46 @@ import org.sonar.plugins.html.node.TagNode;
 import org.sonar.plugins.html.node.TextNode;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
-public class DefaultHtlVisitor {
+public interface DefaultHtlVisitor {
 
-    private HtmlSourceCode htmlSourceCode;
-
-    public void init() {
+    default void init() {
     }
 
-    public void characters(TextNode textNode) {
+    default void characters(TextNode textNode) {
     }
 
-    public void comment(CommentNode node) {
+    default void comment(CommentNode node) {
     }
 
-    public void htlComment(CommentNode node) {
+    default void htlComment(CommentNode node) {
     }
 
-    public void directive(DirectiveNode node) {
+    default void directive(DirectiveNode node) {
     }
 
-    public void endDocument() {
+    default void endDocument() {
     }
 
-    public void endElement(TagNode node) {
+    default void endElement(TagNode node) {
     }
 
-    public void expression(ExpressionNode node) {
+    default void expression(ExpressionNode node) {
     }
 
-    public void htlExpression(Expression expression, Node node) {
+    default void htlExpression(Expression expression, Node node) {
     }
 
-    public HtmlSourceCode getHtmlSourceCode() {
-        return htmlSourceCode;
+    HtmlSourceCode getHtmlSourceCode();
+
+    void setSourceCode(HtmlSourceCode sourceCode);
+
+    default void startDocument(List<Node> nodes) {
     }
 
-    public void setSourceCode(HtmlSourceCode sourceCode) {
-        this.htmlSourceCode = sourceCode;
+    default void startElement(TagNode node) {
     }
 
-    public void startDocument(List<Node> nodes) {
-    }
-
-    public void startElement(TagNode node) {
-    }
-
-    public void startHtlElement(List<Expression> expressions, TagNode node) {
+    default void startHtlElement(List<Expression> expressions, TagNode node) {
     }
 
 }

@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ package com.cognifide.aemrules.extensions;
 
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
+import com.cognifide.aemrules.java.rules.JavaCheckClasses;
 import org.sonar.api.server.rule.RulesDefinition;
-import org.sonar.plugins.java.Java;
 
 public class AemRulesRulesDefinition implements RulesDefinition {
 
@@ -44,9 +44,9 @@ public class AemRulesRulesDefinition implements RulesDefinition {
 
     private void defineJavaRepository(Context context) {
         NewRepository repo = context
-            .createRepository(CheckListRegistrar.REPOSITORY_KEY, Java.KEY)
-            .setName(CheckListRegistrar.REPOSITORY_NAME);
-        rulesLoader.load(repo, CheckListRegistrar.CHECK_CLASSES);
+            .createRepository(JavaCheckClasses.REPOSITORY_KEY, "java")
+            .setName(JavaCheckClasses.REPOSITORY_NAME);
+        rulesLoader.load(repo, JavaCheckClasses.CHECK_CLASSES);
         repo.done();
 
     }

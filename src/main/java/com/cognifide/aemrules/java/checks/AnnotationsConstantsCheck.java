@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.java.util.ConstantsChecker;
 import com.cognifide.aemrules.version.AemVersion;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;

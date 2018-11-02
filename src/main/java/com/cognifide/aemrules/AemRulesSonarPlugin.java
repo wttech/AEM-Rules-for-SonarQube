@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 package com.cognifide.aemrules;
 
 import com.cognifide.aemrules.extensions.AemRulesRulesDefinition;
-import com.cognifide.aemrules.extensions.CheckListRegistrar;
+import com.cognifide.aemrules.java.rules.JavaCheckClasses;
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.Constants;
 import com.cognifide.aemrules.htl.HtlProfile;
@@ -58,7 +58,7 @@ public class AemRulesSonarPlugin implements Plugin {
         context.addExtensions(
             Htl.class,
             AemRulesRulesDefinition.class,
-            CheckListRegistrar.class,
+            JavaCheckClasses.class,
             HtlProfile.class,
             HtlSensor.class);
         context.addExtensions(pluginProperties());

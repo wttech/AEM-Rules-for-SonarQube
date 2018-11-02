@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,12 @@ import com.cognifide.aemrules.version.AemVersion;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 
+@Rule(
+    key = ParsingErrorCheck.RULE_KEY,
+    name = ParsingErrorCheck.RULE_NAME,
+    priority = Priority.MINOR,
+    tags = Tags.AEM
+)
 @AemVersion(
     from = "6.0"
 )
@@ -33,12 +39,6 @@ import org.sonar.check.Rule;
     technicalDebt = "5min"
 )
 @ParsingErrorRule
-@Rule(
-    key = ParsingErrorCheck.RULE_KEY,
-    name = ParsingErrorCheck.RULE_NAME,
-    priority = Priority.MINOR,
-    tags = Tags.AEM
-)
 public class ParsingErrorCheck extends AbstractHtlCheck {
 
     static final String RULE_KEY = "HTL-0";

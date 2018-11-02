@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.htl.lex;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.List;
@@ -29,15 +30,15 @@ import org.sonar.plugins.html.node.Node;
 
 class DoctypeTokenizer extends AbstractTokenizer<List<Node>> {
 
-    DoctypeTokenizer(String startToken, String endToken) {
+    public DoctypeTokenizer(String startToken, String endToken) {
         super(startToken, endToken);
     }
 
     private static void parseToken(DirectiveNode node) {
         String code = node.getCode();
-        StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(code));
-        tokenizer.quoteChar('"');
-        try {
+        try(Reader reader = new StringReader(code)) {
+            StreamTokenizer tokenizer = new StreamTokenizer(reader);
+            tokenizer.quoteChar('"');
             while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
                 if (tokenizer.sval != null) {
                     if (node.getNodeName() == null) {
@@ -55,7 +56,6 @@ class DoctypeTokenizer extends AbstractTokenizer<List<Node>> {
     @Override
     protected void addNode(List<Node> nodeList, Node node) {
         super.addNode(nodeList, node);
-
         parseToken((DirectiveNode) node);
     }
 

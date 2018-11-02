@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import com.google.common.collect.Ordering;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
@@ -31,23 +32,27 @@ import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
-@AemVersion(
-    from = "6.0"
-)
-@Metadata(
-    technicalDebt = "5min"
-)
 @Rule(
     key = HtlAttributesShouldBeAtTheEndCheck.RULE_KEY,
     name = HtlAttributesShouldBeAtTheEndCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
 )
+@AemVersion(
+    from = "6.0"
+)
+@Metadata(
+    technicalDebt = "5min"
+)
 public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
 
     public static final String RULE_KEY = "HTL-1";
 
-    static final String RULE_MESSAGE = "Always Place HTL Attributes After the Ones that are Part of the Markup";
+    static final String RULE_MESSAGE = "Always place HTL attributes at the end";
+
+    private static boolean isOrdered(Iterable<Integer> list) {
+        return Ordering.natural().isOrdered(list);
+    }
 
     @Override
     public void startHtlElement(List<Expression> expressions, TagNode node) {
@@ -56,21 +61,10 @@ public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
             .map(Syntax::isPluginAttribute)
             .mapToInt(value -> value == Boolean.TRUE ? 1 : 0)
             .boxed()
-            .collect(Collectors.collectingAndThen(Collectors.toList(), list -> !isSorted(list)));
+            .collect(Collectors.collectingAndThen(Collectors.toList(), listOfAttributes -> !isOrdered(listOfAttributes)));
         if (hasAttributesInWrongOrder) {
             createViolation(node.getStartLinePosition(), "Move HTL Attributes to the end of the tag");
         }
         super.startHtlElement(expressions, node);
-    }
-
-    private boolean isSorted(List<Integer> data) {
-        boolean result = true;
-        for (int i = 1; i < data.size(); i++) {
-            if (data.get(i - 1) > data.get(i)) {
-                result = false;
-                break;
-            }
-        }
-        return result;
     }
 }
