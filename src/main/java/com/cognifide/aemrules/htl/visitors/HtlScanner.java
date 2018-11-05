@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@
 package com.cognifide.aemrules.htl.visitors;
 
 import com.google.common.collect.Lists;
-import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,17 +42,7 @@ public class HtlScanner {
 
     private static final ExpressionParser expressionParser = new ExpressionParser();
 
-    private final List<DefaultHtlVisitor> metricVisitors;
     private final List<DefaultHtlVisitor> checkVisitors = Lists.newArrayList();
-
-    public HtlScanner() {
-        this(Collections.emptyList());
-    }
-
-    public HtlScanner(List<DefaultHtlVisitor> metricVisitors) {
-        this.metricVisitors = metricVisitors;
-    }
-
     private static void scanElementTag(DefaultHtlVisitor visitor, TagNode node) {
         if (!node.isEndElement()) {
             visitor.startElement(node);
@@ -64,7 +52,6 @@ public class HtlScanner {
                         .map(Attribute::getValue)
                         .filter(HtlScanner::hasHtlExpression)
                         .flatMap(HtlScanner::getExpressions)
-                        .peek(expression -> visitor.htlExpression(expression, node))
                         .collect(Collectors.toList());
                 visitor.startHtlElement(expressions, node);
             }
@@ -107,12 +94,11 @@ public class HtlScanner {
     /**
      * Scan a list of Nodes and send events to the visitors.
      */
-    public void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset) {
-        scan(nodeList, htmlSourceCode, charset, metricVisitors);
-        scan(nodeList, htmlSourceCode, charset, checkVisitors);
+    public void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode) {
+        scan(nodeList, htmlSourceCode, checkVisitors);
     }
 
-    private void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode, Charset charset,
+    private void scan(List<Node> nodeList, HtmlSourceCode htmlSourceCode,
         List<DefaultHtlVisitor> visitors) {
         // prepare the visitors
         for (DefaultHtlVisitor visitor : visitors) {

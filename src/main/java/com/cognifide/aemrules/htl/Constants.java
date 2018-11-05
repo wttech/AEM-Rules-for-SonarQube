@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 package com.cognifide.aemrules.htl;
 
-public class Constants {
+public final class Constants {
 
     private Constants() {
         //private constructor
@@ -28,5 +28,9 @@ public class Constants {
     public static final String FILE_EXTENSIONS_PROP_KEY = "sonar.htl.file.suffixes";
 
     public static final String FILE_EXTENSIONS_DEF_VALUE = ".html";
+
+    public static final String HTL_FILES_RELATIVE_PATHS_KEY = "sonar.htl.file.paths";
+
+    public static final String HTL_FILES_RELATIVE_PATHS_DEF_VALUE = "src/main/content/jcr_root";
 
 }

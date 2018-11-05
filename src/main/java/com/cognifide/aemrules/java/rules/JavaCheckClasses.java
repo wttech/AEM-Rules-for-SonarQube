@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.extensions;
+package com.cognifide.aemrules.java.rules;
 
 import com.cognifide.aemrules.java.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.java.checks.AnnotationsConstantsCheck;
@@ -36,6 +36,7 @@ import com.cognifide.aemrules.java.checks.slice.iterator.IteratingResourcesCheck
 import com.cognifide.aemrules.java.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
 import com.cognifide.aemrules.java.checks.slice.session.ModelsShouldNotUseSessionCheck;
 import com.cognifide.aemrules.java.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
+import com.cognifide.aemrules.java.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import com.cognifide.aemrules.version.AemVersion;
 import com.cognifide.aemrules.version.VersionSupportChecker;
 import com.google.common.collect.ImmutableList;
@@ -47,7 +48,7 @@ import org.sonar.api.config.Configuration;
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
 
-public class CheckListRegistrar implements CheckRegistrar {
+public class JavaCheckClasses implements CheckRegistrar {
 
     public static final String REPOSITORY_KEY = "AEM Rules";
 
@@ -71,13 +72,14 @@ public class CheckListRegistrar implements CheckRegistrar {
         ThreadSafeFieldCheck.class,
         DefaultInjectionStrategyAnnotationCheck.class,
         ModifiableValueMapUsageCheck.class,
-        ContentResourceShouldBeNullCheckedCheck.class
+        ContentResourceShouldBeNullCheckedCheck.class,
+        SlingQueryImplicitStrategyCheck.class
     );
 
     private final Configuration configuration;
 
-    public CheckListRegistrar(Configuration settings) {
-        this.configuration = settings;
+    public JavaCheckClasses(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Override

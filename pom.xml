@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.cognifide.aemrules</groupId>
   <artifactId>aemrules</artifactId>
-  <version>0.11-SNAPSHOT</version>
+  <version>0.12-SNAPSHOT</version>
 
   <name>AEM Rules for SonarQube</name>
   <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific
@@ -93,21 +91,16 @@
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.scripting.sightly.compiler</artifactId>
-            <version>${htl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonarsource.sonarqube</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.scripting.sightly.compiler</artifactId>
+      <version>${htl.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <version>${sonar.version}</version>
       <scope>provided</scope>
@@ -115,6 +108,7 @@
     <dependency>
       <groupId>org.sonarsource.java</groupId>
       <artifactId>sonar-java-plugin</artifactId>
+      <type>sonar-plugin</type>
       <version>${sonar.java.plugin}</version>
       <scope>provided</scope>
     </dependency>
@@ -123,17 +117,22 @@
       <artifactId>guava</artifactId>
       <version>19.0</version>
     </dependency>
-        <dependency>
-            <groupId>org.sonarsource.html</groupId>
-            <artifactId>sonar-html-plugin</artifactId>
-            <version>${sonar.html.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonarsource.html</groupId>
+      <artifactId>sonar-html-plugin</artifactId>
+      <version>${sonar.html.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
     <!-- Unit Test dependencies -->
     <dependency>
@@ -215,6 +214,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.query</artifactId>
+      <version>4.0.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>2.21.0</version>
@@ -268,7 +273,6 @@
           <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
           <skipDependenciesPackaging>false</skipDependenciesPackaging>
           <requirePlugins>java:4.10</requirePlugins>
-          <basePlugin>java</basePlugin>
           <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
           <sonarLintSupported>true</sonarLintSupported>
         </configuration>
@@ -305,7 +309,7 @@
       <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>2.11</version>
+        <version>3.0</version>
         <configuration>
           <skipExistingHeaders>false</skipExistingHeaders>
           <header>${basedir}/assets/license-template.txt</header>
