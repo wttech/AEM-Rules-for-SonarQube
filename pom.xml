@@ -69,7 +69,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <sonar.version>6.4</sonar.version>
+    <htl.version>1.0.14</htl.version>
+    <sonar.version>6.7</sonar.version>
+    <sonar.html.version>3.0.1.1444</sonar.html.version>
     <sonar.java.plugin>4.10.0.10260</sonar.java.plugin>
     <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
     <tagName>v${project.version}</tagName>
@@ -88,6 +90,16 @@
 
   <dependencies>
     <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.scripting.sightly.compiler</artifactId>
+      <version>${htl.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <version>${sonar.version}</version>
@@ -101,6 +113,33 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.sonarsource.sslr-squid-bridge</groupId>
+      <artifactId>sslr-squid-bridge</artifactId>
+      <version>2.6.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.sonar.sslr</groupId>
+          <artifactId>sslr-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.sonar</groupId>
+          <artifactId>sonar-plugin-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.sonar.sslr</groupId>
+          <artifactId>sslr-xpath</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>19.0</version>
@@ -109,6 +148,17 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonarsource.html</groupId>
+      <artifactId>sonar-html-plugin</artifactId>
+      <version>${sonar.html.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Unit Test dependencies -->
@@ -197,6 +247,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>2.21.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
       <version>4.2.0</version>
@@ -244,7 +300,7 @@
           <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
           <skipDependenciesPackaging>false</skipDependenciesPackaging>
           <requirePlugins>java:4.10</requirePlugins>
-          <sonarQubeMinVersion>5.6.6</sonarQubeMinVersion>
+          <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
           <sonarLintSupported>true</sonarLintSupported>
         </configuration>
       </plugin>

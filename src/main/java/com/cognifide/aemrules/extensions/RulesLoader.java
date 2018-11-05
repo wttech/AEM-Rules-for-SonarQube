@@ -41,7 +41,8 @@ import org.sonar.api.server.rule.RulesDefinition.DebtRemediationFunctions;
 import org.sonar.api.utils.AnnotationUtils;
 import org.sonar.api.utils.FieldUtils2;
 import org.sonar.check.Rule;
-import org.sonar.plugins.java.api.JavaCheck;
+import org.sonar.check.RuleProperty;
+
 
 public class RulesLoader {
 
@@ -67,20 +68,20 @@ public class RulesLoader {
         return TYPE_FOR_CLASS.apply(type);
     }
 
-    void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends JavaCheck>> annotatedClasses) {
-        for (Class<? extends JavaCheck> annotatedClass : annotatedClasses) {
+    public <T> void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends T>> annotatedClasses) {
+        for (Class annotatedClass : annotatedClasses) {
             loadRule(repo, annotatedClass);
         }
     }
 
     @CheckForNull
-    private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz) {
+    private RulesDefinition.NewRule loadRule(RulesDefinition.NewExtendedRepository repo, Class clazz) {
         return Optional.ofNullable(AnnotationUtils.getAnnotation(clazz, Rule.class))
             .map(annotationRule -> createRule(repo, clazz, annotationRule))
             .orElse(null);
     }
 
-    private RulesDefinition.NewRule createRule(RulesDefinition.NewExtendedRepository repo, Class<? extends JavaCheck> clazz, Rule ruleAnnotation) {
+    private RulesDefinition.NewRule createRule(RulesDefinition.NewExtendedRepository repo, Class clazz, Rule ruleAnnotation) {
         String ruleKey = StringUtils.defaultIfEmpty(ruleAnnotation.key(), clazz.getCanonicalName());
         String ruleName = StringUtils.defaultIfEmpty(ruleAnnotation.name(), null);
         String description = StringUtils.defaultIfEmpty(loadDescription(ruleKey), "No description yet.");
@@ -101,7 +102,7 @@ public class RulesLoader {
         return rule;
     }
 
-    private void setMetadata(RulesDefinition.NewRule rule, Class<? extends JavaCheck> clazz) {
+    private void setMetadata(RulesDefinition.NewRule rule, Class clazz) {
         Optional.ofNullable(AnnotationUtils.getAnnotation(clazz, Metadata.class))
             .ifPresent(metadataAnnotation -> setTechnicalDebt(rule, metadataAnnotation));
     }
@@ -131,7 +132,7 @@ public class RulesLoader {
     }
 
     private void loadParameters(RulesDefinition.NewRule rule, Field field) {
-        org.sonar.check.RuleProperty propertyAnnotation = field.getAnnotation(org.sonar.check.RuleProperty.class);
+        RuleProperty propertyAnnotation = field.getAnnotation(RuleProperty.class);
         if (propertyAnnotation != null) {
             String fieldKey = StringUtils.defaultIfEmpty(propertyAnnotation.key(), field.getName());
             RulesDefinition.NewParam param = rule.createParam(fieldKey)
