@@ -19,6 +19,7 @@
  */
 package com.cognifide.aemrules.htl.rules;
 
+import com.cognifide.aemrules.htl.checks.AvoidInlineCodeCheck;
 import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
 import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.Htl;
@@ -36,7 +37,8 @@ public final class HtlCheckClasses {
 
     private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
         ParsingErrorCheck.class,
-        HtlAttributesShouldBeAtTheEndCheck.class
+        HtlAttributesShouldBeAtTheEndCheck.class,
+        AvoidInlineCodeCheck.class
     );
 
     private HtlCheckClasses() {
