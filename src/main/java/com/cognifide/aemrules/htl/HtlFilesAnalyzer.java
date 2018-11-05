@@ -37,13 +37,13 @@ import org.sonar.api.utils.log.Loggers;
 import org.sonar.squidbridge.ProgressReport;
 import org.sonar.squidbridge.api.AnalysisException;
 
-public abstract class AbstractHtlFilesAnalyzer {
+public abstract class HtlFilesAnalyzer {
 
     private static final Logger LOGGER = Loggers.get(HtlSensor.class);
     protected final HtlChecks checks;
     private RuleKey parsingErrorRuleKey;
 
-    public AbstractHtlFilesAnalyzer(CheckFactory checkFactory) {
+    public HtlFilesAnalyzer(CheckFactory checkFactory) {
         this.checks = HtlChecks.createHtlCheck(checkFactory)
             .addChecks(HtlCheckClasses.REPOSITORY_KEY, HtlCheckClasses.getCheckClasses());
         this.parsingErrorRuleKey = setupParsingErrorRuleKey(checks);
