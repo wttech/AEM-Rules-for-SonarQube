@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,14 +79,12 @@ class TextTokenizer extends AbstractTokenizer<List<Node>> {
 
         @Override
         public boolean match(int endFlag) {
-            if ('<' == endFlag) {
-                return true;
-            }
-            if (equalsIgnoreCase(codeReader.peek("${".length()), "${".toCharArray())) {
-                return true;
+            boolean match = false;
+            if ('<' == endFlag || equalsIgnoreCase(codeReader.peek("${".length()), "${".toCharArray())) {
+                match = true;
             }
 
-            return false;
+            return match;
         }
     }
 
@@ -111,8 +109,7 @@ class TextTokenizer extends AbstractTokenizer<List<Node>> {
             }
 
             // check for end script
-            return (char) endFlag == '<' && END_SCRIPT
-                .equalsIgnoreCase(new String(codeReader.peek(END_SCRIPT.length())));
+            return (char) endFlag == '<' && END_SCRIPT.equalsIgnoreCase(new String(codeReader.peek(END_SCRIPT.length())));
         }
     }
 

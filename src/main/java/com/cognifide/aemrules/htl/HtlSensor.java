@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,151 +20,46 @@
 package com.cognifide.aemrules.htl;
 
 import com.cognifide.aemrules.htl.api.HtlCheck;
-import com.cognifide.aemrules.htl.api.ParsingErrorRule;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
-import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
 import com.cognifide.aemrules.htl.visitors.DefaultHtlVisitor;
 import com.cognifide.aemrules.htl.visitors.HtlScanner;
-import com.google.common.base.Throwables;
 import java.io.File;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CancellationException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.apache.commons.lang.StringUtils;
-import org.apache.sling.scripting.sightly.compiler.SightlyCompilerException;
 import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.fs.FilePredicate;
-import org.sonar.api.batch.fs.FilePredicates;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.InputFile.Type;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.batch.sensor.issue.NewIssue;
-import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.config.Configuration;
-import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
-import org.sonar.api.measures.Metric;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
-import org.sonar.plugins.html.checks.HtmlIssue;
+import org.sonar.plugins.html.node.Node;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;
 import org.sonar.squidbridge.ProgressReport;
-import org.sonar.squidbridge.api.AnalysisException;
 
 @Phase(name = Phase.Name.PRE)
-public class HtlSensor implements Sensor {
+public class HtlSensor extends HtlFilesAnalyzer implements Sensor {
 
-    private static final Logger LOGGER = Loggers.get(HtlSensor.class);
-
-    private final HtlLexer lexer = new HtlLexer();
-
-    private final FileSystem fileSystem;
-
-    private final FilePredicate htlFilePredicate;
-
-    private final HtlChecks checks;
+    private static final HtlLexer lexer = new HtlLexer();
 
     private final FileLinesContextFactory fileLinesContextFactory;
 
-    private RuleKey parsingErrorRuleKey = null;
+    private Configuration configuration;
 
-    public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory, FileSystem fileSystem) {
-        this.checks = HtlChecks.createHtlCheck(checkFactory)
-            .addChecks(HtlCheckClasses.REPOSITORY_KEY, HtlCheckClasses.getCheckClasses());
-        this.parsingErrorRuleKey = setupParsingErrorRuleKey(checks);
-        this.fileSystem = fileSystem;
-        this.htlFilePredicate = createFilePredicate(configuration, fileSystem);
+    public HtlSensor(FileLinesContextFactory fileLinesContextFactory, Configuration configuration, CheckFactory checkFactory) {
+        super(checkFactory);
+        this.configuration = configuration;
         this.fileLinesContextFactory = fileLinesContextFactory;
-    }
-
-    private RuleKey setupParsingErrorRuleKey(HtlChecks checks) {
-        return checks.getAll().stream()
-            .filter(check -> check.getClass().isAnnotationPresent(ParsingErrorRule.class))
-            .findFirst()
-            .map(checks::ruleKeyFor)
-            .orElse(null);
-    }
-
-    private static FilePredicate createFilePredicate(Configuration configuration, FileSystem fileSystem) {
-        FilePredicates predicates = fileSystem.predicates();
-        FilePredicate[] fileExtensions = Stream.of(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY))
-            .filter(Objects::nonNull)
-            .map(extension -> StringUtils.removeStart(extension, "."))
-            .map(predicates::hasExtension)
-            .toArray(FilePredicate[]::new);
-
-        return predicates.and(
-            predicates.hasType(InputFile.Type.MAIN),
-            predicates.or(
-                predicates.hasLanguages(Htl.KEY),
-                predicates.or(fileExtensions)
-            )
-        );
-    }
-
-    private static void stopProgressReport(ProgressReport progressReport, boolean success) {
-        if (success) {
-            progressReport.stop();
-        } else {
-            progressReport.cancel();
-        }
-    }
-
-    private static void checkInterrupted(Exception e) {
-        Throwable cause = Throwables.getRootCause(e);
-        if (cause instanceof InterruptedException || cause instanceof InterruptedIOException) {
-            throw new AnalysisException("Analysis cancelled", e);
-        }
-    }
-
-    private static void processException(Exception e, SensorContext sensorContext,
-        InputFile inputFile) {
-        sensorContext.newAnalysisError()
-            .onFile(inputFile)
-            .message(e.getMessage())
-            .save();
-    }
-
-    private static void saveMetrics(SensorContext context, HtmlSourceCode sourceCode) {
-        InputFile inputFile = sourceCode.inputFile();
-
-        for (Map.Entry<Metric<Integer>, Integer> entry : sourceCode.getMeasures().entrySet()) {
-            context.<Integer>newMeasure()
-                .on(inputFile)
-                .forMetric(entry.getKey())
-                .withValue(entry.getValue())
-                .save();
-        }
-
-        for (HtmlIssue issue : sourceCode.getIssues()) {
-            NewIssue newIssue = context.newIssue()
-                .forRule(issue.ruleKey())
-                .gap(issue.cost());
-            Integer line = issue.line();
-            NewIssueLocation location = newIssue.newLocation()
-                .on(inputFile)
-                .message(issue.message());
-            if (line != null) {
-                location.at(inputFile.selectLine(line));
-            }
-            newIssue.at(location);
-            newIssue.save();
-        }
     }
 
     @Override
@@ -176,6 +71,7 @@ public class HtlSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
+        FilePredicate htlFilePredicate = HtlFilePredicateProvider.createFilePredicate(configuration, context);
         Iterable<InputFile> inputFiles = context.fileSystem().inputFiles(htlFilePredicate);
 
         Collection<File> files = StreamSupport.stream(inputFiles.spliterator(), false)
@@ -189,87 +85,22 @@ public class HtlSensor implements Sensor {
         analyseFiles(context, inputFiles, progressReport);
     }
 
-    private void analyseFiles(SensorContext context, Iterable<InputFile> inputFiles, ProgressReport progressReport) {
-        boolean success = false;
-        try {
-            for (InputFile inputFile : inputFiles) {
-                if (context.isCancelled()) {
-                    throw new CancellationException(
-                        "Analysis interrupted because the SensorContext is in cancelled state");
-                }
-                analyse(context, inputFile);
-                progressReport.nextFile();
-            }
-            success = true;
-        } catch (CancellationException e) {
-            // do not propagate the exception
-            LOGGER.debug(e.toString());
-        } finally {
-            stopProgressReport(progressReport, success);
-        }
-    }
-
-    private void analyse(SensorContext sensorContext, InputFile inputFile) {
-
-        try {
-            scanFile(sensorContext, inputFile);
-        } catch (SightlyCompilerException e) {
-            checkInterrupted(e);
-            LOGGER.error("Unable to parse file: " + inputFile.uri());
-            LOGGER.error(e.getMessage());
-            processRecognitionException(e, sensorContext, inputFile);
-        } catch (Exception e) {
-            checkInterrupted(e);
-            processException(e, sensorContext, inputFile);
-            LOGGER.error("Unable to analyse file: " + inputFile.uri(), e);
-        }
-    }
-
-    private void processRecognitionException(SightlyCompilerException e, SensorContext sensorContext, InputFile inputFile) {
-        if (parsingErrorRuleKey != null) {
-            NewIssue newIssue = sensorContext.newIssue();
-
-            NewIssueLocation primaryLocation = newIssue.newLocation()
-                .message("Parse error: " + e.getMessage())
-                .on(inputFile)
-                .at(inputFile.selectLine(e.getLine()));
-
-            newIssue
-                .forRule(parsingErrorRuleKey)
-                .at(primaryLocation)
-                .save();
-        }
-
-        sensorContext.newAnalysisError()
-            .onFile(inputFile)
-            .at(inputFile.newPointer(e.getLine(), 0))
-            .message(e.getMessage())
-            .save();
-
-    }
-
-    private void scanFile(SensorContext sensorContext, InputFile inputFile) throws IOException {
+    @Override
+    void scanFile(SensorContext sensorContext, InputFile inputFile) throws IOException {
         final HtlScanner scanner = setupScanner();
         HtmlSourceCode sourceCode = new HtmlSourceCode(inputFile);
 
-        Reader reader = new StringReader(inputFile.contents());
-        scanner.scan(lexer.parse(reader), sourceCode, fileSystem.encoding());
-        saveMetrics(sensorContext, sourceCode);
-        saveLineLevelMeasures(inputFile, sourceCode);
-    }
-
-    private void saveLineLevelMeasures(InputFile inputFile, HtmlSourceCode htmlSourceCode) {
-        FileLinesContext fileLinesContext = fileLinesContextFactory.createFor(inputFile);
-
-        for (Integer line : htmlSourceCode.getDetailedLinesOfCode()) {
-            fileLinesContext.setIntValue(CoreMetrics.NCLOC_DATA_KEY, line, 1);
+        try (Reader reader = new StringReader(inputFile.contents())) {
+            List<Node> nodeList = lexer.parse(reader);
+            scanner.scan(nodeList, sourceCode);
+            MetricsSaver.saveIssues(sensorContext, sourceCode);
+            MetricsSaver.saveMeasures(sensorContext, sourceCode);
+            MetricsSaver.saveLineLevelMeasures(inputFile, sourceCode, fileLinesContextFactory);
         }
-
-        fileLinesContext.save();
     }
 
     /**
-     * Create PageScanner with Visitors.
+     * Create HtlScanner with Visitors.
      */
     private HtlScanner setupScanner() {
         HtlScanner scanner = new HtlScanner();

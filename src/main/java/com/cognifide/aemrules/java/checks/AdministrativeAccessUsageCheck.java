@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@
  */
 package com.cognifide.aemrules.java.checks;
 
+import com.cognifide.aemrules.matcher.MethodMatcher;
+import com.cognifide.aemrules.matcher.MethodNamePredicate;
+import com.cognifide.aemrules.matcher.OwnerTypePredicate;
+import com.cognifide.aemrules.matcher.ParameterTypePredicate;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
@@ -28,11 +32,11 @@ import java.util.List;
 import java.util.Map;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.java.checks.methods.AbstractMethodDetection;
-import org.sonar.java.matcher.MethodMatcher;
+import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.tree.MemberSelectExpressionTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
+import org.sonar.plugins.java.api.tree.Tree.Kind;
 
 @Rule(
     key = AdministrativeAccessUsageCheck.RULE_KEY,
@@ -46,7 +50,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 @Metadata(
     technicalDebt = "30min"
 )
-public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
+public class AdministrativeAccessUsageCheck extends IssuableSubscriptionVisitor {
 
     public static final String RULE_KEY = "AEM-11";
 
@@ -57,31 +61,40 @@ public class AdministrativeAccessUsageCheck extends AbstractMethodDetection {
         .put("getAdministrativeResourceResolver", "getServiceResourceResolver")
         .build();
 
+    private static final List<MethodMatcher> matchers = ImmutableList.of(
+        MethodMatcher.create(
+            MethodNamePredicate.is("loginAdministrative"),
+            OwnerTypePredicate.is("org.apache.sling.jcr.api.SlingRepository"),
+            ParameterTypePredicate.is("java.lang.String")),
+        MethodMatcher.create(
+            MethodNamePredicate.is("getAdministrativeResourceResolver"),
+            OwnerTypePredicate.is("org.apache.sling.api.resource.ResourceResolverFactory"),
+            ParameterTypePredicate.is("java.util.Map"))
+    );
+
     @Override
     public List<Tree.Kind> nodesToVisit() {
         return ImmutableList.of(Tree.Kind.METHOD_INVOCATION);
     }
 
     @Override
-    protected void onMethodInvocationFound(MethodInvocationTree mit) {
-        String method = ((MemberSelectExpressionTree) mit.methodSelect()).identifier().name();
-        context.reportIssue(this, mit, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
-        super.onMethodInvocationFound(mit);
+    public void visitNode(Tree tree) {
+        if (this.hasSemantic()) {
+            matchers.forEach(invocationMatcher -> this.checkInvocation(tree, invocationMatcher));
+        }
     }
 
-    @Override
-    protected List<MethodMatcher> getMethodInvocationMatchers() {
-        return ImmutableList.of(
-            //@formatter:off
-            MethodMatcher.create()
-                .typeDefinition("org.apache.sling.jcr.api.SlingRepository")
-                .name("loginAdministrative")
-                .addParameter("java.lang.String"),
-            MethodMatcher.create()
-                .typeDefinition("org.apache.sling.api.resource.ResourceResolverFactory")
-                .name("getAdministrativeResourceResolver")
-                .addParameter("java.util.Map")
-            //@formatter:on
-        );
+    private void checkInvocation(Tree tree, MethodMatcher invocationMatcher) {
+        if (tree.is(Kind.METHOD_INVOCATION)) {
+            MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
+            if (invocationMatcher.matches(methodInvocationTree)) {
+                this.onMethodInvocationFound(methodInvocationTree);
+            }
+        }
+    }
+
+    private void onMethodInvocationFound(MethodInvocationTree mit) {
+        String method = ((MemberSelectExpressionTree) mit.methodSelect()).identifier().name();
+        context.reportIssue(this, mit, String.format("Method '%s' is deprecated. Use '%s' instead.", method, SUBSTITUTES.get(method)));
     }
 }

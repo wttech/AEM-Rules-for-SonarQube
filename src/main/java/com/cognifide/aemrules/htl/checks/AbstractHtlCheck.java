@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,11 @@ import org.apache.sling.scripting.sightly.impl.compiler.frontend.ExpressionParse
 import org.apache.sling.scripting.sightly.impl.compiler.frontend.Fragment;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.html.checks.HtmlIssue;
+import org.sonar.plugins.html.visitor.HtmlSourceCode;
 
-public class AbstractHtlCheck extends DefaultHtlVisitor implements HtlCheck {
+public class AbstractHtlCheck implements DefaultHtlVisitor, HtlCheck {
+
+    private HtmlSourceCode htmlSourceCode;
 
     private static final ExpressionParser EXPRESSION_PARSER = new ExpressionParser();
 
@@ -50,17 +53,27 @@ public class AbstractHtlCheck extends DefaultHtlVisitor implements HtlCheck {
     }
 
     @Override
-    public final void createViolation(int line, String message) {
+    public final void createViolation(Integer line, String message) {
         getHtmlSourceCode().addIssue(
-            new HtmlIssue(ruleKey, line == 0 ? null : line, message)
+            new HtmlIssue(ruleKey, line, message)
         );
     }
 
     @Override
-    public final void createViolation(int line, String message, Double cost) {
+    public final void createViolation(Integer line, String message, Double cost) {
         getHtmlSourceCode().addIssue(
-            new HtmlIssue(ruleKey, line == 0 ? null : line, message, cost)
+            new HtmlIssue(ruleKey, line, message, cost)
         );
+    }
+
+    @Override
+    public HtmlSourceCode getHtmlSourceCode() {
+        return htmlSourceCode;
+    }
+
+    @Override
+    public void setSourceCode(HtmlSourceCode sourceCode) {
+        this.htmlSourceCode = sourceCode;
     }
 
 

@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015 Cognifide Limited
+ * Copyright (C) 2015-2018 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,11 @@ import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
 import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
-import com.cognifide.aemrules.htl.visitors.DefaultHtlVisitor;
 import com.cognifide.aemrules.htl.visitors.HtlScanner;
-import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.sonar.api.batch.fs.InputFile;
@@ -47,17 +45,8 @@ public abstract class AbstractBaseTest {
 
     protected String filename;
 
-    protected final List<HtmlIssue> verify() {
-        File file = new File(filename);
-
-        FileReader fileReader;
-        try {
-            fileReader = new FileReader(file);
-        } catch (FileNotFoundException e) {
-            throw Throwables.propagate(e);
-        }
-
-        HtmlSourceCode result = new HtmlSourceCode(
+    private static HtmlSourceCode createSourceCode(File file) {
+        return new HtmlSourceCode(
             new TestInputFileBuilder("key", file.getPath())
                 .setLanguage(HtmlConstants.LANGUAGE_KEY)
                 .setType(InputFile.Type.MAIN)
@@ -65,9 +54,10 @@ public abstract class AbstractBaseTest {
                 .setCharset(StandardCharsets.UTF_8)
                 .build()
         );
+    }
 
+    private static HtlScanner setupScanner(AbstractHtlCheck check, HtmlCheckVerifier htmlCheckVerifier) {
         HtlScanner scanner = new HtlScanner();
-        HtmlCheckVerifier htmlCheckVerifier = new HtmlCheckVerifier();
         scanner.addVisitor(new ExpectedIssueCollector(htmlCheckVerifier));
         if (check != null) {
             Class<? extends HtlCheck> htlCheck = check.getClass();
@@ -76,13 +66,26 @@ public abstract class AbstractBaseTest {
             check.setRuleKey(ruleKey);
         }
         scanner.addVisitor(check);
-        scanner.scan(new HtlLexer().parse(fileReader), result, Charsets.UTF_8);
+        return scanner;
+    }
+
+    protected final List<HtmlIssue> verify() {
+        File file = new File(filename);
+        HtmlSourceCode result = createSourceCode(file);
+        HtmlCheckVerifier htmlCheckVerifier = new HtmlCheckVerifier();
+        HtlScanner scanner = setupScanner(check, htmlCheckVerifier);
+
+        try (FileReader fileReader = new FileReader(file)) {
+            scanner.scan(new HtlLexer().parse(fileReader), result);
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
 
         htmlCheckVerifier.checkIssues(result.getIssues());
         return result.getIssues();
     }
 
-    private static class ExpectedIssueCollector extends DefaultHtlVisitor {
+    private static class ExpectedIssueCollector extends AbstractHtlCheck {
 
         private final HtmlCheckVerifier verifier;
 
