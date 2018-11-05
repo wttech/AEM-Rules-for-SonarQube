@@ -100,7 +100,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void fileCheck_expectIssues() throws Exception {
+    public void checkIncorrectFile_issuesFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -109,7 +109,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void cancellation() throws Exception {
+    public void checkCancellation_noIssueFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
         tester.setCancelled(true);
@@ -118,7 +118,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void sonarlint() throws Exception {
+    public void sonarlintCheck() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -129,7 +129,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void compilationException() throws Exception {
+    public void checkFileWithError_analysisErrorFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "error.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -137,7 +137,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void expressionWithinHtmlComment() throws Exception {
+    public void checkExpressionWithinHtmlComment_noErrorsFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "comment.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -145,7 +145,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void checkNestedTags() throws IOException {
+    public void checkNestedTags_noErrorsFound() throws IOException {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "nestedTags.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -153,7 +153,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void testDescriptor() {
+    public void checkDescriptorConfiguration() {
         DefaultSensorDescriptor descriptor = new DefaultSensorDescriptor();
         sensor.describe(descriptor);
         assertThat(descriptor.name()).isEqualTo("HTL");
