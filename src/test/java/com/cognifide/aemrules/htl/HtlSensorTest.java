@@ -105,6 +105,7 @@ public class HtlSensorTest {
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
         assertThat(tester.allIssues()).isNotEmpty();
+        System.out.println("Travis test");
         assertEquals(HtlAttributesShouldBeAtTheEndCheck.RULE_KEY, tester.allIssues().toArray(new Issue[]{})[0].ruleKey().rule());
     }
 
