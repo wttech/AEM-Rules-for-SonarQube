@@ -24,9 +24,9 @@
 </template>
 
 <div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template}"></sly> <!-- Non-Compliant -->
+    <sly data-sly-call="${template}"></sly> <!--/* Non-Compliant */-->
 </div>
 
 <div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!-- Non-Compliant -->
+    <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!--/* Non-Compliant */-->
 </div>
