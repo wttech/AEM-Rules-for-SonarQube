@@ -48,7 +48,7 @@ import org.sonar.plugins.html.visitor.HtmlSourceCode;
 import org.sonar.squidbridge.ProgressReport;
 
 @Phase(name = Phase.Name.PRE)
-public class HtlSensor extends AbstractHtlFilesAnalyzer implements Sensor {
+public class HtlSensor extends HtlFilesAnalyzer implements Sensor {
 
     private static final HtlLexer lexer = new HtlLexer();
 
