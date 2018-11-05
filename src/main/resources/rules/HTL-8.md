@@ -1,0 +1,1 @@
+Avoid inline CSS and JS code. One of the primary drivers behind the introduction of HTL was to avoid scriptlets and mixing code in multiple languages. Place CSS and JS in separate files.
