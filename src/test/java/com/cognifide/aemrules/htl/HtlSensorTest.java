@@ -20,7 +20,6 @@
 package com.cognifide.aemrules.htl;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -105,7 +105,12 @@ public class HtlSensorTest {
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
         assertThat(tester.allIssues()).isNotEmpty();
-        assertEquals(HtlAttributesShouldBeAtTheEndCheck.RULE_KEY, tester.allIssues().toArray(new Issue[]{})[0].ruleKey().rule());
+        List<String> issuesRules = tester.allIssues().stream()
+            .map(Issue::ruleKey)
+            .map(RuleKey::rule)
+            .distinct()
+            .collect(Collectors.toList());
+        assertThat(issuesRules).contains(HtlAttributesShouldBeAtTheEndCheck.RULE_KEY);
     }
 
     @Test
