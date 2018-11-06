@@ -30,3 +30,15 @@
         <a href="${file.url}">${file.name}</a>
     </li>
 </ul>
+
+<ul data-sly-repeat="${model.downloadableFiles}"> <!--/* Non-Compliant */-->
+    <li>
+        <a href="${item.url}">${item.name}</a>
+    </li>
+</ul>
+
+<ul data-sly-repeat.file="${model.downloadableFiles}">
+    <li>
+        <a href="${file.url}">${file.name}</a>
+    </li>
+</ul>

@@ -55,6 +55,10 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
+- **HTL-2** Use Explicit Names in Loops
+  - HTL provides implicit variables in `data-sly-list` and `data-sly-repeat` blocks.
+  Try to avoid them and use explicit names clarifying the role of the objects instead.
+
 ## Good practices
 
 - **AEM-1** Use predefined constant in annotation instead of hardcoded value.
@@ -78,10 +82,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **AEM-19** Implicit search strategy used in Sling Query
   - `SearchStrategy` can have negative performance impact if mismatched.
   Therefore developer should always make informed decision and define strategy explicitly.
-  
-- **HTL-3** Use Explicit Names in Loops
-  - HTL provides implicit variables in `data-sly-list` and `data-sly-repeat` blocks.
-  Try to avoid them and use explicit names clarifying the role of the objects instead.
 
 ## Possible bugs
 

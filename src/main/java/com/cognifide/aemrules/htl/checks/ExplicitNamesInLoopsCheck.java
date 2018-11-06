@@ -31,8 +31,16 @@ public class ExplicitNamesInLoopsCheck extends AbstractHtlCheck {
 
     @Override
     public void htlExpression(Expression expression, Node node) {
-        if (node instanceof TagNode && ((TagNode) node).getAttributes().iterator().next().getName().equals("data-sly-list")) {
+        if (node instanceof TagNode && (isSlyList((TagNode)node) || isSlyRepeat((TagNode)node))) {
             createViolation(node.getStartLinePosition(), RULE_MESSAGE);
         }
+    }
+
+    private boolean isSlyList(TagNode node) {
+        return "data-sly-list".equals(node.getAttributes().iterator().next().getName());
+    }
+
+    private boolean isSlyRepeat(TagNode node) {
+        return "data-sly-repeat".equals(node.getAttributes().iterator().next().getName());
     }
 }
