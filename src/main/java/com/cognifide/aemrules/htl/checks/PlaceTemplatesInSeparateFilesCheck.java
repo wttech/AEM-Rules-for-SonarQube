@@ -33,17 +33,17 @@ import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
-@AemVersion(
-    from = "6.0"
-)
-@Metadata(
-    technicalDebt = "5min"
-)
 @Rule(
     key = PlaceTemplatesInSeparateFilesCheck.RULE_KEY,
     name = PlaceTemplatesInSeparateFilesCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
+)
+@AemVersion(
+    from = "6.0"
+)
+@Metadata(
+    technicalDebt = "15min"
 )
 public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
 
