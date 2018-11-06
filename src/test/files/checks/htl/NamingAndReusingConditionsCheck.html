@@ -10,4 +10,12 @@
         Text
     </div>
 </span>
+<span class="uber-mode__top-bar" data-sly-test="${uberMode}"></span>
+
+<span class="uber-mode__bottom-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}"> <!--/* Non-Compliant */-->
+    <div class="my-component">
+        Text
+    </div>
+</span>
+
 <span class="uber-mode__bottom-bar" data-sly-test="${uberMode}"></span>
