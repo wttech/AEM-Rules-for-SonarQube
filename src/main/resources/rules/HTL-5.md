@@ -1,5 +1,4 @@
-Always Place HTL Attributes After the Ones that are Part of the Markup
-It's easier to understand HTL code if the attributes processed server-side are visually separated from the ones used at the front-end.
+Always try to re-use existing conditions, so the code is more readable.
 
 == Noncompliant Code Example
 ```

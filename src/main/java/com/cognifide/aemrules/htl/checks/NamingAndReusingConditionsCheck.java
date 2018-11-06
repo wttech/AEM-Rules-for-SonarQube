@@ -25,11 +25,13 @@ import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
+import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
 @Rule(
@@ -51,22 +53,48 @@ public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
 
     static final String RULE_MESSAGE = "Consider caching data-sly-test conditions";
 
-    private Set<String> conditions = new HashSet<>();
+    private static final String SLY_TEST = "data-sly-test";
+
+    private Set<String> unnamedConditions = new HashSet<>();
+
+    private Set<String> namedConditions = new HashSet<>();
 
     @Override
     public void startHtlElement(List<Expression> expressions, TagNode node) {
-        if (isANewTest(node) && isRepeatedCondition(expressions)) {
+        if (isConditionReused(expressions, node)) {
             createViolation(node.getStartLinePosition(), RULE_MESSAGE);
         }
-        conditions.addAll(expressions.stream().map(Expression::getRawText).collect(Collectors.toSet()));
-        super.startHtlElement(expressions, node);
+        updateConditionSets(expressions, node);
     }
 
-    private boolean isANewTest(TagNode node) {
-        return node.getAttributes().stream().anyMatch(attribute -> attribute.getName().equals("data-sly-test"));
+    private boolean isConditionReused(List<Expression> expressions, TagNode node) {
+        String condition = expressions.stream()
+            .map(Expression::getRawText)
+            .map(text -> text.replaceAll("[${}]", ""))
+            .findFirst()
+            .orElse("");
+
+        return unnamedConditions.stream()
+            .anyMatch(condition::equals) && // To see if someone is reusing not cached condition
+            node.getAttributes().stream()
+                .map(Attribute::getName)
+                .anyMatch(name -> name.equals(SLY_TEST)); // To see if someone is not declaring new cached condition
     }
 
-    private boolean isRepeatedCondition(List<Expression> expressions) {
-        return expressions.stream().map(Expression::getRawText).anyMatch(expression -> conditions.contains(expression));
+    private void updateConditionSets(List<Expression> expressions, TagNode node) {
+        Optional<String> condition = node.getAttributes().stream()
+            .map(Attribute::getName)
+            .filter(text -> text.contains(SLY_TEST))
+            .findFirst();
+        if (condition.isPresent() && !condition.get().equals(SLY_TEST)) {
+            condition = Optional.of(condition.get().substring(14));
+            namedConditions.add(condition.get());
+        } else {
+            unnamedConditions.addAll(expressions.stream()
+                .map(Expression::getRawText)
+                .map(text -> text.replaceAll("[${}]", ""))
+                .filter(text -> !namedConditions.contains(text))
+                .collect(Collectors.toSet()));
+        }
     }
 }
