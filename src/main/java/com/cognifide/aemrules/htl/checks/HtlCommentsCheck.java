@@ -19,7 +19,6 @@
  */
 package com.cognifide.aemrules.htl.checks;
 
-import com.cognifide.aemrules.htl.api.ParsingErrorRule;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
@@ -27,18 +26,17 @@ import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.CommentNode;
 
-@AemVersion(
-    all = true
-)
-@Metadata(
-    technicalDebt = "5min"
-)
-@ParsingErrorRule
 @Rule(
     key = HtlCommentsCheck.RULE_KEY,
     name = HtlCommentsCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
+)
+@AemVersion(
+    all = true
+)
+@Metadata(
+    technicalDebt = "5min"
 )
 public class HtlCommentsCheck extends AbstractHtlCheck {
 
