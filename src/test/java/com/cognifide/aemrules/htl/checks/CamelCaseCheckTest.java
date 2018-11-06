@@ -22,7 +22,7 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.htl.AbstractBaseTest;
 import org.junit.Test;
 
-public class CapitalizationCheckTest extends AbstractBaseTest {
+public class CamelCaseCheckTest extends AbstractBaseTest {
 
     @Test
     public void checkCapitalization() {

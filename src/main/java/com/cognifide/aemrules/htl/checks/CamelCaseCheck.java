@@ -32,17 +32,17 @@ import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
-@AemVersion(
-    from = "6.0"
-)
-@Metadata(
-    technicalDebt = "5min"
-)
 @Rule(
     key = CamelCaseCheck.RULE_KEY,
     name = CamelCaseCheck.RULE_MESSAGE,
     priority = Priority.MINOR,
     tags = Tags.AEM
+)
+@AemVersion(
+    from = "6.0"
+)
+@Metadata(
+    technicalDebt = "5min"
 )
 public class CamelCaseCheck extends AbstractHtlCheck {
 

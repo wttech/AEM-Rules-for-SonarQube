@@ -55,6 +55,12 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
+## [HTL](https://github.com/Adobe-Marketing-Cloud/htl-spec/blob/master/SPECIFICATION.md) related
+
+- **HTL-4** Use Camel Case in identifiers:
+    - variable names
+    - template names
+
 ## Good practices
 
 - **AEM-1** Use predefined constant in annotation instead of hardcoded value.
@@ -125,12 +131,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 - **AEM-16** Optional is defined as ``DefaultInjectionStrategy``
   - Usage of ``@Optional`` annotation is redundant, when ``defaultInjectionStrategy`` is ``OPTIONAL``.
-
-## [HTL](https://github.com/Adobe-Marketing-Cloud/htl-spec/blob/master/SPECIFICATION.md) related
-
-- **HTL-4** Use Camel Case in identifiers:
-    - variable names
-    - template names
 
 # Release notes
 
