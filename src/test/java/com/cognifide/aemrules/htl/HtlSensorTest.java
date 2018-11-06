@@ -20,7 +20,6 @@
 package com.cognifide.aemrules.htl;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -100,16 +100,21 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void fileCheck_expectIssues() throws Exception {
+    public void checkIncorrectFile_issuesFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
         assertThat(tester.allIssues()).isNotEmpty();
-        assertEquals(HtlAttributesShouldBeAtTheEndCheck.RULE_KEY, tester.allIssues().toArray(new Issue[]{})[0].ruleKey().rule());
+        List<String> issuesRules = tester.allIssues().stream()
+            .map(Issue::ruleKey)
+            .map(RuleKey::rule)
+            .distinct()
+            .collect(Collectors.toList());
+        assertThat(issuesRules).contains(HtlAttributesShouldBeAtTheEndCheck.RULE_KEY);
     }
 
     @Test
-    public void cancellation() throws Exception {
+    public void checkCancellation_noIssueFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
         tester.setCancelled(true);
@@ -118,7 +123,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void sonarlint() throws Exception {
+    public void sonarlintCheck() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "test.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -129,7 +134,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void compilationException() throws Exception {
+    public void checkFileWithError_analysisErrorFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "error.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -137,7 +142,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void expressionWithinHtmlComment() throws Exception {
+    public void checkExpressionWithinHtmlComment_noErrorsFound() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "comment.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -145,7 +150,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void checkNestedTags() throws IOException {
+    public void checkNestedTags_noErrorsFound() throws IOException {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "nestedTags.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
@@ -153,7 +158,7 @@ public class HtlSensorTest {
     }
 
     @Test
-    public void testDescriptor() {
+    public void checkDescriptorConfiguration() {
         DefaultSensorDescriptor descriptor = new DefaultSensorDescriptor();
         sensor.describe(descriptor);
         assertThat(descriptor.name()).isEqualTo("HTL");
