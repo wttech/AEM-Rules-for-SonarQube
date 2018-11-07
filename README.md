@@ -55,8 +55,10 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
+## HTL Best practices
+
 - **HTL-5** Name and re-use Repeating Conditions
-  - Consider caching data-sly-test conditions. Additionally, this reduces code duplication.
+  - Consider caching data-sly-test conditions and reduce code duplication.
 
 ## Good practices
 
