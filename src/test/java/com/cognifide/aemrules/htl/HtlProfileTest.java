@@ -52,9 +52,7 @@ public class HtlProfileTest {
         Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
 
         assertThat(activeRules.size()).isEqualTo(3);
-
         assertThat(activeRules.keySet()).contains("HTL-0");
-
     }
 
     @Test

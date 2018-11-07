@@ -25,7 +25,6 @@ import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
@@ -55,6 +54,8 @@ public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
 
     private static final String SLY_TEST = "data-sly-test";
 
+    private static final int SLY_TEST_LENGTH = 14;
+
     private Set<String> unnamedConditions = new HashSet<>();
 
     private Set<String> namedConditions = new HashSet<>();
@@ -74,21 +75,29 @@ public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
             .findFirst()
             .orElse("");
 
+        return isUnnamedConditionReused(condition) && isNewConditionDeclared(node);
+    }
+
+    private boolean isNewConditionDeclared(TagNode node) {
+        return node.getAttributes().stream()
+            .map(Attribute::getName)
+            .anyMatch(SLY_TEST::equals);
+    }
+
+    private boolean isUnnamedConditionReused(String condition) {
         return unnamedConditions.stream()
-            .anyMatch(condition::equals) && // To see if someone is reusing not cached condition
-            node.getAttributes().stream()
-                .map(Attribute::getName)
-                .anyMatch(name -> name.equals(SLY_TEST)); // To see if someone is not declaring new cached condition
+            .anyMatch(condition::equals);
     }
 
     private void updateConditionSets(List<Expression> expressions, TagNode node) {
-        Optional<String> condition = node.getAttributes().stream()
+        String condition = node.getAttributes().stream()
             .map(Attribute::getName)
             .filter(text -> text.contains(SLY_TEST))
-            .findFirst();
-        if (condition.isPresent() && !condition.get().equals(SLY_TEST)) {
-            condition = Optional.of(condition.get().substring(14));
-            namedConditions.add(condition.get());
+            .findFirst()
+            .orElse("");
+        if (!SLY_TEST.equals(condition) && SLY_TEST_LENGTH < condition.length()) {
+            condition = condition.substring(SLY_TEST_LENGTH);
+            namedConditions.add(condition);
         } else {
             unnamedConditions.addAll(expressions.stream()
                 .map(Expression::getRawText)

@@ -5,7 +5,7 @@ Always try to re-use existing conditions, so the code is more readable.
 <!--/* Bad - the same condition is evaluated multiple times */-->
 <span class="uber-mode__top-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}">
     <div class="my-component">
-        Blah blah blah
+        Some text
     </div>
 </span>
 <span class="uber-mode__bottom-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}"></span>
@@ -17,7 +17,7 @@ Always try to re-use existing conditions, so the code is more readable.
 ```
 <span class="uber-mode__top-bar" data-sly-test.uberMode="${uberModeHelper.uberModeEnabled || forceUberMode}">
     <div class="my-component">
-        Blah blah blah
+        Some text
     </div>
 </span>
 <span class="uber-mode__bottom-bar" data-sly-test="${uberMode}"></span>
