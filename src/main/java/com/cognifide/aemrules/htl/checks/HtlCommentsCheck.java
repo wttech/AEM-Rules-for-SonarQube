@@ -40,7 +40,7 @@ import org.sonar.plugins.html.node.CommentNode;
 )
 public class HtlCommentsCheck extends AbstractHtlCheck {
 
-    static final String RULE_KEY = "HTL-3";
+    static final String RULE_KEY = "HTL-6";
 
     static final String RULE_MESSAGE = "Always use HTL style of comments";
 

@@ -55,7 +55,6 @@ public class HtlProfileTest {
 
         assertThat(activeRules.keySet()).contains("HTL-0");
         assertThat(activeRules.keySet()).contains("HTL-3");
-
     }
 
     @Test
