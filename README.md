@@ -56,7 +56,7 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
 - **HTL-6** Usage of HTML comments should be avoided if possible
-  - If you want to place comments regarding your code, make sure they don't display to end users.
+  - If you want to place comments regarding your code, make sure they don't display to the end users.
 
 ## Good practices
 
