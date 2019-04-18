@@ -52,4 +52,11 @@ public class ModelsShouldNotUseSessionTest extends AbstractBaseTest {
         filename = "src/test/files/checks/java/session/ModelWithAnonymousClass.java";
         verify();
     }
+
+    @Test
+    public void checkModelWithMethodCircularDependency() {
+        check = new ModelsShouldNotUseSessionCheck();
+        filename = "src/test/files/checks/java/session/ModelWithMethodCircularDependency.java";
+        verify();
+    }
 }

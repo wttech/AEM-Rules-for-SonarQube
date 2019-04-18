@@ -21,6 +21,7 @@ package com.cognifide.aemrules.htl.rules;
 
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
+import com.cognifide.aemrules.htl.checks.PlaceTemplatesInSeparateFilesCheck;
 import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
 import com.cognifide.aemrules.htl.checks.HtlCommentsCheck;
 import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
@@ -38,6 +39,7 @@ public final class HtlCheckClasses {
     private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
         ParsingErrorCheck.class,
         HtlAttributesShouldBeAtTheEndCheck.class,
+        PlaceTemplatesInSeparateFilesCheck.class,
         HtlCommentsCheck.class
     );
 

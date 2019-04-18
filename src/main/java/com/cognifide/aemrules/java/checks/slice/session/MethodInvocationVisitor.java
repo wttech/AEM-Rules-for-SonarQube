@@ -19,6 +19,8 @@
  */
 package com.cognifide.aemrules.java.checks.slice.session;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
@@ -32,9 +34,18 @@ class MethodInvocationVisitor extends BaseTreeVisitor {
 
     private final JavaFileScannerContext context;
 
+    private final Set<MethodInvocationTree> visitedMethodInvocationTrees;
+
     MethodInvocationVisitor(JavaFileScanner javaFileScanner, JavaFileScannerContext context) {
         this.javaFileScanner = javaFileScanner;
         this.context = context;
+        this.visitedMethodInvocationTrees = new HashSet<>();
+    }
+
+    MethodInvocationVisitor(JavaFileScanner javaFileScanner, JavaFileScannerContext context, Set<MethodInvocationTree> visitedMethodInvocationTrees) {
+        this.javaFileScanner = javaFileScanner;
+        this.context = context;
+        this.visitedMethodInvocationTrees = new HashSet<>(visitedMethodInvocationTrees);
     }
 
     @Override
@@ -46,8 +57,9 @@ class MethodInvocationVisitor extends BaseTreeVisitor {
     @Override
     public void visitMethodInvocation(MethodInvocationTree tree) {
         Tree declaration = tree.symbol().declaration();
-        if (null != declaration) {
-            declaration.accept(new MethodInvocationVisitor(javaFileScanner, context));
+        if (null != declaration && !visitedMethodInvocationTrees.contains(tree)) {
+            visitedMethodInvocationTrees.add(tree);
+            declaration.accept(new MethodInvocationVisitor(javaFileScanner, context, visitedMethodInvocationTrees));
         }
         super.visitMethodInvocation(tree);
     }
