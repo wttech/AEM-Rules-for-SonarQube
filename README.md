@@ -62,22 +62,25 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 - **AEM-2** Use predefined constant instead of hardcoded value.
   - Use constants available in AEM instead of repeating inline literals.
+  
+- **AEM-4** Implicit search strategy used in Sling Query
+  - `SearchStrategy` can have negative performance impact if mismatched.
+  Therefore developer should always make informed decision and define strategy explicitly.
+  
+- **AEM-5** ``getContentResource()`` is not null checked
+  - Always null check the return value of ``getContentResource()``. It is possible to get a null if a jcr:content node does not exist in the repository.
 
 - **AEM-8** Prefer cleaner `@SlingServlet` annotation.
   - Prefer cleaner `@SlingServlet` annotation over `@Properties` approach. Do not mix up both approaches.
 
-- **AEM-14** Using http literal hardcoded makes it difficult to switch to https later on.
-  - We should not use http as a literal in our projects because if we want to switch to https, our code will be not ready.
-
-- **AEM-15** Usage of ``synchronized`` keyword should be avoided if possible.
-  - Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.
-
-- **AEM-17** No mutator methods invoked on ``ModifiableValueMap``
+- **AEM-9** No mutator methods invoked on ``ModifiableValueMap``
   - ``ModifiableValueMap`` should be replaced by ``ValueMap`` if no mutator methods are invoked.
 
-- **AEM-19** Implicit search strategy used in Sling Query
-  - `SearchStrategy` can have negative performance impact if mismatched.
-  Therefore developer should always make informed decision and define strategy explicitly.
+- **AEM-12** Using http literal hardcoded makes it difficult to switch to https later on.
+  - We should not use http as a literal in our projects because if we want to switch to https, our code will be not ready.
+
+- **AEM-13** Usage of ``synchronized`` keyword should be avoided if possible.
+  - Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.
 
 ## Possible bugs
 
@@ -106,7 +109,7 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 ## [Sling Models](https://sling.apache.org/documentation/bundles/models.html) related
 
-- **AEM-16** Optional is defined as ``DefaultInjectionStrategy``
+- **AEM-10** Optional is defined as ``DefaultInjectionStrategy``
   - Usage of ``@Optional`` annotation is redundant, when ``defaultInjectionStrategy`` is ``OPTIONAL``.
 
 # Release notes

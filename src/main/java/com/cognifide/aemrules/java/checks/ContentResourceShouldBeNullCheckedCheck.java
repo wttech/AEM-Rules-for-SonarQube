@@ -60,7 +60,7 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-    public static final String RULE_KEY = "AEM-18";
+    public static final String RULE_KEY = "AEM-5";
 
     public static final String RULE_MESSAGE = "Always null check the returned value of Page.getContentResource() method";
 
