@@ -52,7 +52,7 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-    protected static final String RULE_KEY = "AEM-9";
+    protected static final String RULE_KEY = "AEM-17";
 
     protected static final String RULE_MESSAGE = "No mutator methods invoked on ModifiableValueMap";
 

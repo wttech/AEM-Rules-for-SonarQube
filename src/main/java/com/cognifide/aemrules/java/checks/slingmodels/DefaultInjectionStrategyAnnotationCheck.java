@@ -51,7 +51,7 @@ import org.sonar.plugins.java.api.tree.Tree;
 )
 public class DefaultInjectionStrategyAnnotationCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-    public static final String RULE_KEY = "AEM-10";
+    public static final String RULE_KEY = "AEM-16";
 
     public static final String RULE_MESSAGE = "Optional is defined as DefaultInjectionStrategy";
 

@@ -45,7 +45,7 @@ import org.sonar.plugins.java.api.tree.VariableTree;
 )
 public class SlingQueryImplicitStrategyCheck extends BaseTreeVisitor implements JavaFileScanner {
 
-    protected static final String RULE_KEY = "AEM-4";
+    protected static final String RULE_KEY = "AEM-19";
 
     protected static final String RULE_MESSAGE = "Implicit search strategy used in Sling Query";
 

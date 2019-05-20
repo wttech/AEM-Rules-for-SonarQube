@@ -53,7 +53,7 @@ public class SynchronizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
     protected static final String MESSAGE = "Usage of 'synchronized' keyword should be avoided if possible.";
 
-    protected static final String RULE_KEY = "AEM-13";
+    protected static final String RULE_KEY = "AEM-15";
 
     protected static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
 
