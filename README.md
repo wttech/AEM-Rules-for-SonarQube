@@ -55,7 +55,7 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
-## Good practices
+## AEM Good practices
 
 - **AEM-1** Use predefined constant in annotation instead of hardcoded value.
   - Use constants available in AEM instead of repeating inline literals.
@@ -81,6 +81,16 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 - **AEM-13** Usage of ``synchronized`` keyword should be avoided if possible.
   - Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.
+
+## HTL Good practices
+
+- **HTL-1** Wrong placement of the HTL Attribute.
+  - Always Place HTL Attributes After the Ones that are Part of the Markup.
+  
+- **HTL-2** HTL Templates should be placed in separate files.
+  - HTL Templates should be placed in separate files. This helps to understand which code is meant to render a component and which code is re-used as a template.
+
+
 
 ## Possible bugs
 
