@@ -90,8 +90,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **HTL-2** HTL Templates should be placed in separate files.
   - HTL Templates should be placed in separate files. This helps to understand which code is meant to render a component and which code is re-used as a template.
 
-
-
 ## Possible bugs
 
 - **AEM-3** Non-thread safe object used as a field of Servlet / Filter etc.
