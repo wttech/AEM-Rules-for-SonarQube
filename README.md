@@ -109,23 +109,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **AEM-11** Do not use deprecated administrative access methods
   - Administrative access to the resource tree and JCR Repository by means of usage of ``ResourceResolverFactory.getAdministrativeResourceResolver`` and ``SlingRepository.loginAdministrative`` has been deprecated. Use ``ResourceResolverFactory.getServiceResourceResolver`` or ``SlingRepository.loginService`` respectively.
 
-## [Slice](https://github.com/Cognifide/Slice) related
-
-- **AEM-4** Injector should be closed in finally block or created as a resource within try block.
-  - Injectors (`com.cognifide.slice.api.injector.InjectorWithContext`) are created in the context of either request or resource resolver. To restore its initial state after using injector, it should be closed in finally block or created as a resource within try block.
-
-- **AEM-5** Injector can be closed using try-with-resources Java 7 feature.
-  - Take advantage of Java 7 try-with-resources feature to close `com.cognifide.slice.api.injector.InjectorWithContext`.
-
-- **AEM-9** Objects annotated by `@SliceResource` should not use (except: constructor, `com.cognifide.slice.api.model.InitializableModel.afterCreated()`) and return any session based object.
-  - Objects annotated by `@SliceResource` should not use any session based objects, except places like constructor and overridden `com.cognifide.slice.api.model.InitializableModel.afterCreated()` method.
-
-- **AEM-10** Use ``ModelProvider#getListFromResources`` instead of iteration
-  - Slice provides method for creating list of models from specified resources given as an ``Iterator``. Instead of iterating over resources yourself, use ``ModelProvider#getListFromResources`` method.
-
-- **AEM-12** Fields annotated by `@JcrProperty` shouldn't be accessed from constructor.
-  - Fields that are annotated with `@JcrProperty` should not be accessed from within constructor.
-
 ## [Sling Models](https://sling.apache.org/documentation/bundles/models.html) related
 
 - **AEM-16** Optional is defined as ``DefaultInjectionStrategy``
