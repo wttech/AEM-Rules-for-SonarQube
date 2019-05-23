@@ -62,23 +62,21 @@ public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
 
     @Override
     public void startHtlElement(List<Expression> expressions, TagNode node) {
-        if (isConditionReused(expressions, node)) {
+        if (!isConditionReusedCorrectly(expressions, node)) {
             createViolation(node.getStartLinePosition(), RULE_MESSAGE);
         }
         updateConditionSets(expressions, node);
     }
 
-    private boolean isConditionReused(List<Expression> expressions, TagNode node) {
-        String condition = expressions.stream()
-            .map(Expression::getRawText)
-            .map(text -> text.replaceAll("[${}]", ""))
+    private boolean isConditionReusedCorrectly(List<Expression> expressions, TagNode node) {
+        String condition = clearExpressions(expressions).stream()
             .findFirst()
             .orElse("");
 
-        return isUnnamedConditionReused(condition) && isNewConditionDeclared(node);
+        return !(isUnnamedConditionReused(condition) && isNewUnnamedConditionDeclared(node));
     }
 
-    private boolean isNewConditionDeclared(TagNode node) {
+    private boolean isNewUnnamedConditionDeclared(TagNode node) {
         return node.getAttributes().stream()
             .map(Attribute::getName)
             .anyMatch(SLY_TEST::equals);
@@ -99,11 +97,16 @@ public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
             condition = condition.substring(SLY_TEST_LENGTH);
             namedConditions.add(condition);
         } else {
-            unnamedConditions.addAll(expressions.stream()
-                .map(Expression::getRawText)
-                .map(text -> text.replaceAll("[${}]", ""))
+            unnamedConditions.addAll(clearExpressions(expressions).stream()
                 .filter(text -> !namedConditions.contains(text))
                 .collect(Collectors.toSet()));
         }
+    }
+
+    private Set<String> clearExpressions(List<Expression> expressions){
+        return expressions.stream()
+            .map(Expression::getRawText)
+            .map(text -> text.replaceAll("[${}]", ""))
+            .collect(Collectors.toSet());
     }
 }
