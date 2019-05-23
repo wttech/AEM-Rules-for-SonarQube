@@ -48,7 +48,7 @@ import org.sonar.plugins.html.node.TagNode;
 @ParsingErrorRule
 public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
 
-    static final String RULE_KEY = "HTL-5";
+    static final String RULE_KEY = "HTL-4";
 
     static final String RULE_MESSAGE = "Consider caching data-sly-test conditions";
 
