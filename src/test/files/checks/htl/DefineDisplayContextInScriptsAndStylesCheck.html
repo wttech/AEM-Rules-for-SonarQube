@@ -24,7 +24,7 @@
     var bar = '${someText @ context="scriptString"}';
 </script>
 
-<script>var bar = '${someText}';</script> <!--/* Non-Compliant */-->
+<script>var bar = '${someText}';</script><!--/* Non-Compliant */-->
 
 
 <!--/* Styles */-->
@@ -36,8 +36,6 @@
 
 <style>
     a {
-        font-family: '${fontFamily}', sans-serif;
-    <!-- /* Non-Compliant */
-    -->
+        font-family: '${fontFamily}', sans-serif; <!--/* Non-Compliant */-->
     }
 </style>
