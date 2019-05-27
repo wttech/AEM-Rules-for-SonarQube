@@ -55,18 +55,16 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
-## HTL Best practices
-
-- **HTL-4** Name and re-use Repeating Conditions
-  - Consider caching data-sly-test conditions and reduce code duplication.
-
-## Good practices
+## AEM Good practices
 
 - **AEM-1** Use predefined constant in annotation instead of hardcoded value.
   - Use constants available in AEM instead of repeating inline literals.
 
 - **AEM-2** Use predefined constant instead of hardcoded value.
   - Use constants available in AEM instead of repeating inline literals.
+  
+- **AEM-5** ``getContentResource()`` is not null checked
+  - Always null check the return value of ``getContentResource()``. It is possible to get a null if a jcr:content node does not exist in the repository.
 
 - **AEM-8** Prefer cleaner `@SlingServlet` annotation.
   - Prefer cleaner `@SlingServlet` annotation over `@Properties` approach. Do not mix up both approaches.
@@ -84,6 +82,17 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
   - `SearchStrategy` can have negative performance impact if mismatched.
   Therefore developer should always make informed decision and define strategy explicitly.
 
+## HTL Good practices
+
+- **HTL-1** Wrong placement of the HTL Attribute.
+  - Always Place HTL Attributes After the Ones that are Part of the Markup.
+  
+- **HTL-2** HTL Templates should be placed in separate files.
+  - HTL Templates should be placed in separate files. This helps to understand which code is meant to render a component and which code is re-used as a template.
+
+- **HTL-4** Name and re-use Repeating Conditions
+  - Consider caching data-sly-test conditions and reduce code duplication.
+  
 ## Possible bugs
 
 - **AEM-3** Non-thread safe object used as a field of Servlet / Filter etc.
