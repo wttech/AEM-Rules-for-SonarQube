@@ -55,6 +55,15 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
+- **HTL-6** HTL automatically recognises the context for HTML output
+  - HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes
+  
+- **HTL-7** Style and script tags display context definition is mandatory
+    
+- **HTL-8** Event attribute attributes must have display context defined
+  
+- **HTL-9** Inline styles must have display context defined
+
 ## Good practices
 
 - **AEM-1** Use predefined constant in annotation instead of hardcoded value.

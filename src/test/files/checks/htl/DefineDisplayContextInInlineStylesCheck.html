@@ -19,14 +19,6 @@
     #L%
 
 -->
-<template data-sly-template.template="${@ source, description}">
-    <img src="${source}" alt="${description}" title="${description}"/>
-</template>
-
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template}"></sly> <!--/* Non-Compliant */-->
-</div>
-
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!--/* Non-Compliant */-->
-</div>
+<!--/* Styles Inline */-->
+<a href="#id" style="color: ${colorName @ context='styleToken'};">Link</a>
+<a href="#id" style="color: ${colorName};">Link</a> <!--/* Non-Compliant */-->
