@@ -26,6 +26,7 @@ import com.cognifide.aemrules.version.AemVersion;
 import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
+import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
 import java.util.regex.Pattern;
@@ -59,8 +60,13 @@ public class EventMandatoryDisplayContextCheck extends AbstractHtlCheck {
         node.getAttributes()
                 .stream()
                 .filter(attribute -> StringUtils.startsWith(attribute.getName(), "on"))
-                .filter(attribute -> LITERAL_EXPRESION_PATTERN.matcher(attribute.getValue()).find() && !attribute.getValue().contains(DISPLAY_CONTEXT_ATTRIBUTE))
+                .filter(this::notContainsDisplayContext)
                 .forEach(attribute -> createViolation(node.getStartLinePosition(), VIOLATION_MESSAGE));
+    }
+
+    private boolean notContainsDisplayContext(Attribute attribute) {
+        return LITERAL_EXPRESION_PATTERN.matcher(attribute.getValue()).find() &&
+                !attribute.getValue().contains(DISPLAY_CONTEXT_ATTRIBUTE);
     }
 
 }
