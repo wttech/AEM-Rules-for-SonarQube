@@ -19,15 +19,14 @@
     #L%
 
 -->
-<!--/* Non-Compliant */-->
-<sly data-sly-test="${model.visible}" data-sly-use="com.example.HeroModel">
+<sly data-sly-test="${model.visible}" data-sly-use="com.example.HeroModel"><!--/* Non-Compliant */-->
     <div class="myComponent">
         <h1>${model.headline}</h1>
         <p>${model.text}</p>
     </div>
 </sly>
 
-<!--/* Non-Compliant */-->
+
 <div class="myComponent"
      data-sly-test="${model.visible}"
      data-sly-use="com.example.HeroModel">
