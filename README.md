@@ -93,6 +93,12 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **HTL-4** Name and re-use Repeating Conditions
   - Consider caching data-sly-test conditions and reduce code duplication.
   
+- **HTL-12** Use the most restrictive HTL context possible.
+  - For data attributes HTL applies HTML escaping.  
+  
+- **HTL-13** Avoid using 'unsafe' display context. 
+  - 'unsafe' display context disables XSS protection completely.
+  
 ## Possible bugs
 
 - **AEM-3** Non-thread safe object used as a field of Servlet / Filter etc.
