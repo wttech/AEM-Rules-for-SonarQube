@@ -91,8 +91,10 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
   - HTL Templates should be placed in separate files. This helps to understand which code is meant to render a component and which code is re-used as a template.
   
 - **HTL-10** Use sly tags over redundant markup.
+    - HTL attributes should be wrapped in sly tags to avoid superfluous markup.
 
 - **HTL-11** Use existing HTML elements instead of adding extra sly tags.
+    - HTL attributes should be included in HTML markup without additional SLY tags. 
  
 
 ## Possible bugs
