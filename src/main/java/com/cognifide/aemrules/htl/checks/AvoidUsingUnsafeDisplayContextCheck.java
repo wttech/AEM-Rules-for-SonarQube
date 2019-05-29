@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 @Rule(
         key = AvoidUsingUnsafeDisplayContextCheck.RULE_KEY,
         name = AvoidUsingUnsafeDisplayContextCheck.RULE_MESSAGE,
-        priority = Priority.MINOR,
+        priority = Priority.CRITICAL,
         tags = Tags.AEM
 )
 @AemVersion(
