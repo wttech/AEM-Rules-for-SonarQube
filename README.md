@@ -93,6 +93,8 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **HTL-4** Name and re-use Repeating Conditions
   - Consider caching data-sly-test conditions and reduce code duplication.
   
+- **HTL-14** Name and re-use Repeating Conditions
+
 ## Possible bugs
 
 - **AEM-3** Non-thread safe object used as a field of Servlet / Filter etc.
