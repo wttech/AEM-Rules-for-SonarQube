@@ -24,12 +24,11 @@ import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
-
-import java.util.regex.Pattern;
 
 @Rule(
         key = EventMandatoryDisplayContextCheck.RULE_KEY,
@@ -51,22 +50,20 @@ public class EventMandatoryDisplayContextCheck extends AbstractHtlCheck {
 
     private static final String VIOLATION_MESSAGE = "Please define display context";
 
-    private static final Pattern LITERAL_EXPRESION_PATTERN = Pattern.compile("\\$\\{.*}");
-
-    private static final String DISPLAY_CONTEXT_ATTRIBUTE = "context";
+    private static final String EVENT_ATTRIBUTE_PREFIX = "on";
 
     @Override
     public void startElement(TagNode node) {
         node.getAttributes()
                 .stream()
-                .filter(attribute -> StringUtils.startsWith(attribute.getName(), "on"))
+                .filter(attribute -> StringUtils.startsWith(attribute.getName(), EVENT_ATTRIBUTE_PREFIX))
                 .filter(this::notContainsDisplayContext)
                 .forEach(attribute -> createViolation(node.getStartLinePosition(), VIOLATION_MESSAGE));
     }
 
     private boolean notContainsDisplayContext(Attribute attribute) {
-        return LITERAL_EXPRESION_PATTERN.matcher(attribute.getValue()).find() &&
-                !attribute.getValue().contains(DISPLAY_CONTEXT_ATTRIBUTE);
+        return getExpressions(attribute.getValue()).stream()
+                .anyMatch(expression -> !expression.containsOption(Syntax.CONTEXT_OPTION));
     }
 
 }

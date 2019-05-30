@@ -23,14 +23,12 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import org.apache.sling.scripting.sightly.compiler.expression.Expression;
+import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.plugins.html.node.ExpressionNode;
 import org.sonar.plugins.html.node.Node;
 import org.sonar.plugins.html.node.TagNode;
-import org.sonar.plugins.html.node.TextNode;
-
-import java.util.regex.Pattern;
 
 @Rule(
         key = ScriptsAndStyleMandatoryDisplayContextCheck.RULE_KEY,
@@ -56,10 +54,6 @@ public class ScriptsAndStyleMandatoryDisplayContextCheck extends AbstractHtlChec
 
     private static final String STYLE_TAG_NAME = "style";
 
-    private static final Pattern LITERAL_EXPRESION_PATTERN = Pattern.compile("\\$\\{.*}");
-
-    private static final String DISPLAY_CONTEXT_ATTRIBUTE = "context";
-
     private boolean isEmbeddedInstructionNode = false;
 
     @Override
@@ -71,26 +65,14 @@ public class ScriptsAndStyleMandatoryDisplayContextCheck extends AbstractHtlChec
     }
 
     @Override
-    public void characters(TextNode textNode) {
-        verifyDisplayContext(textNode);
-    }
-
-    @Override
-    public void expression(ExpressionNode node) {
-        verifyDisplayContext(node);
+    public void htlExpression(Expression expression, Node node) {
+        if (isEmbeddedInstructionNode && !expression.containsOption(Syntax.CONTEXT_OPTION)) {
+            createViolation(node.getStartLinePosition(), VIOLATION_MESSAGE);
+        }
     }
 
     @Override
     public void endElement(TagNode node) {
         isEmbeddedInstructionNode = false;
-    }
-
-    private void verifyDisplayContext(Node node) {
-        String text = node.getCode();
-        if (isEmbeddedInstructionNode &&
-                LITERAL_EXPRESION_PATTERN.matcher(text).find() &&
-                !text.contains(DISPLAY_CONTEXT_ATTRIBUTE)) {
-            createViolation(node.getStartLinePosition(), VIOLATION_MESSAGE);
-        }
     }
 }
