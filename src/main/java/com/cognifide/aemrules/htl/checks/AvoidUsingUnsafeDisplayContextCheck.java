@@ -19,18 +19,17 @@
  */
 package com.cognifide.aemrules.htl.checks;
 
+import com.cognifide.aemrules.htl.visitors.HtlStringOptionVisitor;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.scripting.sightly.compiler.expression.Expression;
+import org.apache.sling.scripting.sightly.compiler.expression.MarkupContext;
+import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.plugins.html.node.Attribute;
-import org.sonar.plugins.html.node.ExpressionNode;
 import org.sonar.plugins.html.node.Node;
-import org.sonar.plugins.html.node.TagNode;
-import org.sonar.plugins.html.node.TextNode;
-
-import java.util.regex.Pattern;
 
 @Rule(
         key = AvoidUsingUnsafeDisplayContextCheck.RULE_KEY,
@@ -50,37 +49,14 @@ public class AvoidUsingUnsafeDisplayContextCheck extends AbstractHtlCheck {
 
     public static final String RULE_MESSAGE = "Avoid using 'unsafe' display context, this disables XSS protection completely.";
 
-    private static final String UNSAFE_DISPLAY_CONTEXT = "unsafe";
-
-    private static final Pattern LITERAL_EXPRESION_PATTERN = Pattern.compile("\\$\\{.*}");
-
     @Override
-    public void characters(TextNode textNode) {
-        verifyDisplayContext(textNode);
-    }
-
-    @Override
-    public void expression(ExpressionNode node) {
-        verifyDisplayContext(node);
-    }
-
-    @Override
-    public void startElement(TagNode node) {
-        node.getAttributes().stream()
-                .map(Attribute::getValue)
-                .filter(this::isUnsafeContextDefined)
-                .forEach(s -> createViolation(node.getStartLinePosition(), RULE_MESSAGE));
-    }
-
-    private void verifyDisplayContext(Node node) {
-        String text = node.getCode();
-        if (isUnsafeContextDefined(text)) {
-            createViolation(node.getStartLinePosition(), RULE_MESSAGE);
+    public void htlExpression(Expression expression, Node node) {
+        if (expression.containsOption(Syntax.CONTEXT_OPTION)) {
+            String context = expression.getOptions().get(Syntax.CONTEXT_OPTION).accept(new HtlStringOptionVisitor());
+            if (StringUtils.equalsAnyIgnoreCase(context, MarkupContext.UNSAFE.getName())) {
+                createViolation(node.getStartLinePosition(), RULE_MESSAGE);
+            }
         }
-    }
 
-    private boolean isUnsafeContextDefined(String text) {
-        return LITERAL_EXPRESION_PATTERN.matcher(text).find() &&
-                text.contains(UNSAFE_DISPLAY_CONTEXT);
     }
 }

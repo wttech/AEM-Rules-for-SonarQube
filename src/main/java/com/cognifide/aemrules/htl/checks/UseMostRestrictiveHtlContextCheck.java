@@ -22,14 +22,12 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
-
-import java.util.regex.Pattern;
-
-import static org.apache.sling.scripting.sightly.impl.compiler.Syntax.CONTEXT_OPTION;
 
 @Rule(
         key = UseMostRestrictiveHtlContextCheck.RULE_KEY,
@@ -49,21 +47,18 @@ public class UseMostRestrictiveHtlContextCheck extends AbstractHtlCheck {
 
     public static final String RULE_MESSAGE = "Use the most restrictive HTL context possible.";
 
-    private static final String DATA_ATTRIBUTE = "data";
-
-    private static final Pattern LITERAL_EXPRESION_PATTERN = Pattern.compile("\\$\\{.*}");
+    private static final String DATA_ATTRIBUTE_PREFIX = "data";
 
     @Override
     public void startElement(TagNode node) {
         node.getAttributes().stream()
-                .filter(this::isContextMandatory)
+                .filter(attribute -> StringUtils.startsWith(attribute.getName(), DATA_ATTRIBUTE_PREFIX))
+                .filter(this::isNotContextDefined)
                 .forEach(attribute -> createViolation(attribute.getLine(), RULE_MESSAGE));
     }
 
-    private boolean isContextMandatory(Attribute attribute) {
-        String value = attribute.getValue();
-        return attribute.getName().startsWith(DATA_ATTRIBUTE) &&
-                LITERAL_EXPRESION_PATTERN.matcher(value).find() &&
-                !value.contains(CONTEXT_OPTION);
+    private boolean isNotContextDefined(Attribute attribute) {
+        return  getExpressions(attribute.getValue()).stream()
+                .anyMatch(expression -> !expression.containsOption(Syntax.CONTEXT_OPTION));
     }
 }
