@@ -19,14 +19,10 @@
     #L%
 
 -->
-<template data-sly-template.template="${@ source, description}">
-    <img src="${source}" alt="${description}" title="${description}"/>
-</template>
+<img alt="${model.imageAlt}" src="${model.imageUrl}"/>
 
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template}"></sly> <!--/* Non-Compliant */-->
-</div>
+<img alt="${model.imageAlt @ context='attribute'}" src="${model.imageUrl @ context='uri'}"/> <!--/* Non-Compliant */-->
 
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!--/* Non-Compliant */-->
+<div data-service-url="${model.url @ context='uri'}">
+    ${'http://www.example.org/search?s=1&q=htl' @ context='uri'}
 </div>

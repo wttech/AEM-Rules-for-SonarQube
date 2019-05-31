@@ -22,12 +22,12 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.htl.AbstractBaseTest;
 import org.junit.Test;
 
-public class PlaceTemplatesInSeparateFilesCheckTest extends AbstractBaseTest {
+public class DefaultDisplayContextCheckTest extends AbstractBaseTest {
 
     @Test
-    public void checkHtlAttributesOrder() {
-        check = new PlaceTemplatesInSeparateFilesCheck();
-        filename = "src/test/files/checks/htl/PlaceTemplatesInSeparateFilesCheck.html";
+    public void checkDefaultDisplayContext() {
+        check = new DefaultDisplayContextCheck();
+        filename = "src/test/files/checks/htl/UseDefaultDisplayContextCheck.html";
         verify();
     }
 }
