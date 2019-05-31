@@ -19,4 +19,22 @@
     #L%
 
 -->
-<div data-sly-list="${model.value}" class="list"></div> <!--/* Non-Compliant */-->
+<div class="my-component">
+    <p>${model.text @ context='unsafe'}</p>  <!--/* Non-Compliant */-->
+</div>
+
+<div class="${model.text @ context='unsafe'}"> <!--/* Non-Compliant */-->
+    <p>${model.text}</p>
+</div>
+
+<script>  var bar = '${someText @ context="unsafe"}'; </script> <!--/* Non-Compliant */-->
+
+<style>
+    a {
+        font-family: "${fontFamily @ context='unsafe'}", sans-serif; <!--/* Non-Compliant */-->
+    }
+</style>
+
+<div class="my-component">
+    <p>${model.text}</p>
+</div>
