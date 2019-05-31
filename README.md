@@ -92,6 +92,27 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 - **HTL-4** Name and re-use Repeating Conditions
   - Consider caching data-sly-test conditions and reduce code duplication.
+
+- **HTL-6** HTL automatically recognises the context for HTML output
+  - HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes
+  
+- **HTL-7** Style and script tags display context definition is mandatory
+  
+- **HTL-8** Event attribute attributes must have display context defined
+
+- **HTL-9** Inline styles must have display context defined
+
+- **HTL-10** Use sly tags over redundant markup.
+  - HTL attributes should be wrapped in sly tags to avoid superfluous markup.
+
+- **HTL-11** Use existing HTML elements instead of adding extra sly tags.
+  - HTL attributes should be included in HTML markup without additional SLY tags. 
+
+- **HTL-12** Use the most restrictive HTL context possible.
+  - For data attributes HTL applies HTML escaping.  
+  
+- **HTL-13** Avoid using 'unsafe' display context. 
+  - 'unsafe' display context disables XSS protection completely.
   
 - **HTL-14** HTL expressions in HTML comments should have defined context.
     - HTML comments automatically implies 'comment' markup context. 

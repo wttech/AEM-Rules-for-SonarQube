@@ -3,7 +3,7 @@
     #%L
     AEM Rules for SonarQube
     %%
-    Copyright (C) 2015-2018 Cognifide Limited
+    Copyright (C) 2015 Cognifide Limited
     %%
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -19,14 +19,8 @@
     #L%
 
 -->
-<template data-sly-template.template="${@ source, description}">
-    <img src="${source}" alt="${description}" title="${description}"/>
-</template>
+<div data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html"></div> <!--/* Non-Compliant */-->
 
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template}"></sly> <!--/* Non-Compliant */-->
-</div>
+<div data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html" data-sly-unwrap></div>  <!--/* Non-Compliant */-->
 
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!--/* Non-Compliant */-->
-</div>
+<sly data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html"></sly>

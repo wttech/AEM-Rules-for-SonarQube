@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015-2018 Cognifide Limited
+ * Copyright (C) 2015 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.htl.AbstractBaseTest;
 import org.junit.Test;
 
-public class PlaceTemplatesInSeparateFilesCheckTest extends AbstractBaseTest {
+public class AvoidExtraSlyTagsCheckTest extends AbstractBaseTest {
 
     @Test
-    public void checkHtlAttributesOrder() {
-        check = new PlaceTemplatesInSeparateFilesCheck();
-        filename = "src/test/files/checks/htl/PlaceTemplatesInSeparateFilesCheck.html";
+    public void avoidExtraSlyTags() {
+        check = new AvoidExtraSlyTagsCheck();
+        filename = "src/test/files/checks/htl/AvoidExtraSlyTagsCheck.html";
         verify();
     }
 }

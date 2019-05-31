@@ -19,14 +19,22 @@
     #L%
 
 -->
-<template data-sly-template.template="${@ source, description}">
-    <img src="${source}" alt="${description}" title="${description}"/>
-</template>
-
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template}"></sly> <!--/* Non-Compliant */-->
+<div class="my-component">
+    <p>${model.text @ context='unsafe'}</p>  <!--/* Non-Compliant */-->
 </div>
 
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!--/* Non-Compliant */-->
+<div class="${model.text @ context='unsafe'}"> <!--/* Non-Compliant */-->
+    <p>${model.text}</p>
+</div>
+
+<script>  var bar = '${someText @ context="unsafe"}'; </script> <!--/* Non-Compliant */-->
+
+<style>
+    a {
+        font-family: "${fontFamily @ context='unsafe'}", sans-serif; <!--/* Non-Compliant */-->
+    }
+</style>
+
+<div class="my-component">
+    <p>${model.text}</p>
 </div>

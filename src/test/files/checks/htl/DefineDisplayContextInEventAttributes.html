@@ -19,14 +19,12 @@
     #L%
 
 -->
-<template data-sly-template.template="${@ source, description}">
-    <img src="${source}" alt="${description}" title="${description}"/>
-</template>
+<!--/* Scripts */-->
+<a href="#id" onclick="${myFunctionName @ context='scriptToken'}()">Link</a>
+<a href="#id" onclick="${myFunctionName}()">Link</a> <!--/* Non-Compliant */-->
 
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template}"></sly> <!--/* Non-Compliant */-->
-</div>
+<a href="#id" onclick="${myFunctionName @ context='scriptToken'}">Link</a>
+<a href="#id" onclick="${myFunctionName}">Link</a> <!--/* Non-Compliant */-->
 
-<div class="image-component" data-sly-use.model="com.example.Image">
-    <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!--/* Non-Compliant */-->
-</div>
+
+
