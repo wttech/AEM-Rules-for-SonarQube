@@ -45,7 +45,7 @@ public class DisplayContextInConditionalCommentsCheck extends AbstractHtlCheck {
 
     public static final String RULE_KEY = "HTL-14";
 
-    public static final String RULE_MESSAGE = "HTL expressions in HTML comments should have defined context";
+    public static final String RULE_MESSAGE = "Please define markup context for HTML conditional comments otherwise automatically implied context will be 'comment'";
 
     private static final Pattern CONDITIONAL_COMMENT_PATTERN = Pattern.compile("<!--\\[if.*!\\[endif\\]-->");
 
