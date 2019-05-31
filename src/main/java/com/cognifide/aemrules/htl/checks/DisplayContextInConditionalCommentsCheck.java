@@ -22,38 +22,45 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.Ordering;
-import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.CommentNode;
-import org.sonar.plugins.html.node.TagNode;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 @Rule(
-    key = DisplayContextInConditionalCommentsCheck.RULE_KEY,
-    name = DisplayContextInConditionalCommentsCheck.RULE_MESSAGE,
-    priority = Priority.MINOR,
-    tags = Tags.AEM
+        key = DisplayContextInConditionalCommentsCheck.RULE_KEY,
+        name = DisplayContextInConditionalCommentsCheck.RULE_MESSAGE,
+        priority = Priority.MINOR,
+        tags = Tags.AEM
 )
 @AemVersion(
-    from = "6.0"
+        from = "6.0"
 )
 @Metadata(
-    technicalDebt = "5min"
+        technicalDebt = "5min"
 )
 public class DisplayContextInConditionalCommentsCheck extends AbstractHtlCheck {
 
     public static final String RULE_KEY = "HTL-14";
 
-    static final String RULE_MESSAGE = "Always place HTL attributes at the end";
+    public static final String RULE_MESSAGE = "HTL expressions in HTML comments should have defined context";
+
+    private static final Pattern CONDITIONAL_COMMENT_PATTERN = Pattern.compile("<!--\\[if.*!\\[endif\\]-->");
 
     @Override
     public void comment(CommentNode node) {
+        String code = node.getCode();
+        if(isConditionalComment(code)){
+            getExpressions(code).stream()
+                    .filter(expression -> !expression.containsOption(Syntax.CONTEXT_OPTION))
+                    .forEach(expression -> createViolation(node.getStartLinePosition(), RULE_MESSAGE));
+        }
 
+    }
+
+    private boolean isConditionalComment(String code) {
+        return CONDITIONAL_COMMENT_PATTERN.matcher(code).matches();
     }
 }

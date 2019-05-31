@@ -25,9 +25,9 @@ import org.junit.Test;
 public class DisplayContextInConditionalCommentsCheckTest extends AbstractBaseTest {
 
     @Test
-    public void checkHtlAttributesOrder() {
+    public void checkContextInConditionalComments() {
         check = new DisplayContextInConditionalCommentsCheck();
-        filename = "src/test/files/checks/htl/HtlAttributesShouldBeAtTheEndCheck.html";
+        filename = "src/test/files/checks/htl/DisplayContextInConditionalCommentsCheck.html";
         verify();
     }
 }

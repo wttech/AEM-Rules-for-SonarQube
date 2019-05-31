@@ -1,24 +1,7 @@
-Always try to re-use existing conditions, so the code is more readable.
+HTL expressions in HTML comments should have defined context.
 
 == Noncompliant Code Example
-```
-<!--/* Bad - the same condition is evaluated multiple times */-->
-<span class="uber-mode__top-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}">
-    <div class="my-component">
-        Some text
-    </div>
-</span>
-<span class="uber-mode__bottom-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}"></span>
-```
- 
- 
+`<!--[if IE]><link rel="shortcut icon" href="${site.root}/images/favicon/favicon.ico?v2"><![endif]-->`
     
 == Compliant Solution
-```
-<span class="uber-mode__top-bar" data-sly-test.uberMode="${uberModeHelper.uberModeEnabled || forceUberMode}">
-    <div class="my-component">
-        Some text
-    </div>
-</span>
-<span class="uber-mode__bottom-bar" data-sly-test="${uberMode}"></span>
-```
+`<!--[if IE]><link rel="shortcut icon" href="${site.root @ context='uri'}/images/favicon/favicon.ico?v2"><![endif]-->`

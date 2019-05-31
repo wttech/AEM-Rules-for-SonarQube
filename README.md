@@ -93,7 +93,8 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **HTL-4** Name and re-use Repeating Conditions
   - Consider caching data-sly-test conditions and reduce code duplication.
   
-- **HTL-14** Name and re-use Repeating Conditions
+- **HTL-14** HTL expressions in HTML comments should have defined context.
+    - HTML comments automatically implies 'comment' markup context. 
 
 ## Possible bugs
 
