@@ -17,6 +17,15 @@ Each release has its own prerequisites section, for more information please chec
 
 ## Installation
 
+Using docker we can start our work with AemRules really quick.
+This is already prepared solution thanks to @ahmed-musallam.
+
+`docker run --rm -p 9000:9000 ahmedmusallam/sonarqube-aem:latest`
+
+This solution is for those who would like to start testing theirs code within aem rules and sonarqube. It contains SonarQube v 7.7, aem rules v 0.11 and predefined quality gates.
+If you would like to participate in our Aem Rules development, please refer to [wiki page](https://github.com/Cognifide/AEM-Rules-for-SonarQube/wiki) to get into. 
+
+
 ### Update Center
 
 Go to your SonarQube instance administration console and open Update Center. Find AEM Rules for SonarQube plugin and click install!
