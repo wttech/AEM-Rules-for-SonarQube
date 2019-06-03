@@ -30,6 +30,7 @@ import com.cognifide.aemrules.java.checks.SessionShouldBeLoggedOut;
 import com.cognifide.aemrules.java.checks.SynchronizedKeywordUsageCheck;
 import com.cognifide.aemrules.java.checks.ThreadSafeFieldCheck;
 import com.cognifide.aemrules.java.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
+import com.cognifide.aemrules.java.checks.resourceresolver.close.ResourceResolverTryWithResourcesCheck;
 import com.cognifide.aemrules.java.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
 import com.cognifide.aemrules.java.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import com.cognifide.aemrules.version.AemVersion;
@@ -63,7 +64,8 @@ public class JavaCheckClasses implements CheckRegistrar {
         DefaultInjectionStrategyAnnotationCheck.class,
         ModifiableValueMapUsageCheck.class,
         ContentResourceShouldBeNullCheckedCheck.class,
-        SlingQueryImplicitStrategyCheck.class
+        SlingQueryImplicitStrategyCheck.class,
+        ResourceResolverTryWithResourcesCheck.class
     );
 
     private final Configuration configuration;
