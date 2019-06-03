@@ -24,7 +24,6 @@ import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -72,9 +71,7 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
 
   @Override
   public void visitVariable(VariableTree tree) {
-    if (insideTryStatement && !insideLambdaExpression && isResourceResolver(tree)
-        && !resourceResolversInTryWithResources
-        .contains(getResourceResolver(tree))) {
+    if (isResourceResolverUsedProperly(tree)) {
       context.reportIssue(this, tree, RULE_MESSAGE);
     }
     super.visitVariable(tree);
@@ -91,9 +88,10 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
   @Override
   public void visitTryStatement(TryStatementTree tree) {
     insideTryStatement = true;
-    resourceResolversInTryWithResources = tree.resources().stream()
+    tree.resources().stream()
         .map(resource -> resource.simpleName().name())
-        .collect(Collectors.toList());
+        .forEach(resourceResolversInTryWithResources::add);
+
     super.visitTryStatement(tree);
     resourceResolversInTryWithResources.clear();
     insideTryStatement = false;
@@ -104,6 +102,12 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
     insideLambdaExpression = true;
     super.visitLambdaExpression(lambdaExpressionTree);
     insideLambdaExpression = false;
+  }
+
+  private boolean isResourceResolverUsedProperly(VariableTree tree) {
+    return insideTryStatement && !insideLambdaExpression && isResourceResolver(tree)
+        && !resourceResolversInTryWithResources
+        .contains(getResourceResolver(tree));
   }
 
   private boolean isResourceResolver(AssignmentExpressionTree tree) {
