@@ -343,6 +343,7 @@
             <exclude>**/LICENSE.txt</exclude>
             <exclude>**.xml</exclude>
             <exclude>assets/**</exclude>
+            <exclude>src/test/files/checks/htl/HtlCommentsCheck.html</exclude>
           </excludes>
         </configuration>
         <executions>
