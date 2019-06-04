@@ -55,7 +55,7 @@ public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
 
     private Map<Integer, String> templatesCalls;
 
-    public PlaceTemplatesInSeparateFilesCheck() {
+    public  PlaceTemplatesInSeparateFilesCheck() {
         templatesDefinition = new HashMap<>();
         templatesCalls = new HashMap<>();
     }
@@ -74,6 +74,8 @@ public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
     @Override
     public void endDocument() {
         checkTemplateUsage();
+        templatesDefinition.clear();
+        templatesCalls.clear();
     }
 
     private boolean isTemplateAttribute(Attribute attribute) {
