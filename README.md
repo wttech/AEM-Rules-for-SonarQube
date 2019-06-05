@@ -93,6 +93,9 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **HTL-4** Name and re-use Repeating Conditions
   - Consider caching data-sly-test conditions and reduce code duplication.
 
+- **HTL-5** Usage of HTML comments should be avoided if possible
+  - If you want to place comments regarding your code, make sure they don't display to the end users.
+
 - **HTL-6** HTL automatically recognises the context for HTML output
   - HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes
   

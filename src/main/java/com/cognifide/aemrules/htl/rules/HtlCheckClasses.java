@@ -28,6 +28,7 @@ import com.cognifide.aemrules.htl.checks.DisplayContextInConditionalCommentsChec
 import com.cognifide.aemrules.htl.checks.EventMandatoryDisplayContextCheck;
 import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
 import com.cognifide.aemrules.htl.checks.InlineStyleMandatoryDisplayContextCheck;
+import com.cognifide.aemrules.htl.checks.HtlCommentsCheck;
 import com.cognifide.aemrules.htl.checks.NamingAndReusingConditionsCheck;
 import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.checks.PlaceTemplatesInSeparateFilesCheck;
@@ -35,8 +36,10 @@ import com.cognifide.aemrules.htl.checks.ScriptsAndStyleMandatoryDisplayContextC
 import com.cognifide.aemrules.htl.checks.UseMostRestrictiveHtlContextCheck;
 import com.cognifide.aemrules.htl.checks.UseSlyTagsOverRedundantMarkupCheck;
 import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 import java.util.Optional;
+
 import org.sonar.check.Rule;
 
 public final class HtlCheckClasses {
@@ -46,6 +49,11 @@ public final class HtlCheckClasses {
     public static final String REPOSITORY_NAME = "AEM Rules";
 
     private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
+            ParsingErrorCheck.class,
+            PlaceTemplatesInSeparateFilesCheck.class,
+            HtlAttributesShouldBeAtTheEndCheck.class,
+            NamingAndReusingConditionsCheck.class,
+            HtlCommentsCheck.class
             AvoidExtraSlyTagsCheck.class,
             AvoidUsingUnsafeDisplayContextCheck.class,
             DefaultDisplayContextCheck.class,
@@ -71,8 +79,8 @@ public final class HtlCheckClasses {
 
     public static Rule getRule(Class<? extends HtlCheck> clazz) {
         return Optional.ofNullable(clazz)
-            .filter(c -> c.isAnnotationPresent(Rule.class))
-            .map(c -> c.getAnnotation(Rule.class))
-            .orElse(null);
+                .filter(c -> c.isAnnotationPresent(Rule.class))
+                .map(c -> c.getAnnotation(Rule.class))
+                .orElse(null);
     }
 }
