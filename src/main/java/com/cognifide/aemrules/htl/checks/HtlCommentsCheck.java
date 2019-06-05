@@ -22,6 +22,7 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import java.util.regex.Pattern;
 import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -45,10 +46,18 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
 
   static final String RULE_MESSAGE = "Always use HTL style of comments";
 
+  private static final Pattern CONDITIONAL_COMMENT_PATTERN = Pattern
+      .compile("<!--\\[if.*!\\[endif\\]-->");
+
   @Override
   public void comment(CommentNode node) {
-    if (!Syntax.isSightlyComment(node.getCode())) {
+    String code = node.getCode();
+    if (!Syntax.isSightlyComment(code) && !isConditionalComment(code)) {
       createViolation(node.getStartLinePosition(), RULE_MESSAGE);
     }
+  }
+
+  private boolean isConditionalComment(String code) {
+    return CONDITIONAL_COMMENT_PATTERN.matcher(code).matches();
   }
 }
