@@ -19,16 +19,17 @@
  */
 package com.cognifide.aemrules.htl;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.config.Configuration;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class HtlFilePredicateProvider {
 
@@ -43,29 +44,29 @@ public final class HtlFilePredicateProvider {
         List<FilePredicate> relativePaths = getPathsPredicate(predicates, configuration);
 
         return predicates.and(
-            predicates.hasType(InputFile.Type.MAIN),
-            predicates.or(
-                predicates.hasLanguages(Htl.KEY),
-                predicates.or(fileExtensions)
-            ),
-            predicates.or(relativePaths)
+                predicates.hasType(InputFile.Type.MAIN),
+                predicates.or(
+                        predicates.hasLanguages(Htl.KEY),
+                        predicates.or(fileExtensions)
+                ),
+                predicates.or(relativePaths)
         );
     }
 
     private static List<FilePredicate> getFileExtensionsPredicates(FilePredicates predicates, Configuration configuration) {
         return Stream.of(configuration.getStringArray(Constants.FILE_EXTENSIONS_PROP_KEY))
-            .filter(Objects::nonNull)
-            .map(extension -> StringUtils.removeStart(extension, "."))
-            .map(predicates::hasExtension)
-            .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .map(extension -> StringUtils.removeStart(extension, "."))
+                .map(predicates::hasExtension)
+                .collect(Collectors.toList());
     }
 
     private static List<FilePredicate> getPathsPredicate(FilePredicates predicates, Configuration configuration) {
         return Stream.of(configuration.getStringArray(Constants.HTL_FILES_RELATIVE_PATHS_KEY))
-            .filter(StringUtils::isNotEmpty)
-            .map(path -> path.concat("/**"))
-            .map(predicates::matchesPathPattern)
-            .collect(Collectors.toList());
+                .filter(StringUtils::isNotEmpty)
+                .map(path -> StringUtils.wrapIfMissing(path, "**"))
+                .map(predicates::matchesPathPattern)
+                .collect(Collectors.toList());
     }
 
 }

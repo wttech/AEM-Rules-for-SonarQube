@@ -10,8 +10,6 @@ Always try to re-use existing conditions, so the code is more readable.
 </span>
 <span class="uber-mode__bottom-bar" data-sly-test="${uberModeHelper.uberModeEnabled || forceUberMode}"></span>
 ```
- 
- 
     
 == Compliant Solution
 ```

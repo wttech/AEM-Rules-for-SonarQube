@@ -1,5 +1,4 @@
-HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes.
-Explicit display context definition should be removed.
+HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes. Explicit display context definition should be removed.
 
 == Noncompliant Code Example
 
@@ -8,6 +7,7 @@ Explicit display context definition should be removed.
 ```
 
 == Compliant Solution
+
 ```
 <img alt="${model.imageAlt}" src="${model.imageUrl}" />
 ```

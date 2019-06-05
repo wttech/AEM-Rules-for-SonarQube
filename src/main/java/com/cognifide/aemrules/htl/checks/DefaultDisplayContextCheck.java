@@ -44,9 +44,9 @@ import java.util.regex.Pattern;
 )
 public class DefaultDisplayContextCheck extends AbstractHtlCheck {
 
-    public static final String RULE_MESSAGE = "HTL-6";
+    public static final String RULE_KEY = "HTL-6";
 
-    public static final String RULE_KEY = "HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes";
+    public static final String RULE_MESSAGE = "HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes";
 
     private static final Pattern CONTEXT_URI_DEFINITION = Pattern.compile("context=['\"]uri['\"]");
 

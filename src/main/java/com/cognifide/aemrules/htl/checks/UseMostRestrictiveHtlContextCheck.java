@@ -52,9 +52,15 @@ public class UseMostRestrictiveHtlContextCheck extends AbstractHtlCheck {
     @Override
     public void startElement(TagNode node) {
         node.getAttributes().stream()
-                .filter(attribute -> StringUtils.startsWith(attribute.getName(), DATA_ATTRIBUTE_PREFIX))
+                .filter(this::isHtmlDataAttribute)
                 .filter(this::isNotContextDefined)
-                .forEach(attribute -> createViolation(attribute.getLine(), RULE_MESSAGE));
+                .forEach(attribute -> createViolation(node.getStartLinePosition(), RULE_MESSAGE));
+    }
+
+    private boolean isHtmlDataAttribute(Attribute attribute) {
+        String name = attribute.getName();
+        return StringUtils.startsWith(name, DATA_ATTRIBUTE_PREFIX) &&
+                !StringUtils.startsWith(name, Syntax.PLUGIN_ATTRIBUTE_PREFIX);
     }
 
     private boolean isNotContextDefined(Attribute attribute) {
