@@ -22,6 +22,7 @@ package com.cognifide.aemrules.htl.rules;
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
+import com.cognifide.aemrules.htl.checks.HtlCommentsCheck;
 import com.cognifide.aemrules.htl.checks.NamingAndReusingConditionsCheck;
 import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.checks.PlaceTemplatesInSeparateFilesCheck;
@@ -40,7 +41,8 @@ public final class HtlCheckClasses {
         ParsingErrorCheck.class,
         PlaceTemplatesInSeparateFilesCheck.class,
         HtlAttributesShouldBeAtTheEndCheck.class,
-        NamingAndReusingConditionsCheck.class
+        NamingAndReusingConditionsCheck.class,
+        HtlCommentsCheck.class
     );
 
     private HtlCheckClasses() {
