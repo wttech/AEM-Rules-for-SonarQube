@@ -50,10 +50,7 @@ public final class HtlCheckClasses {
 
     private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
             ParsingErrorCheck.class,
-            PlaceTemplatesInSeparateFilesCheck.class,
-            HtlAttributesShouldBeAtTheEndCheck.class,
-            NamingAndReusingConditionsCheck.class,
-            HtlCommentsCheck.class
+            HtlCommentsCheck.class,
             AvoidExtraSlyTagsCheck.class,
             AvoidUsingUnsafeDisplayContextCheck.class,
             DefaultDisplayContextCheck.class,
@@ -62,7 +59,6 @@ public final class HtlCheckClasses {
             HtlAttributesShouldBeAtTheEndCheck.class,
             InlineStyleMandatoryDisplayContextCheck.class,
             NamingAndReusingConditionsCheck.class,
-            ParsingErrorCheck.class,
             PlaceTemplatesInSeparateFilesCheck.class,
             ScriptsAndStyleMandatoryDisplayContextCheck.class,
             UseMostRestrictiveHtlContextCheck.class,
