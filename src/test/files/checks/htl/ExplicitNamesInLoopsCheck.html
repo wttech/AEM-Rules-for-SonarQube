@@ -42,3 +42,15 @@
         <a href="${file.url}">${file.name}</a>
     </li>
 </ul>
+
+<ul style="list-style-type:none;" data-sly-repeat="${model.downloadableFiles}"> <!--/* Non-Compliant */-->
+    <li>Coffee</li>
+    <li>Tea</li>
+    <li>Milk</li>
+</ul>
+
+<ul style="list-style-type:none;" data-sly-repeat.file="${model.downloadableFiles}">
+    <li>Coffee</li>
+    <li>Tea</li>
+    <li>Milk</li>
+</ul>

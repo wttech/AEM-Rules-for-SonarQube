@@ -36,11 +36,19 @@ public class ExplicitNamesInLoopsCheck extends AbstractHtlCheck {
         }
     }
 
+
+
     private boolean isSlyList(TagNode node) {
-        return "data-sly-list".equals(node.getAttributes().iterator().next().getName());
+        return node.getAttributes().stream()
+            .anyMatch(attribute -> "data-sly-list".equals(attribute.getName()));
+
+//        return "data-sly-list".equals(node.getAttributes().iterator().next().getName());
     }
 
     private boolean isSlyRepeat(TagNode node) {
-        return "data-sly-repeat".equals(node.getAttributes().iterator().next().getName());
+        return node.getAttributes().stream()
+            .anyMatch(attribute -> "data-sly-repeat".equals(attribute.getName()));
+
+//        return "data-sly-repeat".equals(node.getAttributes().iterator().next().getName());
     }
 }
