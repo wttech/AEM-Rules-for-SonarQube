@@ -53,14 +53,21 @@ public class UseSlyTagsOverRedundantMarkupCheck extends AbstractHtlCheck {
 
     private static final ImmutableList SLY_ATTRIBUTES = ImmutableList.of("data-sly-use",
             "data-sly-test",
+            "data-sly-include",
             "data-sly-resource",
             "data-sly-call");
 
     @Override
     public void startElement(TagNode node) {
-        if (!StringUtils.equalsAnyIgnoreCase(SLY_TAG, node.getNodeName()) && isReferenceBlockStatement(node)) {
+        if (containsRedundantMarkup(node)) {
             createViolation(node.getStartLinePosition(), RULE_VIOLATION);
         }
+    }
+
+    private boolean containsRedundantMarkup(TagNode node) {
+        return !StringUtils.equalsAnyIgnoreCase(SLY_TAG, node.getNodeName()) &&
+                isReferenceBlockStatement(node) &&
+                node.getChildren().isEmpty();
     }
 
     private boolean isReferenceBlockStatement(TagNode node) {
