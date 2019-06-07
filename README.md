@@ -90,6 +90,10 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **HTL-2** HTL Templates should be placed in separate files.
   - HTL Templates should be placed in separate files. This helps to understand which code is meant to render a component and which code is re-used as a template.
 
+- **HTL-3** Use Explicit Names in Loops
+  - HTL provides implicit variables in `data-sly-list` and `data-sly-repeat` blocks.
+    Try to avoid them and use explicit names clarifying the role of the objects instead.
+
 - **HTL-4** Name and re-use Repeating Conditions
   - Consider caching data-sly-test conditions and reduce code duplication.
 
