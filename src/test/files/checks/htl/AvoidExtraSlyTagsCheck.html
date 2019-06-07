@@ -19,6 +19,13 @@
     #L%
 
 -->
+
+<div data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html"></div>
+
+<div data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html" data-sly-unwrap></div>
+
+<sly data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html"></sly>
+
 <sly data-sly-test="${model.visible}" data-sly-use="com.example.HeroModel"><!--/* Non-Compliant */-->
     <div class="myComponent">
         <h1>${model.headline}</h1>

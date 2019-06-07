@@ -24,3 +24,16 @@
 <div data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html" data-sly-unwrap></div>  <!--/* Non-Compliant */-->
 
 <sly data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html"></sly>
+
+<sly data-sly-test="${model.visible}" data-sly-use="com.example.HeroModel">
+    <div class="myComponent">
+        <h1>${model.headline}</h1>
+        <p>${model.text}</p>
+    </div>
+</sly>
+
+
+<div class="myComponent" data-sly-test="${model.visible}" data-sly-use="com.example.HeroModel">
+    <h1>${model.headline}</h1>
+    <p>${model.text}</p>
+</div>
