@@ -25,8 +25,26 @@
 
 <div class="image-component" data-sly-use.model="com.example.Image">
     <sly data-sly-call="${template}"></sly> <!--/* Non-Compliant */-->
+    <div data-sly-call="${template.property}"></div>
 </div>
 
 <div class="image-component" data-sly-use.model="com.example.Image">
     <sly data-sly-call="${template @ source=model.src, description=model.altText}"></sly> <!--/* Non-Compliant */-->
 </div>
+
+<template data-sly-template.one>template text</template>
+<div data-sly-call="${one}"></div><!--/* Non-Compliant */-->
+
+<template data-sly-template.two="${@ title, resource='The resource of the parent node'}">
+    <h1>${title}</h1>
+    <p>Parent: ${resource.name}</p>
+</template>
+<div data-sly-call="${two @ title=properties.jcr:title, resource=resource.parent}"></div>  <!--/* Non-Compliant */-->
+
+<div data-sly-call="${component @ title=properties.jcr:title, resource=resource.parent}"></div>
+
+<div data-sly-use.lib="templateLib.html" data-sly-call="${lib.one}"></div>
+
+<div data-sly-call="${four @ title=properties.jcr:title, resource=resource.parent}"></div>
+
+<div data-sly-call="${example @ title=properties.jcr:title, resource=resource.parent}"></div>

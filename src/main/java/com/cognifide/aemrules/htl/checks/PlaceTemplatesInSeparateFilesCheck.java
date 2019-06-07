@@ -22,28 +22,32 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
+import org.apache.sling.scripting.sightly.compiler.expression.ExpressionNode;
 import org.apache.sling.scripting.sightly.compiler.expression.nodes.Identifier;
+import org.apache.sling.scripting.sightly.compiler.expression.nodes.PropertyAccess;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 @Rule(
-    key = PlaceTemplatesInSeparateFilesCheck.RULE_KEY,
-    name = PlaceTemplatesInSeparateFilesCheck.RULE_MESSAGE,
-    priority = Priority.MINOR,
-    tags = Tags.AEM
+        key = PlaceTemplatesInSeparateFilesCheck.RULE_KEY,
+        name = PlaceTemplatesInSeparateFilesCheck.RULE_MESSAGE,
+        priority = Priority.MINOR,
+        tags = Tags.AEM
 )
 @AemVersion(
-    from = "6.0"
+        from = "6.0"
 )
 @Metadata(
-    technicalDebt = "15min"
+        technicalDebt = "15min"
 )
 public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
 
@@ -55,7 +59,7 @@ public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
 
     private Map<Integer, String> templatesCalls;
 
-    public  PlaceTemplatesInSeparateFilesCheck() {
+    public PlaceTemplatesInSeparateFilesCheck() {
         templatesDefinition = new HashMap<>();
         templatesCalls = new HashMap<>();
     }
@@ -63,12 +67,12 @@ public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
     @Override
     public void startHtlElement(List<Expression> expressions, TagNode node) {
         node.getAttributes().stream()
-            .filter(this::isTemplateAttribute)
-            .forEach(attribute -> templatesDefinition.put(attribute.getLine(), getTemplateName(attribute)));
+                .filter(this::isTemplateAttribute)
+                .forEach(attribute -> templatesDefinition.put(attribute.getLine(), getTemplateName(attribute)));
 
         node.getAttributes().stream()
-            .filter(this::isCallAttribute)
-            .forEach(attribute -> templatesCalls.put(attribute.getLine(), getTemplateUsage(attribute)));
+                .filter(this::isCallAttribute)
+                .forEach(attribute -> templatesCalls.put(attribute.getLine(), getTemplateUsage(attribute)));
     }
 
     @Override
@@ -94,12 +98,24 @@ public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
 
     private String getTemplateUsage(Attribute attribute) {
         return getExpressions(attribute.getValue()).stream()
-            .map(Expression::getRoot)
-            .filter(Identifier.class::isInstance)
-            .map(Identifier.class::cast)
-            .map(Identifier::getName)
-            .findFirst()
-            .orElse(StringUtils.EMPTY);
+                .map(Expression::getRoot)
+                .map(this::extractIdentifier)
+                .filter(Objects::nonNull)
+                .map(Identifier.class::cast)
+                .map(Identifier::getName)
+                .findFirst()
+                .orElse(StringUtils.EMPTY);
+    }
+
+    private ExpressionNode extractIdentifier(ExpressionNode expressionNode) {
+        if (expressionNode instanceof Identifier) {
+            return expressionNode;
+        } else if (expressionNode instanceof PropertyAccess) {
+            PropertyAccess propertyAccess = (PropertyAccess) expressionNode;
+            return propertyAccess.getTarget();
+        } else {
+            return null;
+        }
     }
 
     private void checkTemplateUsage() {
