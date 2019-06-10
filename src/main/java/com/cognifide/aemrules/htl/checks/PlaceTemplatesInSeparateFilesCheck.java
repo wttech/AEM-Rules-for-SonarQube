@@ -123,10 +123,16 @@ public class PlaceTemplatesInSeparateFilesCheck extends AbstractHtlCheck {
             String templateUsage = callEntry.getValue();
             for (Map.Entry<Integer, String> templateEntry : templatesDefinition.entrySet()) {
                 String templateDefinitionName = templateEntry.getValue();
-                if (StringUtils.equals(templateUsage, templateDefinitionName)) {
-                    createViolation(callEntry.getKey(), RULE_MESSAGE);
+                if (StringUtils.equals(templateUsage, templateDefinitionName) &&
+                        isDuplicated(templateEntry)) {
+                    createViolation(templateEntry.getKey(), RULE_MESSAGE);
                 }
             }
         }
+    }
+
+    private boolean isDuplicated(Map.Entry<Integer, String> templateEntry) {
+        return getHtmlSourceCode().getIssues().stream()
+                .noneMatch(htmlIssue -> Objects.equals(htmlIssue.line(), templateEntry.getKey()) && htmlIssue.ruleKey().rule().equalsIgnoreCase(RULE_KEY));
     }
 }
