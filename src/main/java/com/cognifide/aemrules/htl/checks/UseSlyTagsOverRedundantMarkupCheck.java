@@ -24,10 +24,14 @@ import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Rule(
         key = UseSlyTagsOverRedundantMarkupCheck.RULE_KEY,
@@ -58,23 +62,38 @@ public class UseSlyTagsOverRedundantMarkupCheck extends AbstractHtlCheck {
             "data-sly-call");
 
     @Override
-    public void startElement(TagNode node) {
-        if (containsRedundantMarkup(node)) {
+    public void startHtlElement(List<Expression> expressions, TagNode node) {
+        if (isWrappedInRedundantMarkup(node, expressions)) {
             createViolation(node.getStartLinePosition(), RULE_VIOLATION);
         }
     }
 
-    private boolean containsRedundantMarkup(TagNode node) {
+    private boolean isWrappedInRedundantMarkup(TagNode node, List<Expression> expressions) {
         return !StringUtils.equalsAnyIgnoreCase(SLY_TAG, node.getNodeName()) &&
-                isReferenceBlockStatement(node) &&
+                containsSlyCallAttributeWithExpression(node, expressions) &&
                 node.getChildren().isEmpty();
     }
 
-    private boolean isReferenceBlockStatement(TagNode node) {
+    private boolean isUsingCallAttributes(TagNode node){
         return node.getAttributes().stream()
                 .map(Attribute::getName)
                 .map(s -> StringUtils.substringBefore(s, "."))
                 .anyMatch(SLY_ATTRIBUTES::contains);
+    }
+
+
+    private boolean containsSlyCallAttributeWithExpression(TagNode node, List<Expression> expressions) {
+        if (expressions.isEmpty()) {
+            return isUsingCallAttributes(node);
+        }
+
+        List<String> slyAttributesExpression = node.getAttributes().stream()
+                .filter(attribute -> SLY_ATTRIBUTES.contains(attribute.getName()))
+                .map(Attribute::getValue)
+                .collect(Collectors.toList());
+
+        return expressions.stream()
+                .anyMatch(expression -> slyAttributesExpression.contains(expression.getRawText()));
     }
 
 }
