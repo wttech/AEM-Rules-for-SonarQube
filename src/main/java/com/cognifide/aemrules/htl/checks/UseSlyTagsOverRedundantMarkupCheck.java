@@ -93,7 +93,8 @@ public class UseSlyTagsOverRedundantMarkupCheck extends AbstractHtlCheck {
                 .collect(Collectors.toList());
 
         return expressions.stream()
-                .anyMatch(expression -> slyAttributesExpression.contains(expression.getRawText()));
+                .map(Expression::getRawText)
+                .anyMatch(slyAttributesExpression::contains);
     }
 
 }
