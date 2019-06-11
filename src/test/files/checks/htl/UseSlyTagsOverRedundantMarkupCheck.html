@@ -37,3 +37,14 @@
     <h1>${model.headline}</h1>
     <p>${model.text}</p>
 </div>
+
+
+<div data-sly-use.model="com.example.model.PageConfig"
+        id="banner"
+        class="component-banner"
+        data-config="${model.json}">
+</div>
+
+<div data-sly-call="${lib.two @ title=properties.jcr:title, resource=resource.parent}"></div> <!--/* Non-Compliant */-->
+
+
