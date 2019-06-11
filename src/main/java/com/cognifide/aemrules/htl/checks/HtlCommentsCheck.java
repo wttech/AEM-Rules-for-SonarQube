@@ -47,17 +47,32 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
   static final String RULE_MESSAGE = "Always use HTL style of comments";
 
   private static final Pattern CONDITIONAL_COMMENT_PATTERN = Pattern
-      .compile("<!--\\[if.*!\\[endif\\]-->");
+      .compile("<!--\\[.*]-->");
+
+  private static final Pattern ESI_COMMENT_PATTERN = Pattern
+      .compile("<!--esi.*-->");
 
   @Override
   public void comment(CommentNode node) {
     String code = node.getCode();
-    if (!Syntax.isSightlyComment(code) && !isConditionalComment(code)) {
+    if (!Syntax.isSightlyComment(code) && !isException(code)) {
       createViolation(node.getStartLinePosition(), RULE_MESSAGE);
     }
   }
 
+  private boolean isException(String code) {
+    return isConditionalComment(code) || isESIComment(code);
+  }
+
   private boolean isConditionalComment(String code) {
-    return CONDITIONAL_COMMENT_PATTERN.matcher(code).matches();
+    return CONDITIONAL_COMMENT_PATTERN.matcher(removeWhitespace(code)).matches();
+  }
+
+  private boolean isESIComment(String code) {
+    return ESI_COMMENT_PATTERN.matcher(removeWhitespace(code)).matches();
+  }
+
+  private String removeWhitespace(String code) {
+    return code.replaceAll("\\s+", "");
   }
 }
