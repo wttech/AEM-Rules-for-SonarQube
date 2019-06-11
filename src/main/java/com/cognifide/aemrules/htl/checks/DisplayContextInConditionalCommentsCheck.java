@@ -22,12 +22,11 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import java.util.regex.Pattern;
 import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.CommentNode;
-
-import java.util.regex.Pattern;
 
 @Rule(
         key = DisplayContextInConditionalCommentsCheck.RULE_KEY,
@@ -61,6 +60,10 @@ public class DisplayContextInConditionalCommentsCheck extends AbstractHtlCheck {
     }
 
     private boolean isConditionalComment(String code) {
-        return CONDITIONAL_COMMENT_PATTERN.matcher(code).matches();
+        return CONDITIONAL_COMMENT_PATTERN.matcher(removeWhitespace(code)).matches();
+    }
+
+    private String removeWhitespace(String code) {
+        return code.replaceAll("\\s+", "");
     }
 }
