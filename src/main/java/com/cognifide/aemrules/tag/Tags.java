@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015-2018 Cognifide Limited
+ * Copyright (C) 2015-2019 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,6 @@ public class Tags {
     public static final String PERFORMANCE = "performance";
 
     public static final String MULTI_THREADING = "multi-threading";
-
-    public static final String SLICE = "slice";
 
     public static final String SLING_MODELS = "sling-models";
 

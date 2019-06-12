@@ -1,14 +1,19 @@
-Use Camel Case in identifiers:
- * variable names
- * template names
+HTL provides implicit variables in data-sly-list and data-sly-repeat blocks.
+Try to avoid them and use explicit names clarifying the role of the objects instead.
 
-== Noncompliant Code Example
-``
-<sly data-sly-template.COMPONENT_VALIDATION>
-<sly data-sly-use.GalleryModel="com.example.GalleryModel">
-``
+ == Noncompliant Code Example
+````
+<ul data-sly-list="${model.downloadableFiles}"> 
+    <li>
+        <a href="${item.url}">${item.name}</a>
+    </li>
+</ul>
+````
 == Compliant Solution
-``
-<sly data-sly-template.componentValidation>
-<sly data-sly-use.galleryModel="com.example.GalleryModel">
-``
+```
+<ul data-sly-list.file="${model.downloadableFiles}">
+    <li>
+        <a href="${file.url}">${file.name}</a>
+    </li>
+</ul>
+```

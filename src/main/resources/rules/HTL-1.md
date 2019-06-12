@@ -5,6 +5,7 @@ It's easier to understand HTL code if the attributes processed server-side are v
 ``
 <div data-sly-test="${model.enabled}" class="decorated" data-sly-unwrap="${!model.decorated}"> // Bad - mixing HTL attributes with other ones
 ``
+
 == Compliant Solution
 ``
 <!--/* Good - HTL-specific attributes grouped at the end of the element */ -->

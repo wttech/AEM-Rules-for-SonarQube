@@ -55,19 +55,16 @@ gradlew sonarQube -DsonarRunner.aemVersion=6.4
 
 Below you will find descriptions of all rules available in **AEM Rules for SonarQube** plugin.
 
-## [HTL](https://github.com/Adobe-Marketing-Cloud/htl-spec/blob/master/SPECIFICATION.md) related
-
-- **HTL-4** Use Camel Case in identifiers:
-    - variable names
-    - template names
-
-## Good practices
+## AEM Good practices
 
 - **AEM-1** Use predefined constant in annotation instead of hardcoded value.
   - Use constants available in AEM instead of repeating inline literals.
 
 - **AEM-2** Use predefined constant instead of hardcoded value.
   - Use constants available in AEM instead of repeating inline literals.
+  
+- **AEM-5** ``getContentResource()`` is not null checked
+  - Always null check the return value of ``getContentResource()``. It is possible to get a null if a jcr:content node does not exist in the repository.
 
 - **AEM-8** Prefer cleaner `@SlingServlet` annotation.
   - Prefer cleaner `@SlingServlet` annotation over `@Properties` approach. Do not mix up both approaches.
@@ -84,6 +81,52 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **AEM-19** Implicit search strategy used in Sling Query
   - `SearchStrategy` can have negative performance impact if mismatched.
   Therefore developer should always make informed decision and define strategy explicitly.
+
+## HTL Good practices
+
+- **HTL-1** Wrong placement of the HTL Attribute.
+  - Always Place HTL Attributes After the Ones that are Part of the Markup.
+  
+- **HTL-2** HTL Templates should be placed in separate files.
+  - HTL Templates should be placed in separate files. This helps to understand which code is meant to render a component and which code is re-used as a template.
+
+- **HTL-3** Use Explicit Names in Loops
+  - HTL provides implicit variables in `data-sly-list` and `data-sly-repeat` blocks.
+    Try to avoid them and use explicit names clarifying the role of the objects instead.
+
+- **HTL-4** Name and re-use Repeating Conditions
+  - Consider caching data-sly-test conditions and reduce code duplication.
+
+- **HTL-5** Usage of HTML comments should be avoided if possible
+  - If you want to place comments regarding your code, make sure they don't display to the end users.
+
+- **HTL-6** HTL automatically recognises the context for HTML output
+  - HTL uses uri display context as default for src, poster, manifest, href, formaction, data, cite, action attributes
+  
+- **HTL-7** Style and script tags display context definition is mandatory
+  
+- **HTL-8** Event attribute attributes must have display context defined
+
+- **HTL-9** Inline styles must have display context defined
+
+- **HTL-10** Use sly tags over redundant markup.
+  - HTL attributes should be wrapped in sly tags to avoid superfluous markup.
+
+- **HTL-11** Use existing HTML elements instead of adding extra sly tags.
+  - HTL attributes should be included in HTML markup without additional SLY tags. 
+
+- **HTL-12** Use the most restrictive HTL context possible.
+  - For data attributes HTL applies HTML escaping.  
+  
+- **HTL-13** Avoid using 'unsafe' display context. 
+  - 'unsafe' display context disables XSS protection completely.
+  
+- **HTL-14** HTL expressions in HTML comments should have defined context.
+    - HTML comments automatically implies 'comment' markup context. 
+    
+- **HTL-15** Use Camel Case in identifiers:
+    - variable names
+    - template names    
 
 ## Possible bugs
 
@@ -109,23 +152,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 - **AEM-11** Do not use deprecated administrative access methods
   - Administrative access to the resource tree and JCR Repository by means of usage of ``ResourceResolverFactory.getAdministrativeResourceResolver`` and ``SlingRepository.loginAdministrative`` has been deprecated. Use ``ResourceResolverFactory.getServiceResourceResolver`` or ``SlingRepository.loginService`` respectively.
-
-## [Slice](https://github.com/Cognifide/Slice) related
-
-- **AEM-4** Injector should be closed in finally block or created as a resource within try block.
-  - Injectors (`com.cognifide.slice.api.injector.InjectorWithContext`) are created in the context of either request or resource resolver. To restore its initial state after using injector, it should be closed in finally block or created as a resource within try block.
-
-- **AEM-5** Injector can be closed using try-with-resources Java 7 feature.
-  - Take advantage of Java 7 try-with-resources feature to close `com.cognifide.slice.api.injector.InjectorWithContext`.
-
-- **AEM-9** Objects annotated by `@SliceResource` should not use (except: constructor, `com.cognifide.slice.api.model.InitializableModel.afterCreated()`) and return any session based object.
-  - Objects annotated by `@SliceResource` should not use any session based objects, except places like constructor and overridden `com.cognifide.slice.api.model.InitializableModel.afterCreated()` method.
-
-- **AEM-10** Use ``ModelProvider#getListFromResources`` instead of iteration
-  - Slice provides method for creating list of models from specified resources given as an ``Iterator``. Instead of iterating over resources yourself, use ``ModelProvider#getListFromResources`` method.
-
-- **AEM-12** Fields annotated by `@JcrProperty` shouldn't be accessed from constructor.
-  - Fields that are annotated with `@JcrProperty` should not be accessed from within constructor.
 
 ## [Sling Models](https://sling.apache.org/documentation/bundles/models.html) related
 

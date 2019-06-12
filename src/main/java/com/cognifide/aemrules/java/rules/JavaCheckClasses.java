@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015-2018 Cognifide Limited
+ * Copyright (C) 2015-2019 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,13 @@ import com.cognifide.aemrules.java.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.java.checks.ConstantsCheck;
 import com.cognifide.aemrules.java.checks.ContentResourceShouldBeNullCheckedCheck;
 import com.cognifide.aemrules.java.checks.HttpConstantCheck;
-import com.cognifide.aemrules.java.checks.InjectorShouldBeClosedCheck;
-import com.cognifide.aemrules.java.checks.InjectorTryWithResourcesCheck;
 import com.cognifide.aemrules.java.checks.ModifiableValueMapUsageCheck;
 import com.cognifide.aemrules.java.checks.PreferSlingServletAnnotation;
 import com.cognifide.aemrules.java.checks.SessionShouldBeLoggedOut;
 import com.cognifide.aemrules.java.checks.SynchronizedKeywordUsageCheck;
 import com.cognifide.aemrules.java.checks.ThreadSafeFieldCheck;
 import com.cognifide.aemrules.java.checks.resourceresolver.close.ResourceResolverShouldBeClosed;
-import com.cognifide.aemrules.java.checks.slice.iterator.IteratingResourcesCheck;
-import com.cognifide.aemrules.java.checks.slice.jcrproperty.JcrPropertyFieldsInConstructorCheck;
-import com.cognifide.aemrules.java.checks.slice.session.ModelsShouldNotUseSessionCheck;
+import com.cognifide.aemrules.java.checks.resourceresolver.close.ResourceResolverTryWithResourcesCheck;
 import com.cognifide.aemrules.java.checks.slingmodels.DefaultInjectionStrategyAnnotationCheck;
 import com.cognifide.aemrules.java.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import com.cognifide.aemrules.version.AemVersion;
@@ -60,11 +56,6 @@ public class JavaCheckClasses implements CheckRegistrar {
         AnnotationsConstantsCheck.class,
         ConstantsCheck.class,
         HttpConstantCheck.class,
-        InjectorShouldBeClosedCheck.class,
-        InjectorTryWithResourcesCheck.class,
-        ModelsShouldNotUseSessionCheck.class,
-        IteratingResourcesCheck.class,
-        JcrPropertyFieldsInConstructorCheck.class,
         PreferSlingServletAnnotation.class,
         ResourceResolverShouldBeClosed.class,
         SessionShouldBeLoggedOut.class,
@@ -73,7 +64,8 @@ public class JavaCheckClasses implements CheckRegistrar {
         DefaultInjectionStrategyAnnotationCheck.class,
         ModifiableValueMapUsageCheck.class,
         ContentResourceShouldBeNullCheckedCheck.class,
-        SlingQueryImplicitStrategyCheck.class
+        SlingQueryImplicitStrategyCheck.class,
+        ResourceResolverTryWithResourcesCheck.class
     );
 
     private final Configuration configuration;
