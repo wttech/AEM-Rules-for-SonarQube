@@ -24,6 +24,7 @@ import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import org.apache.commons.lang.StringUtils;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
@@ -46,11 +47,11 @@ import org.sonar.plugins.html.node.TagNode;
 )
 public class CamelCaseCheck extends AbstractHtlCheck {
 
-    public static final String RULE_KEY = "HTL-3";
+    public static final String RULE_KEY = "HTL-15";
 
     static final String RULE_MESSAGE = "Use Camel Case in identifiers";
 
-    private static final String CAMEL_CASE_PATTERN = "([a-z]+[A-Z]+\\w+)+";
+    private static final Pattern CAMEL_CASE_PATTERN = Pattern.compile("([a-z]+([A-Z][a-z]+)+)");
 
     @Override
     public void startHtlElement(List<Expression> expressions, TagNode node) {
@@ -64,7 +65,7 @@ public class CamelCaseCheck extends AbstractHtlCheck {
     }
 
     private void checkVariableName(@Nonnull String name, Attribute node) {
-        boolean isCamelCase = name.matches(CAMEL_CASE_PATTERN);
+        boolean isCamelCase = CAMEL_CASE_PATTERN.matcher(name).matches();
         boolean isLowercase = StringUtils.isAllLowerCase(name);
         if (!(isCamelCase || isLowercase)) {
             createViolation(node.getLine(), RULE_MESSAGE);

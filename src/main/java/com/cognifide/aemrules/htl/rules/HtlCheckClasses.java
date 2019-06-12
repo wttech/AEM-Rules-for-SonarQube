@@ -19,19 +19,17 @@
  */
 package com.cognifide.aemrules.htl.rules;
 
-import com.cognifide.aemrules.htl.checks.CamelCaseCheck;
-import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
-import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.api.HtlCheck;
 import com.cognifide.aemrules.htl.checks.AvoidExtraSlyTagsCheck;
 import com.cognifide.aemrules.htl.checks.AvoidUsingUnsafeDisplayContextCheck;
+import com.cognifide.aemrules.htl.checks.CamelCaseCheck;
 import com.cognifide.aemrules.htl.checks.DefaultDisplayContextCheck;
 import com.cognifide.aemrules.htl.checks.DisplayContextInConditionalCommentsCheck;
 import com.cognifide.aemrules.htl.checks.EventMandatoryDisplayContextCheck;
 import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
-import com.cognifide.aemrules.htl.checks.InlineStyleMandatoryDisplayContextCheck;
 import com.cognifide.aemrules.htl.checks.HtlCommentsCheck;
+import com.cognifide.aemrules.htl.checks.InlineStyleMandatoryDisplayContextCheck;
 import com.cognifide.aemrules.htl.checks.NamingAndReusingConditionsCheck;
 import com.cognifide.aemrules.htl.checks.ParsingErrorCheck;
 import com.cognifide.aemrules.htl.checks.PlaceTemplatesInSeparateFilesCheck;
@@ -39,11 +37,10 @@ import com.cognifide.aemrules.htl.checks.ScriptsAndStyleMandatoryDisplayContextC
 import com.cognifide.aemrules.htl.checks.UseMostRestrictiveHtlContextCheck;
 import com.cognifide.aemrules.htl.checks.UseSlyTagsOverRedundantMarkupCheck;
 import com.google.common.collect.ImmutableList;
+import org.sonar.check.Rule;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.sonar.check.Rule;
 
 public final class HtlCheckClasses {
 
@@ -65,7 +62,7 @@ public final class HtlCheckClasses {
             PlaceTemplatesInSeparateFilesCheck.class,
             ScriptsAndStyleMandatoryDisplayContextCheck.class,
             UseMostRestrictiveHtlContextCheck.class,
-            UseSlyTagsOverRedundantMarkupCheck.class
+            UseSlyTagsOverRedundantMarkupCheck.class,
             CamelCaseCheck.class
     );
 
