@@ -82,12 +82,12 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
     List<Pattern> result = new ArrayList<>();
     result.add(CONDITIONAL_COMMENT_PATTERN);
     result.add(ESI_COMMENT_PATTERN);
-    result.addAll(buildSSIRegex(SSI_ELEMENTS));
+    result.addAll(buildSsiRegex(SSI_ELEMENTS));
 
     return result;
   }
 
-  private static List<Pattern> buildSSIRegex(List<String> elements) {
+  private static List<Pattern> buildSsiRegex(List<String> elements) {
     return elements.stream()
         .map(e -> "<!--#" + e + ".*-->")
         .map(Pattern::compile)
