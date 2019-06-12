@@ -22,7 +22,13 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -46,18 +52,45 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
 
   static final String RULE_MESSAGE = "Always use HTL style of comments";
 
+  private static final List<String> SSI_ELEMENTS = Lists
+      .newArrayList("comment", "config", "echo", "exec", "fsize", "flastmod", "include", "printenv",
+          "set");
+
   private static final Pattern CONDITIONAL_COMMENT_PATTERN = Pattern
-      .compile("<!--\\[if.*!\\[endif\\]-->");
+      .compile("<!--\\[.*]-->");
+
+  private static final Pattern ESI_COMMENT_PATTERN = Pattern
+      .compile("<!--esi.*-->");
+
+  private static final List<Pattern> EXCEPTIONS = buildExceptionList();
 
   @Override
   public void comment(CommentNode node) {
-    String code = node.getCode();
-    if (!Syntax.isSightlyComment(code) && !isConditionalComment(code)) {
+    String code = StringUtils.deleteWhitespace(node.getCode());
+    if (!Syntax.isSightlyComment(code) && !isException(code)) {
       createViolation(node.getStartLinePosition(), RULE_MESSAGE);
     }
   }
 
-  private boolean isConditionalComment(String code) {
-    return CONDITIONAL_COMMENT_PATTERN.matcher(code).matches();
+  private boolean isException(String code) {
+    return EXCEPTIONS.stream()
+        .map(pattern -> pattern.matcher(code))
+        .anyMatch(Matcher::matches);
+  }
+
+  private static List<Pattern> buildExceptionList() {
+    List<Pattern> result = new ArrayList<>();
+    result.add(CONDITIONAL_COMMENT_PATTERN);
+    result.add(ESI_COMMENT_PATTERN);
+    result.addAll(buildSsiRegex(SSI_ELEMENTS));
+
+    return result;
+  }
+
+  private static List<Pattern> buildSsiRegex(List<String> elements) {
+    return elements.stream()
+        .map(e -> "<!--#" + e + ".*-->")
+        .map(Pattern::compile)
+        .collect(Collectors.toList());
   }
 }

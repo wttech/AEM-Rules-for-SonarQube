@@ -22,12 +22,12 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.CommentNode;
-
-import java.util.regex.Pattern;
 
 @Rule(
         key = DisplayContextInConditionalCommentsCheck.RULE_KEY,
@@ -51,7 +51,7 @@ public class DisplayContextInConditionalCommentsCheck extends AbstractHtlCheck {
 
     @Override
     public void comment(CommentNode node) {
-        String code = node.getCode();
+        String code = StringUtils.deleteWhitespace(node.getCode());
         if(isConditionalComment(code)){
             getExpressions(code).stream()
                     .filter(expression -> !expression.containsOption(Syntax.CONTEXT_OPTION))
