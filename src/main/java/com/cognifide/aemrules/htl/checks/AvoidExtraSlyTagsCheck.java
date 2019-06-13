@@ -59,7 +59,7 @@ public class AvoidExtraSlyTagsCheck extends AbstractHtlCheck {
         Optional.ofNullable(node.getParent())
                 .ifPresent(tagNode ->
                 {
-                    if (tagNode.getNodeName().equalsIgnoreCase(SLY_TAG)) {
+                    if (tagNode.getNodeName().equalsIgnoreCase(SLY_TAG) && tagNode.getChildren().size() <= 1) {
                         tagNode.getAttributes().stream()
                                 .map(Attribute::getName)
                                 .filter(SLY_ATTRIBUTES::contains)
