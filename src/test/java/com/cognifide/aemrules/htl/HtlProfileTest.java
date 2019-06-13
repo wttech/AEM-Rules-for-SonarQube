@@ -51,7 +51,7 @@ public class HtlProfileTest {
         profile.define(context);
         Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
 
-        assertThat(activeRules.size()).isEqualTo(14);
+        assertThat(activeRules.size()).isEqualTo(15);
         assertThat(activeRules.keySet()).contains("HTL-0");
     }
 
@@ -60,7 +60,7 @@ public class HtlProfileTest {
         profile.define(context);
         Map<String, BuiltInActiveRule> activeRules = getActiveRulesByRuleKey(context);
 
-        assertThat(activeRules.size()).isEqualTo(14);
+        assertThat(activeRules.size()).isEqualTo(15);
         assertThat(activeRules.keySet()).contains("HTL-0");
         assertThat(activeRules.keySet()).contains("HTL-5");
     }

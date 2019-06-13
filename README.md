@@ -123,6 +123,10 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
   
 - **HTL-14** HTL expressions in HTML comments should have defined context.
     - HTML comments automatically implies 'comment' markup context. 
+    
+- **HTL-15** Use Camel Case in identifiers:
+    - variable names
+    - template names    
 
 ## Possible bugs
 
