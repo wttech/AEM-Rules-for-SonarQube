@@ -2,18 +2,16 @@ HTL uses uri display context as default for src, poster, manifest, href, formact
 
 == Noncompliant Code Example
 
-```
-<img alt="${model.imageAlt @ context='attribute'}" src="${model.imageUrl @ context='uri'}" /> <!--/* Non-Compliant */-->
-```
+``
+<img alt="${model.imageAlt @ context='attribute'}" src="${model.imageUrl @ context='uri'}" />
+``
 
 == Compliant Solution
 
-```
+``
 <img alt="${model.imageAlt}" src="${model.imageUrl}" />
-```
 
-```
 <div data-service-url="${model.url @ context='uri'}">
     ${'http://www.example.org/search?s=1&q=htl' @ context='uri'}
 </div>
-```
+``

@@ -1,6 +1,16 @@
 Use the most restrictive HTL context possible.
 
-Markup context:
+== Noncompliant Code Example
+``
+<div data-index-number=${model.index} >
+``
+    
+== Compliant Solution
+``
+<div data-index-number=${model.index @ context='number'} >
+``
+
+Available markup context:
 * html          - Use this in case you want to output HTMLRemoves markup that may contain XSS risks
 * text          - Use this for simple HTML contentEncodes all HTML
 * elementName   - Allows only element names that are white-listed, outputs 'div' otherwise -
@@ -18,13 +28,3 @@ Markup context:
 * number        - Outputs zero if the value is not a number
 * unsafe        - Use this at your own risk, this disables XSS protection completely
 Source : [https://github.com/adobe/htl-spec/blob/master/SPECIFICATION.md#121-display-context]()
-
-== Noncompliant Code Example
-```
-<div data-index-number=${model.index} >
-```
-    
-== Compliant Solution
-```
-<div data-index-number=${model.index @ context='number'} >
-```
