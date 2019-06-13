@@ -33,10 +33,16 @@
     </div>
 </sly>
 
-
 <div class="myComponent"
      data-sly-test="${model.visible}"
      data-sly-use="com.example.HeroModel">
     <h1>${model.headline}</h1>
     <p>${model.text}</p>
 </div>
+
+<sly data-sly-test="${model.isVisible}">
+    <p>Caption 1</p>
+    <p>Caption 2</p>
+    <p>Caption 3</p>
+    <p>Caption 4</p>
+</sly>
