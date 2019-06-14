@@ -27,4 +27,4 @@ Available markup context:
 * comment       - Applies HTML comment escaping
 * number        - Outputs zero if the value is not a number
 * unsafe        - Use this at your own risk, this disables XSS protection completely
-Source : [https://github.com/adobe/htl-spec/blob/master/SPECIFICATION.md#121-display-context]()
+Source : https://github.com/adobe/htl-spec/blob/master/SPECIFICATION.md#121-display-context
