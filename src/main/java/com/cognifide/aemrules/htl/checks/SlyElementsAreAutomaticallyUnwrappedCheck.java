@@ -65,7 +65,7 @@ public class SlyElementsAreAutomaticallyUnwrappedCheck extends AbstractHtlCheck 
     }
 
     private boolean containsRedundantUnwrapAttr(Attribute attribute) {
-        return attribute.getName().equalsIgnoreCase(UNWRAP_ATTRIBUTE_NAME) &&
+        return UNWRAP_ATTRIBUTE_NAME.equalsIgnoreCase(attribute.getName()) &&
                 StringUtils.isBlank(attribute.getValue()) &&
                 getExpressions(attribute.getValue()).isEmpty();
     }
