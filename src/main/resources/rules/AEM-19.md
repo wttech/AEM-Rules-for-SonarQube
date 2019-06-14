@@ -6,18 +6,18 @@ Therefore developer should always make informed decision and define strategy exp
 
 == Noncompliant Code Example
 
-```
+``
 private void strategyNotDefined(Resource resource) {
 		SlingQuery sq = $(resource);
 		sq.find();
 	}
-```
+``
 
 == Compliant Solution
 
-```
+``
 private void strategyDefined(Resource resource) {
 		SlingQuery sq = $(resource).searchStrategy(SearchStrategy.BFS);
 		sq.find();
 	}
-```
+``

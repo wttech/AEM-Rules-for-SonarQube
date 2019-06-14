@@ -6,7 +6,7 @@ which ensures that it will be automatically closed because of the [`Autocloseabl
 
  == Noncompliant Code Example
 
- ```
+``
 protected void getResourceResolver() {
     ResourceResolver resourceResolver = null;
     try {
@@ -19,11 +19,11 @@ protected void getResourceResolver() {
         }
     }
 }
-```
+``
 
  == Compliant Solution
 
- ```
+``
 private void getResourceResolver() {
     try (ResourceResolver resourceResolver = resourceResolverFactory.getServiceResourceResolver(null)) {
         resourceResolver.getResource("path/to/resource");
@@ -31,4 +31,4 @@ private void getResourceResolver() {
         System.out.println("something went wrong");
     }
 }
-```
+``
