@@ -4,7 +4,6 @@ If it's not possible to use an existing element, prefer sly tags over introducin
 
 ``
 <div data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html"></div>
-
 <div data-sly-use.model="com.example.Model" data-sly-use.templates="templates.html" data-sly-unwrap></div>
 ``
 
