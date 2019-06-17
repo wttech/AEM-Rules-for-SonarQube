@@ -54,7 +54,7 @@ public class UseMostRestrictiveHtlContextCheck extends AbstractHtlCheck {
         node.getAttributes().stream()
                 .filter(this::isHtmlDataAttribute)
                 .filter(this::isNotContextDefined)
-                .forEach(attribute -> createViolation(node.getStartLinePosition(), RULE_MESSAGE));
+                .forEach(attribute -> createViolation(attribute.getLine(), RULE_MESSAGE));
     }
 
     private boolean isHtmlDataAttribute(Attribute attribute) {

@@ -56,22 +56,27 @@ public class UseSlyTagsOverRedundantMarkupCheck extends AbstractHtlCheck {
     private static final String SLY_TAG = "sly";
 
     private static final ImmutableList SLY_ATTRIBUTES = ImmutableList.of("data-sly-use",
-            "data-sly-test",
             "data-sly-include",
             "data-sly-resource",
             "data-sly-call");
 
     @Override
     public void startHtlElement(List<Expression> expressions, TagNode node) {
-        if (isWrappedInRedundantMarkup(node, expressions)) {
+        if (containsRedundantHtmlContainer(node) || isWrappedInRedundantMarkup(node, expressions)) {
             createViolation(node.getStartLinePosition(), RULE_VIOLATION);
         }
     }
 
     private boolean isWrappedInRedundantMarkup(TagNode node, List<Expression> expressions) {
-        return !StringUtils.equalsAnyIgnoreCase(SLY_TAG, node.getNodeName()) &&
+        return !StringUtils.equalsIgnoreCase(SLY_TAG, node.getNodeName()) &&
                 containsSlyCallAttributeWithExpression(node, expressions) &&
                 node.getChildren().isEmpty();
+    }
+
+    private boolean containsRedundantHtmlContainer(TagNode node){
+        return StringUtils.equalsIgnoreCase("div", node.getNodeName()) &&
+                node.getAttribute("data-sly-test") != null &&
+                node.getAttribute("class") == null;
     }
 
     private boolean isUsingCallAttributes(TagNode node){
@@ -80,7 +85,6 @@ public class UseSlyTagsOverRedundantMarkupCheck extends AbstractHtlCheck {
                 .map(s -> StringUtils.substringBefore(s, "."))
                 .anyMatch(SLY_ATTRIBUTES::contains);
     }
-
 
     private boolean containsSlyCallAttributeWithExpression(TagNode node, List<Expression> expressions) {
         if (expressions.isEmpty()) {

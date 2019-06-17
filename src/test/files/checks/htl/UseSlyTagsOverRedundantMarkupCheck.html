@@ -32,12 +32,10 @@
     </div>
 </sly>
 
-
 <div class="myComponent" data-sly-test="${model.visible}" data-sly-use="com.example.HeroModel">
     <h1>${model.headline}</h1>
     <p>${model.text}</p>
 </div>
-
 
 <div data-sly-use.model="com.example.model.PageConfig"
         id="banner"
@@ -47,4 +45,8 @@
 
 <div data-sly-call="${lib.two @ title=properties.jcr:title, resource=resource.parent}"></div> <!--/* Non-Compliant */-->
 
+<p data-sly-test="${model.columnTitle}">${model.columnTitle}</p>
 
+<span data-sly-test="${wcmmode.edit}">Power Reviews Detailed View</span>
+
+<div data-sly-test="${model.columnTitle}">${model.columnTitle}</div> <!--/* Non-Compliant */-->

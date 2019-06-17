@@ -1,14 +1,10 @@
 Use the most restrictive HTL context possible.
 
 == Noncompliant Code Example
-``
-<div data-index-number=${model.index} >
-``
-    
+`<div data-index-number="${model.index}"></div>`
+
 == Compliant Solution
-``
-<div data-index-number=${model.index @ context='number'} >
-``
+`<div data-index-number="${model.index @ context='number'}"></div>`
 
 Available markup context:
 * html          - Use this in case you want to output HTMLRemoves markup that may contain XSS risks
