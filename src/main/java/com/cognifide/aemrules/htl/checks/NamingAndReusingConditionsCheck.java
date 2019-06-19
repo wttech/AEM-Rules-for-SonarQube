@@ -68,6 +68,12 @@ public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
         updateConditionSets(expressions, node);
     }
 
+    @Override
+    public void endDocument() {
+        unnamedConditions.clear();
+        namedConditions.clear();
+    }
+
     private boolean isConditionReusedCorrectly(List<Expression> expressions, TagNode node) {
         String condition = clearExpressions(expressions).stream()
             .findFirst()

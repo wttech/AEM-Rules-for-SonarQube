@@ -23,6 +23,7 @@ import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
@@ -57,15 +58,18 @@ public class AvoidExtraSlyTagsCheck extends AbstractHtlCheck {
     @Override
     public void startElement(TagNode node) {
         Optional.ofNullable(node.getParent())
-                .ifPresent(tagNode ->
+                .ifPresent(parentNode ->
                 {
-                    if (tagNode.getNodeName().equalsIgnoreCase(SLY_TAG) && tagNode.getChildren().size() <= 1) {
-                        tagNode.getAttributes().stream()
+                    if (!StringUtils.equalsAnyIgnoreCase(SLY_TAG,node.getNodeName()) &&
+                            StringUtils.equalsAnyIgnoreCase(SLY_TAG, parentNode.getNodeName()) &&
+                            parentNode.getChildren().size() <= 1){
+                        parentNode.getAttributes().stream()
                                 .map(Attribute::getName)
                                 .filter(SLY_ATTRIBUTES::contains)
                                 .findFirst()
-                                .ifPresent(s -> createViolation(tagNode.getStartLinePosition(), RULE_MESSAGE));
+                                .ifPresent(s -> createViolation(parentNode.getStartLinePosition(), RULE_MESSAGE));
                     }
                 });
     }
 }
+
