@@ -69,9 +69,6 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 - **AEM-8** Prefer cleaner `@SlingServlet` annotation.
   - Prefer cleaner `@SlingServlet` annotation over `@Properties` approach. Do not mix up both approaches.
 
-- **AEM-14** Using http literal hardcoded makes it difficult to switch to https later on.
-  - We should not use http as a literal in our projects because if we want to switch to https, our code will be not ready.
-
 - **AEM-15** Usage of ``synchronized`` keyword should be avoided if possible.
   - Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.
 
