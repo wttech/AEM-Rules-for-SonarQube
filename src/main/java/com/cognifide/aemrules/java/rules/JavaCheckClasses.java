@@ -23,7 +23,6 @@ import com.cognifide.aemrules.java.checks.AdministrativeAccessUsageCheck;
 import com.cognifide.aemrules.java.checks.AnnotationsConstantsCheck;
 import com.cognifide.aemrules.java.checks.ConstantsCheck;
 import com.cognifide.aemrules.java.checks.ContentResourceShouldBeNullCheckedCheck;
-import com.cognifide.aemrules.java.checks.HttpConstantCheck;
 import com.cognifide.aemrules.java.checks.ModifiableValueMapUsageCheck;
 import com.cognifide.aemrules.java.checks.PreferSlingServletAnnotation;
 import com.cognifide.aemrules.java.checks.SessionShouldBeLoggedOut;
@@ -55,7 +54,6 @@ public class JavaCheckClasses implements CheckRegistrar {
         AdministrativeAccessUsageCheck.class,
         AnnotationsConstantsCheck.class,
         ConstantsCheck.class,
-        HttpConstantCheck.class,
         PreferSlingServletAnnotation.class,
         ResourceResolverShouldBeClosed.class,
         SessionShouldBeLoggedOut.class,
