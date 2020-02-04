@@ -10,28 +10,28 @@ Therefore, you should always null check the return value of 'getContentResource(
 
 == Noncompliant Code Example
 
-```
+``
 public ValueMap getProperty(Page page) {
 	return page.getContentResource().getValueMap();
 }
-```
+``
 
 == Compliant Solution
 
-```
+``
 public ValueMap getProperty(Page page) {
 	if (page.getContentResource != null) {
 	  return page.getContentResource.getValueMap();
 	}
 	return ValueMap.EMPTY;
 }
-```
+``
 
 or
 
-```
+``
 public ValueMap getProperty(Page page) {
     Optional<Resource> contentResource = Optional.ofNullable(page.getContentResource());
     return contentResource.map(Resource::getValueMap).orElse(ValueMap.EMPTY);
 }
-```
+``

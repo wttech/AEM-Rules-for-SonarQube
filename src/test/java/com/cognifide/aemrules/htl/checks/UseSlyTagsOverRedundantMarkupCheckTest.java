@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015-2018 Cognifide Limited
+ * Copyright (C) 2015-2019 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package com.cognifide.aemrules.java.checks;
+package com.cognifide.aemrules.htl.checks;
 
+import com.cognifide.aemrules.htl.AbstractBaseTest;
 import org.junit.Test;
 
-public class HttpConstantCheckTest extends AbstractBaseTest {
+public class UseSlyTagsOverRedundantMarkupCheckTest extends AbstractBaseTest {
 
     @Test
-    public void visitNode() {
-        check = new HttpConstantCheck();
-        filename = "src/test/files/checks/java/HttpConstantCheck.java";
-        verify(false);
+    public void checkRedundantSlyTags() {
+        check = new UseSlyTagsOverRedundantMarkupCheck();
+        filename = "src/test/files/checks/htl/UseSlyTagsOverRedundantMarkupCheck.html";
+        verify();
     }
-
 }

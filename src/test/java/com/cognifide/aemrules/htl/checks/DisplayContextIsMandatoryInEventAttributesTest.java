@@ -2,7 +2,7 @@
  * #%L
  * AEM Rules for SonarQube
  * %%
- * Copyright (C) 2015-2018 Cognifide Limited
+ * Copyright (C) 2015-2019 Cognifide Limited
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package com.example;
+package com.cognifide.aemrules.htl.checks;
 
-public class HttpConstantCheck {
+import com.cognifide.aemrules.htl.AbstractBaseTest;
+import org.junit.Test;
 
-    private String httpLiteral = "http"; // Noncompliant {{Using http literal hardcoded makes it difficult to switch to https later on.}}
+public class DisplayContextIsMandatoryInEventAttributesTest extends AbstractBaseTest {
 
-    private String httpLiteralUppercase = "HTTP"; // Noncompliant {{Using http literal hardcoded makes it difficult to switch to https later on.}}
-
-    private String otherLiteral = "other";
-
-    protected void protectedMethod(String test) {
-        String httpProtocol = "http"; // Noncompliant
+    @Test
+    public void checkEventAttributeDisplayContext() {
+        check = new EventMandatoryDisplayContextCheck();
+        filename = "src/test/files/checks/htl/DefineDisplayContextInEventAttributes.html";
+        verify();
     }
 }
