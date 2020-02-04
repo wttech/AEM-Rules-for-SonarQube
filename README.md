@@ -17,7 +17,17 @@ Each release has its own prerequisites section, for more information please chec
 
 ## Installation
 
-Using docker we can start our work with AemRules really quick.
+**Custom Dockerfile**
+
+Following Dockerfile uses official Sonarqube 7.9 image and download AEM Rules 1.0-RC2 to plugin directory.
+
+```
+FROM sonarqube:7.9-community AS aemrulesqube79
+RUN curl -Lk -o $SONARQUBE_HOME/extensions/plugins/aemrules-1.0-RC2.jar https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases/download/v1.0-RC2/aemrules-1.0-RC2.jar
+```
+
+**Community image**
+
 This is already prepared solution thanks to @ahmed-musallam.
 
 `docker run --rm -p 9000:9000 ahmedmusallam/sonarqube-aem:latest`
