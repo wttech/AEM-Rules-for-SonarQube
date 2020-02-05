@@ -39,7 +39,7 @@ import org.sonar.squidbridge.api.AnalysisException;
 
 public abstract class HtlFilesAnalyzer {
 
-    private static final Logger LOGGER = Loggers.get(HtlSensor.class);
+    private static final Logger LOGGER = Loggers.get(HtlFilesAnalyzer.class);
     protected final HtlChecks checks;
     private RuleKey parsingErrorRuleKey;
 

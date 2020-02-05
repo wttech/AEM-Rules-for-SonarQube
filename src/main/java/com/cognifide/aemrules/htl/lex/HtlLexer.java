@@ -105,7 +105,7 @@ public final class HtlLexer {
 
         // ChannelDispatcher manages the tokenizers
         ChannelDispatcher<List<Node>> channelDispatcher = ChannelDispatcher.builder()
-            .addChannels((Channel[]) tokenizers.toArray(new Channel[0]))
+            .addChannels(tokenizers.toArray(new Channel[0]))
             .build();
         channelDispatcher.consume(codeReader, nodeList);
 

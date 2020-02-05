@@ -25,6 +25,8 @@ import com.cognifide.aemrules.version.AemVersion;
 import com.google.common.collect.Ordering;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.apache.sling.scripting.sightly.impl.compiler.Syntax;
 import org.sonar.check.Priority;
@@ -59,10 +61,10 @@ public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
         Boolean hasAttributesInWrongOrder = node.getAttributes().stream()
             .map(Attribute::getName)
             .map(Syntax::isPluginAttribute)
-            .mapToInt(value -> value == Boolean.TRUE ? 1 : 0)
+            .mapToInt(value -> BooleanUtils.isTrue(value) ? 1 : 0)
             .boxed()
             .collect(Collectors.collectingAndThen(Collectors.toList(), listOfAttributes -> !isOrdered(listOfAttributes)));
-        if (hasAttributesInWrongOrder) {
+        if (Boolean.TRUE.equals(hasAttributesInWrongOrder)) {
             createViolation(node.getStartLinePosition(), "Move HTL Attributes to the end of the tag");
         }
         super.startHtlElement(expressions, node);
