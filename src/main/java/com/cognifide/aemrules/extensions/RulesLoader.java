@@ -20,7 +20,6 @@
 package com.cognifide.aemrules.extensions;
 
 import com.cognifide.aemrules.metadata.Metadata;
-import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
@@ -28,6 +27,7 @@ import com.google.common.io.Resources;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.CheckForNull;
@@ -124,7 +124,7 @@ public class RulesLoader {
         try {
             String path = String.format("/%s/%s.%s", resourceFolder, ruleKey, fileExtension);
             URL url = Resources.getResource(RulesLoader.class, path);
-            result = Resources.toString(url, Charsets.UTF_8);
+            result = Resources.toString(url, StandardCharsets.UTF_8);
         } catch (IOException | IllegalArgumentException e) {
             LOG.error("Cannot read resource file.", e);
         }

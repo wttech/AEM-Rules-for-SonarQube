@@ -158,7 +158,8 @@ public class ContentResourceShouldBeNullCheckedCheck extends BaseTreeVisitor imp
     }
 
     private void equalsNullCheck(MethodInvocationTree tree) {
-        if (!contentResources.getOrDefault(tree.firstToken().text(), true) &&
+        Boolean firstTokenText = contentResources.getOrDefault(tree.firstToken().text(), true);
+        if (Boolean.FALSE.equals(firstTokenText) &&
             !returnOccurredInsideEqualNullCheck) {
             context.reportIssue(this, tree, RULE_MESSAGE);
         }
