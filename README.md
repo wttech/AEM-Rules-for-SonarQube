@@ -1,4 +1,4 @@
-[![Cognifide logo](http://cognifide.github.io/images/cognifide-logo.png)](http://www.cognifide.com/)
+[![Cognifide logo](https://assets.cognifide.com/github/cognifide-logo.png)](http://www.cognifide.com/)
 
 [![Build Status](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube.svg?branch=master)](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube)
 [![Coverage Status](https://coveralls.io/repos/github/Cognifide/AEM-Rules-for-SonarQube/badge.svg?branch=master)](https://coveralls.io/github/Cognifide/AEM-Rules-for-SonarQube?branch=master)
