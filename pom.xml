@@ -39,6 +39,26 @@
       <name>Szymon Owczarzak</name>
       <email>szymon.owczarzak@cognifide.com</email>
     </developer>
+    <developer>
+      <id>piotr.wilczynski</id>
+      <name>Piotr Wilczyński</name>
+      <email>piotr.wilczynski@cognifide.com</email>
+    </developer>
+    <developer>
+      <id>michal.tobiasz</id>
+      <name>Michał Tobiasz</name>
+      <email>michal.tobiasz@cognifide.com</email>
+    </developer>
+    <developer>
+      <id>mateusz.bartkowiak</id>
+      <name>Mateusz Bartkowiak</name>
+      <email>mateusz.bartkowiak@cognifide.com</email>
+    </developer>
+    <developer>
+      <id>jedrzej.plucinski</id>
+      <name>Jędrzej Pluciński</name>
+      <email>jedrzej.plucinski@cognifide.com</email>
+    </developer>
   </developers>
 
   <scm>
