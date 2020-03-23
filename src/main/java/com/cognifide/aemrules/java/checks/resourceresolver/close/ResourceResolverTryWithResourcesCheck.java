@@ -88,8 +88,8 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
   @Override
   public void visitTryStatement(TryStatementTree tree) {
     insideTryStatement = true;
-    tree.resources().stream()
-        .map(resource -> resource.simpleName().name())
+    tree.resourceList().stream()
+        .map(resource -> resource.firstToken().text())
         .forEach(resourceResolversInTryWithResources::add);
 
     super.visitTryStatement(tree);
