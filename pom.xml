@@ -90,21 +90,21 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <htl.version>1.1.2-1.4.0</htl.version>
-    <sonar.version>6.7</sonar.version>
+    <sonar.version>7.9.2</sonar.version>
     <sonar.html.version>3.0.1.1444</sonar.html.version>
-    <sonar.java.plugin>4.10.0.10260</sonar.java.plugin>
+    <sonar.java.plugin>6.2.0.21135</sonar.java.plugin>
     <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
     <tagName>v${project.version}</tagName>
   </properties>
 
   <repositories>
     <repository>
-      <id>adobe-releases</id>
-      <url>http://repo.adobe.com/nexus/content/groups/public/</url>
-    </repository>
-    <repository>
       <id>central</id>
       <url>http://central.maven.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>adobe-releases</id>
+      <url>http://repo.adobe.com/nexus/content/groups/public/</url>
     </repository>
   </repositories>
 
@@ -162,7 +162,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>19.0</version>
+      <version>28.2-jre</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
