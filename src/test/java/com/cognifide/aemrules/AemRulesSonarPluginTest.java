@@ -23,6 +23,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 import org.sonar.api.Plugin;
+import org.sonar.api.SonarEdition;
 import org.sonar.api.SonarQubeSide;
 import org.sonar.api.internal.SonarRuntimeImpl;
 import org.sonar.api.utils.Version;
@@ -31,7 +32,7 @@ public class AemRulesSonarPluginTest {
 
     @Test
     public void webPluginTester() {
-        Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SERVER));
+        Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SERVER, SonarEdition.COMMUNITY));
 
         new AemRulesSonarPlugin().define(context);
         assertThat(context.getExtensions()).hasSize(7);

@@ -81,7 +81,7 @@ public class HtlSensorTest {
     private CheckFactory getCheckFactory(Repository htlRepository) {
         List<NewActiveRule> ar = new ArrayList<>();
         for (RulesDefinition.Rule rule : htlRepository.rules()) {
-            ar.add(new ActiveRulesBuilder().create(RuleKey.of(HtlCheckClasses.REPOSITORY_KEY, rule.key())));
+            ar.add(new NewActiveRule.Builder().setRuleKey(RuleKey.of(HtlCheckClasses.REPOSITORY_KEY, rule.key())).build());
         }
         return new CheckFactory(new DefaultActiveRules(ar));
     }

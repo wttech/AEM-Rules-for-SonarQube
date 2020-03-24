@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
+import org.sonar.java.model.declaration.VariableTreeImpl;
 import org.sonar.plugins.java.api.JavaFileScanner;
 import org.sonar.plugins.java.api.JavaFileScannerContext;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
@@ -88,8 +89,8 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
   @Override
   public void visitTryStatement(TryStatementTree tree) {
     insideTryStatement = true;
-    tree.resources().stream()
-        .map(resource -> resource.simpleName().name())
+    tree.resourceList().stream()
+        .map(resource -> ((VariableTreeImpl) resource).simpleName().name())
         .forEach(resourceResolversInTryWithResources::add);
 
     super.visitTryStatement(tree);
