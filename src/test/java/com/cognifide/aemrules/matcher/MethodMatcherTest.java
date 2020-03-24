@@ -23,7 +23,12 @@ import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 import org.sonar.java.model.JParser;
-import org.sonar.plugins.java.api.tree.*;
+import org.sonar.plugins.java.api.tree.ClassTree;
+import org.sonar.plugins.java.api.tree.CompilationUnitTree;
+import org.sonar.plugins.java.api.tree.ExpressionStatementTree;
+import org.sonar.plugins.java.api.tree.MethodInvocationTree;
+import org.sonar.plugins.java.api.tree.MethodTree;
+import org.sonar.plugins.java.api.tree.StatementTree;
 
 import java.io.File;
 import java.util.List;
@@ -54,6 +59,14 @@ public class MethodMatcherTest {
 
     private static final int METHOD_INVOCATION_INDEX = 2;
 
+    public static final String CLASSES_FILEPATH = "target/classes";
+
+    public static final String TEST_CLASSES_FILEPATH = "target/test-classes";
+
+    public static final String JAVA_VERSION = "1.8";
+
+    public static final String UNIT_NAME = "test";
+
     private MethodInvocationTree methodInvocationTree;
 
     @Test
@@ -61,7 +74,7 @@ public class MethodMatcherTest {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
-            MethodNamePredicate.is("test"),
+            MethodNamePredicate.is(UNIT_NAME),
             OwnerTypePredicate.is("com.cognifide.test.TestClass"),
             ParameterTypePredicate.is("com.cognifide.test.MyClass1"),
             ParameterTypePredicate.is("com.cognifide.test.MyClass2")
@@ -75,7 +88,7 @@ public class MethodMatcherTest {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
-            MethodNamePredicate.is("test"),
+            MethodNamePredicate.is(UNIT_NAME),
             OwnerTypePredicate.is("com.cognifide.test.TestClass"),
             ParameterTypePredicate.anyParameterType(),
             ParameterTypePredicate.is("com.cognifide.test.MyClass2")
@@ -103,7 +116,7 @@ public class MethodMatcherTest {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
-            MethodNamePredicate.is("test"),
+            MethodNamePredicate.is(UNIT_NAME),
             OwnerTypePredicate.is("com.cognifide.test.TestClass"),
             ParameterTypePredicate.is("com.cognifide.test.MyClass1")
         );
@@ -116,7 +129,7 @@ public class MethodMatcherTest {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
-            MethodNamePredicate.is("test"),
+            MethodNamePredicate.is(UNIT_NAME),
             OwnerTypePredicate.is("com.cognifide.test.Different"),
             ParameterTypePredicate.is("com.cognifide.test.MyClass1"),
             ParameterTypePredicate.is("com.cognifide.test.MyClass2")
@@ -130,7 +143,7 @@ public class MethodMatcherTest {
         givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
 
         MethodMatcher methodMatcher = MethodMatcher.create(
-            MethodNamePredicate.is("test"),
+            MethodNamePredicate.is(UNIT_NAME),
             OwnerTypePredicate.is("com.cognifide.test.TestClass"),
             ParameterTypePredicate.is("com.cognifide.test.Different1"),
             ParameterTypePredicate.is("com.cognifide.test.MyClass2")
@@ -147,8 +160,8 @@ public class MethodMatcherTest {
     }
 
     private CompilationUnitTree parse(String source) {
-        List<File> classpath = Lists.newArrayList(new File("target/test-classes"), new File("target/classes"));
-        return JParser.parse("1.8", "test", source, classpath);
+        List<File> classpath = Lists.newArrayList(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
+        return JParser.parse(JAVA_VERSION, UNIT_NAME, source, classpath);
     }
 
 }
