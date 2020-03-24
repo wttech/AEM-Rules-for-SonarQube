@@ -15,4 +15,4 @@ addons:
         jlQkHyA5sAOW8irorD2PKsrtRV26htgVenttopw2tDUEcWeUPnxncq1WzjxVTpTW12LUFPXyngrnbqjb6PbLVz4Pnyy1kVpE7VjdQIM/FG5h9vT0hSbyCni+p+x3HGucQUjzDLGeMbuto7uPkIoUGnWpIdd140uxI/lzUy+/vf9YA6gWPhXkuEV0PHx0e0/m28/JbQVmJNhVZjsx/JA0OUh/Zo5pFv3U6N88MLdgFvb48q/mQMdzj5WZgm7QuqekTIyMC
         Fng0JHydAYJlnXAOuY2NPwGjUtF2cq57K4MlgD3k/ws5gdI8HIITWgKMcosh1gpws8C4PSxHicqy17beNbIE46zSkYtPhwvHOV8zkL4iYwpn3KP9Ar66oWQy44PaEfI4fVI4IQ1CDoukX0+tyVCE4DNnzqif8/AFO2xB+RWqKkqA=
 
-script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package cobertura:cobertura coveralls:report sonar:sonar
+script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package org.jacoco:jacoco-maven-plugin:report cobertura:cobertura coveralls:report sonar:sonar
