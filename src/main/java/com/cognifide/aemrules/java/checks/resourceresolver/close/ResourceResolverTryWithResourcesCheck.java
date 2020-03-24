@@ -90,8 +90,12 @@ public class ResourceResolverTryWithResourcesCheck extends BaseTreeVisitor imple
   public void visitTryStatement(TryStatementTree tree) {
     insideTryStatement = true;
     tree.resourceList().stream()
-        .map(resource -> ((VariableTreeImpl) resource).simpleName().name())
-        .forEach(resourceResolversInTryWithResources::add);
+            // We're iterating over a resource specification in a try-with-resource block
+            // so we expect variable trees
+            .filter(resource -> resource instanceof VariableTree)
+            .map(VariableTree.class::cast)
+            .map(resource -> resource.simpleName().name())
+            .forEach(resourceResolversInTryWithResources::add);
 
     super.visitTryStatement(tree);
     resourceResolversInTryWithResources.clear();
