@@ -100,11 +100,11 @@
   <repositories>
     <repository>
       <id>central</id>
-      <url>http://central.maven.org/maven2/</url>
+      <url>https://repo.maven.apache.org/maven2/</url>
     </repository>
     <repository>
       <id>adobe-releases</id>
-      <url>http://repo.adobe.com/nexus/content/groups/public/</url>
+      <url>https://repo.adobe.com/nexus/content/groups/public/</url>
     </repository>
   </repositories>
 
