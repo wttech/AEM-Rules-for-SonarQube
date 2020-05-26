@@ -19,7 +19,6 @@
  */
 package com.cognifide.aemrules.matcher;
 
-import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 import org.sonar.java.model.JParser;
@@ -160,7 +159,7 @@ public class MethodMatcherTest {
     }
 
     private CompilationUnitTree parse(String source) {
-        List<File> classpath = Lists.newArrayList(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
+        List<File> classpath = List.of(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
         return JParser.parse(JAVA_VERSION, UNIT_NAME, source, classpath);
     }
 

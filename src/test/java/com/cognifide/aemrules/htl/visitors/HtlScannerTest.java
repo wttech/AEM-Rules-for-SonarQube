@@ -21,15 +21,15 @@ package com.cognifide.aemrules.htl.visitors;
 
 import static org.junit.Assert.assertEquals;
 
-import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
-import com.google.common.base.Throwables;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import com.cognifide.aemrules.utils.Throwables;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,6 @@ import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.internal.google.common.io.Files;
 import org.sonar.plugins.html.api.HtmlConstants;
 import org.sonar.plugins.html.node.CommentNode;
-import org.sonar.plugins.html.node.ExpressionNode;
 import org.sonar.plugins.html.node.Node;
 import org.sonar.plugins.html.node.TagNode;
 import org.sonar.plugins.html.visitor.HtmlSourceCode;

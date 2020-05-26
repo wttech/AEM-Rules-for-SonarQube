@@ -19,7 +19,6 @@
  */
 package com.example;
 
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -73,7 +72,7 @@ public class SampleServlet extends SlingAllMethodsServlet {
         throws LoginException {
         ResourceResolver resolver;
         if (userId != null) {
-            Map<String, Object> authenticationInfo = Maps.newHashMap();
+            Map<String, Object> authenticationInfo = new HashMap<>();
             authenticationInfo.put(ResourceResolverFactory.USER_IMPERSONATION, userId);
             resolver = factory.getServiceResourceResolver(authenticationInfo);
         } else {

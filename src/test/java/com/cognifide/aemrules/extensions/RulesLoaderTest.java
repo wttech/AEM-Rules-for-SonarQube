@@ -26,7 +26,6 @@ import com.cognifide.aemrules.java.rules.JavaCheckClasses;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -73,7 +72,7 @@ public class RulesLoaderTest {
 
     @Test
     public void shouldLoadRuleWithAllSettings() {
-        givenRulesLoaded(ImmutableList.of(RuleWithAllSettings.class));
+        givenRulesLoaded(List.of(RuleWithAllSettings.class));
 
         RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
@@ -87,7 +86,7 @@ public class RulesLoaderTest {
 
     @Test
     public void shouldNotSetTechnicalDebtWhenAnnotationNotPresent() {
-        givenRulesLoaded(ImmutableList.of(RuleWithoutMetadataAnnotation.class));
+        givenRulesLoaded(List.of(RuleWithoutMetadataAnnotation.class));
 
         RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
@@ -101,7 +100,7 @@ public class RulesLoaderTest {
 
     @Test
     public void shouldNotSetTechnicalDebtWhenTechnicalDebtNotSetInMetadata() {
-        givenRulesLoaded(ImmutableList.of(RuleWithEmptyTechnicalDebt.class));
+        givenRulesLoaded(List.of(RuleWithEmptyTechnicalDebt.class));
 
         RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
@@ -115,7 +114,7 @@ public class RulesLoaderTest {
 
     @Test
     public void shouldNotLoadRuleWhenRuleAnnotationIsNotPresent() {
-        givenRulesLoaded(ImmutableList.of(RuleWithoutRuleAnnotation.class));
+        givenRulesLoaded(List.of(RuleWithoutRuleAnnotation.class));
 
         RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
@@ -126,7 +125,7 @@ public class RulesLoaderTest {
 
     @Test
     public void shouldSetDefaultValuesWhenRuleAttributeWithNameOnly() {
-        givenRulesLoaded(ImmutableList.of(RuleWithOnlyNameAttribute.class));
+        givenRulesLoaded(List.of(RuleWithOnlyNameAttribute.class));
 
         RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule("com.cognifide.aemrules.extensions.RulesLoaderTest.RuleWithOnlyNameAttribute");
@@ -140,12 +139,12 @@ public class RulesLoaderTest {
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenRuleNameNotProvide() {
-        givenRulesLoaded(ImmutableList.of(RuleWithoutNameAttributeSet.class));
+        givenRulesLoaded(List.of(RuleWithoutNameAttributeSet.class));
     }
 
     @Test
     public void shouldLoadRuleWithProperty() {
-        givenRulesLoaded(ImmutableList.of(RuleWithRuleProperty.class));
+        givenRulesLoaded(List.of(RuleWithRuleProperty.class));
 
         RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
@@ -158,7 +157,7 @@ public class RulesLoaderTest {
 
     @Test
     public void shouldLoadRuleWithPropertyWithoutAttributes() {
-        givenRulesLoaded(ImmutableList.of(RuleWithRulePropertyWithoutAttributes.class));
+        givenRulesLoaded(List.of(RuleWithRulePropertyWithoutAttributes.class));
 
         RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);

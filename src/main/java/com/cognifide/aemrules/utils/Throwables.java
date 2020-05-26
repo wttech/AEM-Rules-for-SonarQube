@@ -33,4 +33,18 @@ public final class Throwables {
 
         return throwable;
     }
+
+    public static RuntimeException propagate(Throwable throwable) {
+        throwIfUnchecked(throwable);
+        throw new RuntimeException(throwable);
+    }
+
+    public static void throwIfUnchecked(Throwable throwable) {
+        if (throwable instanceof RuntimeException) {
+            throw (RuntimeException) throwable;
+        }
+        if (throwable instanceof Error) {
+            throw (Error) throwable;
+        }
+    }
 }
