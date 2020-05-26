@@ -19,7 +19,6 @@
  */
 package com.cognifide.aemrules.java.checks.visitors;
 
-import com.google.common.collect.Sets;
 import org.sonar.plugins.java.api.tree.AssignmentExpressionTree;
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.IdentifierTree;
@@ -33,6 +32,7 @@ import org.sonar.plugins.java.api.tree.TryStatementTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -47,7 +47,7 @@ public class FindSessionDeclarationVisitor extends BaseTreeVisitor {
     private final Set<VariableTree> sessions;
 
     public FindSessionDeclarationVisitor() {
-        sessions = Sets.newHashSet();
+        sessions = new HashSet<>();
     }
 
     public Collection<VariableTree> getDeclarations() {

@@ -21,10 +21,11 @@ package com.cognifide.aemrules.htl;
 
 import com.cognifide.aemrules.htl.api.ParsingErrorRule;
 import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
-import com.google.common.base.Throwables;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.concurrent.CancellationException;
+
+import com.cognifide.aemrules.utils.Throwables;
 import org.apache.sling.scripting.sightly.compiler.SightlyCompilerException;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -41,7 +42,7 @@ public abstract class HtlFilesAnalyzer {
 
     private static final Logger LOGGER = Loggers.get(HtlFilesAnalyzer.class);
     protected final HtlChecks checks;
-    private RuleKey parsingErrorRuleKey;
+    private final RuleKey parsingErrorRuleKey;
 
     public HtlFilesAnalyzer(CheckFactory checkFactory) {
         this.checks = HtlChecks.createHtlCheck(checkFactory)

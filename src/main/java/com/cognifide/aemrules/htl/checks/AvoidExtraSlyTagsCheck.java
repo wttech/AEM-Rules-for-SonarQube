@@ -22,13 +22,13 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
+import java.util.List;
 import java.util.Optional;
 
 @Rule(
@@ -51,7 +51,7 @@ public class AvoidExtraSlyTagsCheck extends AbstractHtlCheck {
 
     private static final String SLY_TAG = "sly";
 
-    private static final ImmutableList SLY_ATTRIBUTES = ImmutableList.of("data-sly-use",
+    private static final List<String> SLY_ATTRIBUTES = List.of("data-sly-use",
             "data-sly-test",
             "data-sly-call");
 

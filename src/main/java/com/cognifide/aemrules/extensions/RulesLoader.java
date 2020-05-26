@@ -20,17 +20,16 @@
 package com.cognifide.aemrules.extensions;
 
 import com.cognifide.aemrules.metadata.Metadata;
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Resources;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.CheckForNull;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,20 +51,17 @@ public class RulesLoader {
 
     private static final String RULE_DESCRIPTION_EXTENSION = "md";
 
-    private static final Function<Class<?>, RuleParamType> TYPE_FOR_CLASS = Functions.forMap(
-        ImmutableMap.<Class<?>, RuleParamType>builder()
-            .put(Integer.class, RuleParamType.INTEGER)
-            .put(int.class, RuleParamType.INTEGER)
-            .put(Float.class, RuleParamType.FLOAT)
-            .put(float.class, RuleParamType.FLOAT)
-            .put(Boolean.class, RuleParamType.BOOLEAN)
-            .put(boolean.class, RuleParamType.BOOLEAN)
-            .build(),
-        RuleParamType.STRING
+    private static final Map<Class<?>, RuleParamType> TYPE_FOR_CLASS = Map.of(
+            Integer.class, RuleParamType.INTEGER,
+            int.class, RuleParamType.INTEGER,
+            Float.class, RuleParamType.FLOAT,
+            float.class, RuleParamType.FLOAT,
+            Boolean.class, RuleParamType.BOOLEAN,
+            boolean.class, RuleParamType.BOOLEAN
     );
 
     private static RuleParamType guessType(Class<?> type) {
-        return TYPE_FOR_CLASS.apply(type);
+        return TYPE_FOR_CLASS.getOrDefault(type, RuleParamType.STRING);
     }
 
     public <T> void load(RulesDefinition.NewExtendedRepository repo, List<Class<? extends T>> annotatedClasses) {
@@ -123,8 +119,8 @@ public class RulesLoader {
         String result = null;
         try {
             String path = String.format("/%s/%s.%s", resourceFolder, ruleKey, fileExtension);
-            URL url = Resources.getResource(RulesLoader.class, path);
-            result = Resources.toString(url, StandardCharsets.UTF_8);
+            URL url = getClass().getResource(path);
+            result = IOUtils.toString(url, StandardCharsets.UTF_8);
         } catch (IOException | IllegalArgumentException e) {
             LOG.error("Cannot read resource file.", e);
         }

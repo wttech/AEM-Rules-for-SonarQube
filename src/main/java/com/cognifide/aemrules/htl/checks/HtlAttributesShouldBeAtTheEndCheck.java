@@ -21,8 +21,8 @@ package com.cognifide.aemrules.htl.checks;
 
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.utils.Comparables;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.Ordering;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +53,7 @@ public class HtlAttributesShouldBeAtTheEndCheck extends AbstractHtlCheck {
     static final String RULE_MESSAGE = "Always place HTL attributes at the end";
 
     private static boolean isOrdered(Iterable<Integer> list) {
-        return Ordering.natural().isOrdered(list);
+        return Comparables.isOrdered(list);
     }
 
     @Override

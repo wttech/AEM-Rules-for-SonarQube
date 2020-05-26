@@ -19,14 +19,13 @@
  */
 package com.cognifide.aemrules.java.checks.visitors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.TryStatementTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
-
-import com.google.common.collect.Lists;
 
 /**
  * Finds all injector variable declarations. Used in method's bodies only.
@@ -39,7 +38,7 @@ public class FindVariableDeclarationVisitor extends BaseTreeVisitor {
 
     public FindVariableDeclarationVisitor(String variableTypeName) {
         this.variableTypeName = variableTypeName;
-        variables = Lists.newArrayList();
+        this.variables = new ArrayList<>();
     }
 
     public List<VariableTree> getDeclarations() {

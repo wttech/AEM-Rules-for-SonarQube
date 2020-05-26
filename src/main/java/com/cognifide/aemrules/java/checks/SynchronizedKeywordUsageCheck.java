@@ -24,7 +24,6 @@ import static com.cognifide.aemrules.java.checks.SynchronizedKeywordUsageCheck.D
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -57,8 +56,7 @@ public class SynchronizedKeywordUsageCheck extends IssuableSubscriptionVisitor {
 
     protected static final String DESCRIPTION = "Check if using 'synchronized' can be replaced with more sophisticated solution.";
 
-    private static final List<Tree.Kind> ACCEPTED_NODE_KINDS
-        = ImmutableList.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);
+    private static final List<Tree.Kind> ACCEPTED_NODE_KINDS = List.of(Kind.SYNCHRONIZED_STATEMENT, Kind.METHOD);
 
     @Override
     public List<Tree.Kind> nodesToVisit() {

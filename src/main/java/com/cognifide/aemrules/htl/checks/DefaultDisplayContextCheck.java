@@ -21,8 +21,8 @@ package com.cognifide.aemrules.htl.checks;
 
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
+import com.cognifide.aemrules.utils.MultiMap;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.ImmutableMultimap;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.TagNode;
@@ -52,35 +52,36 @@ public class DefaultDisplayContextCheck extends AbstractHtlCheck {
 
     private static final String VIOLATION_MESSAGE = "Explicitly using default display context, please remove display context from expression";
 
-    private static final ImmutableMultimap<String, String> TAG_ATTRIBUTE_MAPPING = ImmutableMultimap.<String, String>builder()
-            .put("form", "action")
-            .put("blockquote", "cite")
-            .put("del", "cite")
-            .put("ins", "cite")
-            .put("q", "cite")
-            .put("object", "data")
-            .put("button", "formaction")
-            .put("input", "formaction")
-            .put("a", "href")
-            .put("area", "href")
-            .put("link", "href")
-            .put("base", "href")
-            .put("html", "manifest")
-            .put("video", "poster")
-            .put("audio", "src")
-            .put("embed", "src")
-            .put("iframe", "src")
-            .put("img", "src")
-            .put("input", "src")
-            .put("script", "src")
-            .put("source", "src")
-            .put("track", "src").build();
+    private static final MultiMap<String, String> TAG_ATTRIBUTE_MAPPING = MultiMap.builder(m -> {
+            m.add("form", "action");
+            m.add("blockquote", "cite");
+            m.add("del", "cite");
+            m.add("ins", "cite");
+            m.add("q", "cite");
+            m.add("object", "data");
+            m.add("button", "formaction");
+            m.add("input", "formaction");
+            m.add("a", "href");
+            m.add("area", "href");
+            m.add("link", "href");
+            m.add("base", "href");
+            m.add("html", "manifest");
+            m.add("video", "poster");
+            m.add("audio", "src");
+            m.add("embed", "src");
+            m.add("iframe", "src");
+            m.add("img", "src");
+            m.add("input", "src");
+            m.add("script", "src");
+            m.add("source", "src");
+            m.add("track", "src");
+    });
 
     @Override
     public void startElement(TagNode node) {
         String nodeName = node.getNodeName();
         if (TAG_ATTRIBUTE_MAPPING.containsKey(nodeName)) {
-            Collection<String> supportedAttributes = TAG_ATTRIBUTE_MAPPING.get(nodeName);
+            Collection<String> supportedAttributes = TAG_ATTRIBUTE_MAPPING.getAll(nodeName);
             node.getAttributes().stream()
                     .filter(attribute -> supportedAttributes.contains(attribute.getName()))
                     .filter(a -> CONTEXT_URI_DEFINITION.matcher(a.getValue()).find())

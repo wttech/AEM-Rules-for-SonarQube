@@ -20,8 +20,8 @@
 package com.cognifide.aemrules.htl;
 
 import com.cognifide.aemrules.htl.api.HtlCheck;
-import com.google.common.collect.Sets;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,7 +34,7 @@ public class HtlChecks {
 
     private final CheckFactory checkFactory;
 
-    private Set<Checks<HtlCheck>> checksByRepository = Sets.newHashSet();
+    private final Set<Checks<HtlCheck>> checksByRepository = new HashSet<>();
 
     private HtlChecks(CheckFactory checkFactory) {
         this.checkFactory = checkFactory;
