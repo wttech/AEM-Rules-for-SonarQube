@@ -91,10 +91,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <htl.version>1.1.2-1.4.0</htl.version>
     <sonar.version>7.9.2</sonar.version>
-<!--    <sonar.html.version>3.2.0.2082</sonar.html.version>-->
-<!--    <sonar.java.plugin>6.4.0.21967</sonar.java.plugin>-->
-    <sonar.html.version>3.0.1.1444</sonar.html.version>
-    <sonar.java.plugin>6.2.0.21135</sonar.java.plugin>
+    <sonar.html.version>3.2.0.2082</sonar.html.version>
+    <sonar.java.plugin>6.4.0.21967</sonar.java.plugin>
     <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
     <tagName>v${project.version}</tagName>
   </properties>
@@ -133,12 +131,12 @@
       <type>sonar-plugin</type>
       <version>${sonar.java.plugin}</version>
       <scope>provided</scope>
-<!--      <exclusions>-->
-<!--        <exclusion>-->
-<!--          <groupId>com.google.guava</groupId>-->
-<!--          <artifactId>guava</artifactId>-->
-<!--        </exclusion>-->
-<!--      </exclusions>-->
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.sonarsource.sslr-squid-bridge</groupId>
@@ -176,12 +174,12 @@
       <groupId>org.sonarsource.html</groupId>
       <artifactId>sonar-html-plugin</artifactId>
       <version>${sonar.html.version}</version>
-<!--      <exclusions>-->
-<!--        <exclusion>-->
-<!--          <groupId>com.google.guava</groupId>-->
-<!--          <artifactId>guava</artifactId>-->
-<!--        </exclusion>-->
-<!--      </exclusions>-->
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Unit Test dependencies -->
