@@ -8,3 +8,4 @@ atlassian-ide-plugin.xml
 .classpath
 .project
 .settings/
+.java-version

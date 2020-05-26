@@ -24,8 +24,8 @@ import com.cognifide.aemrules.java.checks.visitors.FinallyBlockVisitor;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.Sets;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.sonar.check.Priority;
@@ -116,7 +116,7 @@ public class ResourceResolverShouldBeClosed extends BaseTreeVisitor implements J
     }
 
     protected boolean checkIfResourceResolverIsClosed(MethodTree method, VariableTree injector) {
-        Set<IdentifierTree> usagesOfRR = Sets.newHashSet(injector.symbol().usages());
+        Set<IdentifierTree> usagesOfRR = new HashSet<>(injector.symbol().usages());
         CheckClosedVisitor checkClosedVisitor = new CheckClosedVisitor(usagesOfRR);
         FinallyBlockVisitor finallyBlockVisitor = new FinallyBlockVisitor(checkClosedVisitor);
         method.accept(finallyBlockVisitor);

@@ -22,7 +22,6 @@ package com.cognifide.aemrules.java.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.Sets;
 import java.util.Set;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -56,24 +55,24 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 
     public static final String RULE_MESSAGE = "Usage of %s as a field is not thread safe.";
 
-    private static Set<String> vulnerableClasses = Sets.newHashSet(
+    private static final Set<String> vulnerableClasses = Set.of(
         // empty for now
     );
 
-    private static Set<String> vulnerableInterfaces = Sets.newHashSet(
+    private static final Set<String> vulnerableInterfaces = Set.of(
         "javax.servlet.Servlet",
         "javax.servlet.Filter",
         "org.osgi.service.event.EventHandler"
     );
 
-    private static Set<String> vulnerableAnnotations = Sets.newHashSet(
+    private static final Set<String> vulnerableAnnotations = Set.of(
         "org.apache.felix.scr.annotations.Component",
         "org.osgi.service.component.annotations.Component",
         "org.apache.felix.scr.annotations.sling.SlingServlet", // this is possibly duplicative, but that shouldn't be a problem.
         "org.apache.felix.scr.annotations.sling.SlingFilter" // this is possibly duplicative, but that shouldn't be a problem.
     );
 
-    private static Set<String> nonThreadSafeTypes = Sets.newHashSet(
+    private static final Set<String> nonThreadSafeTypes = Set.of(
         "org.apache.sling.api.resource.ResourceResolver",
         "javax.jcr.Session",
         "com.day.cq.wcm.api.PageManager",

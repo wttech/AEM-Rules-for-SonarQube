@@ -20,6 +20,7 @@
 package com.cognifide.aemrules.java.checks.resourceresolver.close;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.sonar.plugins.java.api.semantic.Symbol;
@@ -34,8 +35,6 @@ import org.sonar.plugins.java.api.tree.Tree.Kind;
 import org.sonar.plugins.java.api.tree.TryStatementTree;
 import org.sonar.plugins.java.api.tree.VariableTree;
 
-import com.google.common.collect.Sets;
-
 /**
  * Finds all injector variable declarations. Used in method's bodies only. Works only for declaration within the same file - api limitations: {@link
  * Symbol#declaration()}
@@ -49,7 +48,7 @@ class FindRRDeclarationVisitor extends BaseTreeVisitor {
     private final Set<VariableTree> resourceResolvers;
 
     FindRRDeclarationVisitor() {
-        resourceResolvers = Sets.newHashSet();
+        resourceResolvers = new HashSet<>();
     }
 
     public Collection<VariableTree> getDeclarations() {

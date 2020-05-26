@@ -19,7 +19,7 @@
  */
 package com.cognifide.aemrules.htl.visitors;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,7 +42,7 @@ public class HtlScanner {
 
     private static final ExpressionParser expressionParser = new ExpressionParser();
 
-    private final List<DefaultHtlVisitor> checkVisitors = Lists.newArrayList();
+    private final List<DefaultHtlVisitor> checkVisitors = new ArrayList<>();
     private static void scanElementTag(DefaultHtlVisitor visitor, TagNode node) {
         if (!node.isEndElement()) {
             visitor.startElement(node);

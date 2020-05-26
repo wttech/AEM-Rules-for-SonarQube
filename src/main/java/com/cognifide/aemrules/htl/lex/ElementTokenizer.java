@@ -19,7 +19,6 @@
  */
 package com.cognifide.aemrules.htl.lex;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -33,11 +32,11 @@ import org.sonar.plugins.html.node.TagNode;
 
 class ElementTokenizer extends AbstractTokenizer<List<Node>> {
 
-    private static EndQNameMatcher endQNameMatcher = new EndQNameMatcher();
+    private static final EndQNameMatcher endQNameMatcher = new EndQNameMatcher();
 
-    private static EndTokenMatcher endTokenMatcher = new EndTokenMatcher();
+    private static final EndTokenMatcher endTokenMatcher = new EndTokenMatcher();
 
-    private static EndUnquotedAttributeMatcher endUnquotedAttributeMatcher = new EndUnquotedAttributeMatcher();
+    private static final EndUnquotedAttributeMatcher endUnquotedAttributeMatcher = new EndUnquotedAttributeMatcher();
 
     public ElementTokenizer(String startToken, String endToken) {
         super(startToken, endToken);
@@ -196,7 +195,7 @@ class ElementTokenizer extends AbstractTokenizer<List<Node>> {
 
     private static final class EndUnquotedAttributeMatcher implements EndMatcher {
 
-        private static final Set<Character> FORBIDDEN = ImmutableSet.of(
+        private static final Set<Character> FORBIDDEN = Set.of(
             '"',
             '\'',
             '=',

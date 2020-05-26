@@ -22,7 +22,6 @@ package com.cognifide.aemrules.java.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Set;
 import org.sonar.check.Priority;
@@ -58,7 +57,7 @@ public class ModifiableValueMapUsageCheck extends BaseTreeVisitor implements Jav
 
     private static final String MODIFIABLE_VALUE_MAP_FULL_NAME = "org.apache.sling.api.resource.ModifiableValueMap";
 
-    private static final Set<String> MUTABLE_METHODS = ImmutableSet.of("put", "putAll", "remove");
+    private static final Set<String> MUTABLE_METHODS = Set.of("put", "putAll", "remove");
 
     private JavaFileScannerContext context;
 

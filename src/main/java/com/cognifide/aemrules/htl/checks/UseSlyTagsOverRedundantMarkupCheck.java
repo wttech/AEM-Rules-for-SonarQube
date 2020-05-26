@@ -22,7 +22,6 @@ package com.cognifide.aemrules.htl.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.sonar.check.Priority;
@@ -55,10 +54,12 @@ public class UseSlyTagsOverRedundantMarkupCheck extends AbstractHtlCheck {
 
     private static final String SLY_TAG = "sly";
 
-    private static final ImmutableList SLY_ATTRIBUTES = ImmutableList.of("data-sly-use",
+    private static final List<String> SLY_ATTRIBUTES = List.of(
+            "data-sly-use",
             "data-sly-include",
             "data-sly-resource",
-            "data-sly-call");
+            "data-sly-call"
+    );
 
     @Override
     public void startHtlElement(List<Expression> expressions, TagNode node) {

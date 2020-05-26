@@ -25,8 +25,8 @@ import com.cognifide.aemrules.java.checks.visitors.FindSessionDeclarationVisitor
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
-import com.google.common.collect.Sets;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.sonar.check.Priority;
@@ -117,7 +117,7 @@ public class SessionShouldBeLoggedOut extends BaseTreeVisitor implements JavaFil
     }
 
     protected boolean checkIfLoggedOut(MethodTree method, VariableTree injector) {
-        Set<IdentifierTree> usagesOfSession = Sets.newHashSet(injector.symbol().usages());
+        Set<IdentifierTree> usagesOfSession = new HashSet<>(injector.symbol().usages());
         CheckLoggedOutVisitor checkLoggedOutVisitor = new CheckLoggedOutVisitor(usagesOfSession);
         FinallyBlockVisitor finallyBlockVisitor = new FinallyBlockVisitor(checkLoggedOutVisitor);
         method.accept(finallyBlockVisitor);

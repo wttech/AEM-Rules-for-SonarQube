@@ -25,15 +25,16 @@ import com.cognifide.aemrules.htl.Htl;
 import com.cognifide.aemrules.htl.Constants;
 import com.cognifide.aemrules.htl.HtlProfile;
 import com.cognifide.aemrules.htl.HtlSensor;
-import com.google.common.collect.ImmutableList;
 import org.sonar.api.Plugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
 
+import java.util.List;
+
 public class AemRulesSonarPlugin implements Plugin {
 
-    private static ImmutableList<PropertyDefinition> pluginProperties() {
-        return ImmutableList.of(
+    private static List<PropertyDefinition> pluginProperties() {
+        return List.of(
             PropertyDefinition.builder(Constants.FILE_EXTENSIONS_PROP_KEY)
                 .name("File suffixes")
                 .description("List of file suffixes that will be scanned.")

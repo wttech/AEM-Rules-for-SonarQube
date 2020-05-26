@@ -38,7 +38,6 @@ import com.cognifide.aemrules.htl.checks.ScriptsAndStyleMandatoryDisplayContextC
 import com.cognifide.aemrules.htl.checks.SlyElementsAreAutomaticallyUnwrappedCheck;
 import com.cognifide.aemrules.htl.checks.UseMostRestrictiveHtlContextCheck;
 import com.cognifide.aemrules.htl.checks.UseSlyTagsOverRedundantMarkupCheck;
-import com.google.common.collect.ImmutableList;
 import org.sonar.check.Rule;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public final class HtlCheckClasses {
 
     public static final String REPOSITORY_NAME = "AEM Rules";
 
-    private static final List<Class<? extends HtlCheck>> CLASSES = ImmutableList.of(
+    private static final List<Class<? extends HtlCheck>> CLASSES = List.of(
             ParsingErrorCheck.class,
             HtlCommentsCheck.class,
             AvoidExtraSlyTagsCheck.class,
