@@ -24,12 +24,13 @@ import com.cognifide.aemrules.htl.checks.AbstractHtlCheck;
 import com.cognifide.aemrules.htl.lex.HtlLexer;
 import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
 import com.cognifide.aemrules.htl.visitors.HtlScanner;
-import com.google.common.base.Throwables;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import com.cognifide.aemrules.utils.Throwables;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.rule.RuleKey;

@@ -59,6 +59,11 @@
       <name>Jędrzej Pluciński</name>
       <email>jedrzej.plucinski@cognifide.com</email>
     </developer>
+    <developer>
+      <id>krystian.panek</id>
+      <name>Krystian Panek</name>
+      <email>krystian.panek@cognifide.com</email>
+    </developer>
   </developers>
 
   <scm>

@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 import com.cognifide.aemrules.extensions.AemRulesRulesDefinition;
 import com.cognifide.aemrules.htl.checks.HtlAttributesShouldBeAtTheEndCheck;
 import com.cognifide.aemrules.htl.rules.HtlCheckClasses;
-import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +40,6 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
 import org.sonar.api.batch.rule.CheckFactory;
-import org.sonar.api.batch.rule.internal.ActiveRulesBuilder;
 import org.sonar.api.batch.rule.internal.DefaultActiveRules;
 import org.sonar.api.batch.rule.internal.NewActiveRule;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
@@ -170,7 +169,7 @@ public class HtlSensorTest {
             .setModuleBaseDir(dir.toPath())
             .setLanguage(HtmlConstants.LANGUAGE_KEY)
             .setType(InputFile.Type.MAIN)
-            .initMetadata(Files.toString(new File(dir, fileName), StandardCharsets.UTF_8))
+            .initMetadata(Files.readString(new File(dir, fileName).toPath(), StandardCharsets.UTF_8))
             .setCharset(StandardCharsets.UTF_8)
             .build();
     }
