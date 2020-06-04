@@ -304,8 +304,14 @@
         <configuration>
           <forkCount>3</forkCount>
           <reuseForks>true</reuseForks>
+          <!--
+            The dynamically evaluated @{argLine} variable is required to persist command line parameters
+            appended by the jacoco maven plugin (jacoco:prepare-agent)
+            The memory related ones specified inline are a workaround for Windows builds.
+            See https://stackoverflow.com/questions/23260057/the-forked-vm-terminated-without-saying-properly-goodbye-vm-crash-or-system-exi/33757854#33757854
+          -->
           <argLine>
-            -Xmx1024m -XX:MaxPermSize=256m
+            @{argLine} -Xmx1024m -XX:MaxPermSize=256m
           </argLine>
         </configuration>
       </plugin>
@@ -335,21 +341,21 @@
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.1.0</version>
         <configuration>
-          <coberturaReports>
-            <coberturaReport>${project.basedir}/target/report/coverage.xml</coberturaReport>
-          </coberturaReports>
           <repoToken>${coveralls.repo.token}</repoToken>
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <format>xml</format>
-          <maxmem>256m</maxmem>
-          <check>true</check>
-        </configuration>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.5</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
