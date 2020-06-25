@@ -55,24 +55,24 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 
     public static final String RULE_MESSAGE = "Usage of %s as a field is not thread safe.";
 
-    private static final Set<String> vulnerableClasses = Set.of(
+    private static final Set<String> VULNERABLE_CLASSES = Set.of(
         // empty for now
     );
 
-    private static final Set<String> vulnerableInterfaces = Set.of(
+    private static final Set<String> VULNERABLE_INTERFACES = Set.of(
         "javax.servlet.Servlet",
         "javax.servlet.Filter",
         "org.osgi.service.event.EventHandler"
     );
 
-    private static final Set<String> vulnerableAnnotations = Set.of(
+    private static final Set<String> VULNERABLE_ANNOTATIONS = Set.of(
         "org.apache.felix.scr.annotations.Component",
         "org.osgi.service.component.annotations.Component",
         "org.apache.felix.scr.annotations.sling.SlingServlet", // this is possibly duplicative, but that shouldn't be a problem.
         "org.apache.felix.scr.annotations.sling.SlingFilter" // this is possibly duplicative, but that shouldn't be a problem.
     );
 
-    private static final Set<String> nonThreadSafeTypes = Set.of(
+    private static final Set<String> NON_THREAD_SAFE_TYPES = Set.of(
         "org.apache.sling.api.resource.ResourceResolver",
         "javax.jcr.Session",
         "com.day.cq.wcm.api.PageManager",
@@ -116,7 +116,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
         if (isVariableField) {
             VariableTree variableField = (VariableTree) member;
             String name = variableField.type().symbolType().fullyQualifiedName();
-            if (nonThreadSafeTypes.contains(name)) {
+            if (NON_THREAD_SAFE_TYPES.contains(name)) {
                 context.reportIssue(this, member, String.format(RULE_MESSAGE, name));
             }
         }
@@ -126,7 +126,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
         boolean hasAnnotation = false;
         for (AnnotationTree annotationTree : clazz.modifiers().annotations()) {
             String name = annotationTree.annotationType().symbolType().fullyQualifiedName();
-            hasAnnotation |= vulnerableAnnotations.contains(name);
+            hasAnnotation |= VULNERABLE_ANNOTATIONS.contains(name);
         }
         return hasAnnotation;
     }
@@ -136,7 +136,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
         TypeTree type = clazz.superClass();
         if (type != null) {
             String name = type.symbolType().fullyQualifiedName();
-            extendsClass = vulnerableClasses.contains(name);
+            extendsClass = VULNERABLE_CLASSES.contains(name);
         }
         return extendsClass;
     }
@@ -145,7 +145,7 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
         boolean implementsInterface = false;
         for (TypeTree typeTree : clazz.superInterfaces()) {
             String name = typeTree.symbolType().fullyQualifiedName();
-            implementsInterface |= vulnerableInterfaces.contains(name);
+            implementsInterface |= VULNERABLE_INTERFACES.contains(name);
         }
         return implementsInterface;
     }

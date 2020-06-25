@@ -9,3 +9,4 @@ atlassian-ide-plugin.xml
 .project
 .settings/
 .java-version
+.DS_Store
