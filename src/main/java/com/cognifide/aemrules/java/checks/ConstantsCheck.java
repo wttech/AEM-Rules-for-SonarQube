@@ -23,6 +23,8 @@ import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.java.util.ConstantsChecker;
 import com.cognifide.aemrules.version.AemVersion;
+
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
@@ -52,7 +54,7 @@ public class ConstantsCheck extends IssuableSubscriptionVisitor {
 
     @Override
     public List<Kind> nodesToVisit() {
-        return List.of(Kind.STRING_LITERAL);
+        return Arrays.asList(Kind.STRING_LITERAL);
     }
 
     @Override

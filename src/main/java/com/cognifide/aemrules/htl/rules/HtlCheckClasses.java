@@ -40,6 +40,7 @@ import com.cognifide.aemrules.htl.checks.UseMostRestrictiveHtlContextCheck;
 import com.cognifide.aemrules.htl.checks.UseSlyTagsOverRedundantMarkupCheck;
 import org.sonar.check.Rule;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public final class HtlCheckClasses {
 
     public static final String REPOSITORY_NAME = "AEM Rules";
 
-    private static final List<Class<? extends HtlCheck>> CLASSES = List.of(
+    private static final List<Class<? extends HtlCheck>> CLASSES = Arrays.asList(
             ParsingErrorCheck.class,
             HtlCommentsCheck.class,
             AvoidExtraSlyTagsCheck.class,

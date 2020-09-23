@@ -29,6 +29,7 @@ import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,7 @@ public class UseSlyTagsOverRedundantMarkupCheck extends AbstractHtlCheck {
 
     private static final String SLY_TAG = "sly";
 
-    private static final List<String> SLY_ATTRIBUTES = List.of(
+    private static final List<String> SLY_ATTRIBUTES = Arrays.asList(
             "data-sly-use",
             "data-sly-include",
             "data-sly-resource",

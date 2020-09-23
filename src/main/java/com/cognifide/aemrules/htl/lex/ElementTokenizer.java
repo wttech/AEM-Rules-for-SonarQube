@@ -23,6 +23,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.commons.lang3.StringUtils;
 import org.sonar.channel.CodeReader;
 import org.sonar.channel.EndMatcher;
@@ -195,14 +198,14 @@ class ElementTokenizer extends AbstractTokenizer<List<Node>> {
 
     private static final class EndUnquotedAttributeMatcher implements EndMatcher {
 
-        private static final Set<Character> FORBIDDEN = Set.of(
+        private static final Set<Character> FORBIDDEN = Stream.of(
             '"',
             '\'',
             '=',
             '<',
             '>',
             '`'
-        );
+        ).collect(Collectors.toSet());
 
         @Override
         public boolean match(int character) {

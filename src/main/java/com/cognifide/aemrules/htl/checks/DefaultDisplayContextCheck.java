@@ -26,10 +26,14 @@ import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.TagNode;
 
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Rule(
         key = DefaultDisplayContextCheck.RULE_KEY,
@@ -53,29 +57,29 @@ public class DefaultDisplayContextCheck extends AbstractHtlCheck {
 
     private static final String VIOLATION_MESSAGE = "Explicitly using default display context, please remove display context from expression";
 
-    private static final Map<String, List<String>> TAG_ATTRIBUTE_MAPPING = Map.ofEntries(
-            Map.entry("a", List.of("href")),
-            Map.entry("area", List.of("href")),
-            Map.entry("audio", List.of("src")),
-            Map.entry("base", List.of("href")),
-            Map.entry("blockquote", List.of("cite")),
-            Map.entry("button", List.of("formaction")),
-            Map.entry("del", List.of("cite")),
-            Map.entry("embed", List.of("src")),
-            Map.entry("form", List.of("action")),
-            Map.entry("html", List.of("manifest")),
-            Map.entry("img", List.of("src")),
-            Map.entry("ins", List.of("cite")),
-            Map.entry("input", List.of("formaction", "src")),
-            Map.entry("iframe", List.of("src")),
-            Map.entry("link", List.of("href")),
-            Map.entry("q", List.of("cite")),
-            Map.entry("object", List.of("data")),
-            Map.entry("video", List.of("poster")),
-            Map.entry("script", List.of("src")),
-            Map.entry("source", List.of("src")),
-            Map.entry("track", List.of("src"))
-    );
+    private static final Map<String, List<String>> TAG_ATTRIBUTE_MAPPING = Stream.of(
+            new AbstractMap.SimpleImmutableEntry<>("a", Arrays.asList("href")),
+            new AbstractMap.SimpleImmutableEntry<>("area", Arrays.asList("href")),
+            new AbstractMap.SimpleImmutableEntry<>("audio", Arrays.asList("src")),
+            new AbstractMap.SimpleImmutableEntry<>("base", Arrays.asList("href")),
+            new AbstractMap.SimpleImmutableEntry<>("blockquote", Arrays.asList("cite")),
+            new AbstractMap.SimpleImmutableEntry<>("button", Arrays.asList("formaction")),
+            new AbstractMap.SimpleImmutableEntry<>("del", Arrays.asList("cite")),
+            new AbstractMap.SimpleImmutableEntry<>("embed", Arrays.asList("src")),
+            new AbstractMap.SimpleImmutableEntry<>("form", Arrays.asList("action")),
+            new AbstractMap.SimpleImmutableEntry<>("html", Arrays.asList("manifest")),
+            new AbstractMap.SimpleImmutableEntry<>("img", Arrays.asList("src")),
+            new AbstractMap.SimpleImmutableEntry<>("ins", Arrays.asList("cite")),
+            new AbstractMap.SimpleImmutableEntry<>("input", Arrays.asList("formaction", "src")),
+            new AbstractMap.SimpleImmutableEntry<>("iframe", Arrays.asList("src")),
+            new AbstractMap.SimpleImmutableEntry<>("link", Arrays.asList("href")),
+            new AbstractMap.SimpleImmutableEntry<>("q", Arrays.asList("cite")),
+            new AbstractMap.SimpleImmutableEntry<>("object", Arrays.asList("data")),
+            new AbstractMap.SimpleImmutableEntry<>("video", Arrays.asList("poster")),
+            new AbstractMap.SimpleImmutableEntry<>("script", Arrays.asList("src")),
+            new AbstractMap.SimpleImmutableEntry<>("source", Arrays.asList("src")),
+            new AbstractMap.SimpleImmutableEntry<>("track", Arrays.asList("src"))
+    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     @Override
     public void startElement(TagNode node) {

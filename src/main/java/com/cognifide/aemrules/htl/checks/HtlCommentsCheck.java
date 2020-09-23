@@ -23,6 +23,7 @@ import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +52,7 @@ public class HtlCommentsCheck extends AbstractHtlCheck {
 
   static final String RULE_MESSAGE = "Always use HTL style of comments";
 
-  private static final List<String> SSI_ELEMENTS = List.of("comment", "config", "echo", "exec", "fsize", "flastmod",
+  private static final List<String> SSI_ELEMENTS = Arrays.asList("comment", "config", "echo", "exec", "fsize", "flastmod",
           "include", "printenv", "set");
 
   private static final Pattern CONDITIONAL_COMMENT_PATTERN = Pattern

@@ -27,6 +27,9 @@ import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.commons.lang3.StringUtils;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
@@ -68,19 +71,19 @@ public class PreferSlingServletAnnotation extends BaseTreeVisitor implements Jav
 
     public static final String NAME = "name";
 
-    private static final Set<String> SERVLET_CONSTANTS = Set.of(
+    private static final Set<String> SERVLET_CONSTANTS = Stream.of(
         "SLING_SERVLET_METHODS",
         "SLING_SERVLET_EXTENSIONS",
         "SLING_SERVLET_SELECTORS",
         "SLING_SERVLET_RESOURCE_TYPES"
-    );
+    ).collect(Collectors.toSet());
 
-    private static final Set<String> SERVLET_CONSTANTS_VALUES = Set.of(
+    private static final Set<String> SERVLET_CONSTANTS_VALUES = Stream.of(
         "sling.servlet.paths",
         "sling.servlet.resourceTypes",
         "sling.servlet.selectors",
         "sling.servlet.extensions"
-    );
+    ).collect(Collectors.toSet());
 
     private JavaFileScannerContext context;
 
