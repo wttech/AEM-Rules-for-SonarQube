@@ -169,7 +169,7 @@ public class HtlSensorTest {
             .setModuleBaseDir(dir.toPath())
             .setLanguage(HtmlConstants.LANGUAGE_KEY)
             .setType(InputFile.Type.MAIN)
-            .initMetadata(Files.readString(new File(dir, fileName).toPath(), StandardCharsets.UTF_8))
+            .initMetadata(new String(Files.readAllBytes(new File(dir, fileName).toPath()), StandardCharsets.UTF_8))
             .setCharset(StandardCharsets.UTF_8)
             .build();
     }

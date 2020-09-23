@@ -30,6 +30,7 @@ import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.StatementTree;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -159,7 +160,7 @@ public class MethodMatcherTest {
     }
 
     private CompilationUnitTree parse(String source) {
-        List<File> classpath = List.of(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
+        List<File> classpath = Arrays.asList(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
         return JParser.parse(JAVA_VERSION, UNIT_NAME, source, classpath);
     }
 

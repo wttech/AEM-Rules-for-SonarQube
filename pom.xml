@@ -66,6 +66,15 @@
     </developer>
   </developers>
 
+  <contributors>
+    <contributor>
+      <name>Krzysztof Malinowski</name>
+      <email>krzysztof.malinowski@motorolasolutions.com</email>
+      <organization>Motorola Solutions, Inc.</organization>
+      <organizationUrl>https://www.motorolasolutions.com</organizationUrl>
+    </contributor>
+  </contributors>
+
   <scm>
     <connection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</connection>
     <url>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</url>
@@ -299,8 +308,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.5.1</version>
         <configuration>
-          <source>11</source>
-          <target>11</target>
+          <source>8</source>
+          <target>8</target>
         </configuration>
       </plugin>
       <plugin>

@@ -28,6 +28,7 @@ import org.sonar.check.Rule;
 import org.sonar.plugins.html.node.Attribute;
 import org.sonar.plugins.html.node.TagNode;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class AvoidExtraSlyTagsCheck extends AbstractHtlCheck {
 
     private static final String SLY_TAG = "sly";
 
-    private static final List<String> SLY_ATTRIBUTES = List.of("data-sly-use",
+    private static final List<String> SLY_ATTRIBUTES = Arrays.asList("data-sly-use",
             "data-sly-test",
             "data-sly-call");
 

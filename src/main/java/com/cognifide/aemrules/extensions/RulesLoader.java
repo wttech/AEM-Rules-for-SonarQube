@@ -24,9 +24,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.annotation.CheckForNull;
 
 import org.apache.commons.io.IOUtils;
@@ -51,14 +55,14 @@ public class RulesLoader {
 
     private static final String RULE_DESCRIPTION_EXTENSION = "md";
 
-    private static final Map<Class<?>, RuleParamType> TYPE_FOR_CLASS = Map.of(
-            Integer.class, RuleParamType.INTEGER,
-            int.class, RuleParamType.INTEGER,
-            Float.class, RuleParamType.FLOAT,
-            float.class, RuleParamType.FLOAT,
-            Boolean.class, RuleParamType.BOOLEAN,
-            boolean.class, RuleParamType.BOOLEAN
-    );
+    private static final Map<Class<?>, RuleParamType> TYPE_FOR_CLASS = Stream.of(
+            new AbstractMap.SimpleImmutableEntry<>(Integer.class, RuleParamType.INTEGER),
+            new AbstractMap.SimpleImmutableEntry<>(int.class, RuleParamType.INTEGER),
+            new AbstractMap.SimpleImmutableEntry<>(Float.class, RuleParamType.FLOAT),
+            new AbstractMap.SimpleImmutableEntry<>(float.class, RuleParamType.FLOAT),
+            new AbstractMap.SimpleImmutableEntry<>(Boolean.class, RuleParamType.BOOLEAN),
+            new AbstractMap.SimpleImmutableEntry<>(boolean.class, RuleParamType.BOOLEAN)
+    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     private static RuleParamType guessType(Class<?> type) {
         return TYPE_FOR_CLASS.getOrDefault(type, RuleParamType.STRING);

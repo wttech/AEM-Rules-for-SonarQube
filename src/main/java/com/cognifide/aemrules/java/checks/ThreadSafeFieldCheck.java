@@ -22,7 +22,12 @@ package com.cognifide.aemrules.java.checks;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.JavaFileScanner;
@@ -55,24 +60,22 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
 
     public static final String RULE_MESSAGE = "Usage of %s as a field is not thread safe.";
 
-    private static final Set<String> VULNERABLE_CLASSES = Set.of(
-        // empty for now
-    );
+    private static final Set<String> VULNERABLE_CLASSES = Collections.emptySet(); // empty for now
 
-    private static final Set<String> VULNERABLE_INTERFACES = Set.of(
+    private static final Set<String> VULNERABLE_INTERFACES = Stream.of(
         "javax.servlet.Servlet",
         "javax.servlet.Filter",
         "org.osgi.service.event.EventHandler"
-    );
+    ).collect(Collectors.toSet());
 
-    private static final Set<String> VULNERABLE_ANNOTATIONS = Set.of(
+    private static final Set<String> VULNERABLE_ANNOTATIONS = Stream.of(
         "org.apache.felix.scr.annotations.Component",
         "org.osgi.service.component.annotations.Component",
         "org.apache.felix.scr.annotations.sling.SlingServlet", // this is possibly duplicative, but that shouldn't be a problem.
         "org.apache.felix.scr.annotations.sling.SlingFilter" // this is possibly duplicative, but that shouldn't be a problem.
-    );
+    ).collect(Collectors.toSet());
 
-    private static final Set<String> NON_THREAD_SAFE_TYPES = Set.of(
+    private static final Set<String> NON_THREAD_SAFE_TYPES = Stream.of(
         "org.apache.sling.api.resource.ResourceResolver",
         "javax.jcr.Session",
         "com.day.cq.wcm.api.PageManager",
@@ -83,7 +86,8 @@ public class ThreadSafeFieldCheck extends BaseTreeVisitor implements JavaFileSca
         "com.day.cq.security.UserManager",
         "org.apache.jackrabbit.api.security.user.Authorizable",
         "org.apache.jackrabbit.api.security.user.User",
-        "org.apache.jackrabbit.api.security.user.UserManager");
+        "org.apache.jackrabbit.api.security.user.UserManager"
+    ).collect(Collectors.toSet());
 
     private JavaFileScannerContext context;
 

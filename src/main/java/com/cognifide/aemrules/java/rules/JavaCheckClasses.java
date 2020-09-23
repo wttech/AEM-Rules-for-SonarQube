@@ -34,6 +34,8 @@ import com.cognifide.aemrules.java.checks.slingmodels.DefaultInjectionStrategyAn
 import com.cognifide.aemrules.java.checks.slingquery.SlingQueryImplicitStrategyCheck;
 import com.cognifide.aemrules.version.AemVersion;
 import com.cognifide.aemrules.version.VersionSupportChecker;
+
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +50,7 @@ public class JavaCheckClasses implements CheckRegistrar {
 
     public static final String REPOSITORY_NAME = "AEM Rules";
 
-    public static final List<Class<? extends JavaCheck>> CHECK_CLASSES = List.of(
+    public static final List<Class<? extends JavaCheck>> CHECK_CLASSES = Arrays.asList(
         AdministrativeAccessUsageCheck.class,
         AnnotationsConstantsCheck.class,
         ConstantsCheck.class,

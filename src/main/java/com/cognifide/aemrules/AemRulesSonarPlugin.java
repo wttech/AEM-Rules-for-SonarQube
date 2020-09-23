@@ -29,12 +29,13 @@ import org.sonar.api.Plugin;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.resources.Qualifiers;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class AemRulesSonarPlugin implements Plugin {
 
     private static List<PropertyDefinition> pluginProperties() {
-        return List.of(
+        return Arrays.asList(
             PropertyDefinition.builder(Constants.FILE_EXTENSIONS_PROP_KEY)
                 .name("File suffixes")
                 .description("List of file suffixes that will be scanned.")

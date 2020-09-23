@@ -26,8 +26,13 @@ import com.cognifide.aemrules.matcher.ParameterTypePredicate;
 import com.cognifide.aemrules.metadata.Metadata;
 import com.cognifide.aemrules.tag.Tags;
 import com.cognifide.aemrules.version.AemVersion;
+
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
@@ -54,12 +59,12 @@ public class AdministrativeAccessUsageCheck extends IssuableSubscriptionVisitor 
 
     public static final String RULE_MESSAGE = "Do not use deprecated administrative access methods";
 
-    private static final Map<String, String> SUBSTITUTES = Map.of(
-        "loginAdministrative", "loginService",
-        "getAdministrativeResourceResolver", "getServiceResourceResolver"
-    );
+    private static final Map<String, String> SUBSTITUTES = Stream.of(
+        new AbstractMap.SimpleImmutableEntry<>("loginAdministrative", "loginService"),
+        new AbstractMap.SimpleImmutableEntry<>("getAdministrativeResourceResolver", "getServiceResourceResolver")
+    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-    private static final List<MethodMatcher> matchers = List.of(
+    private static final List<MethodMatcher> matchers = Arrays.asList(
         MethodMatcher.create(
             MethodNamePredicate.is("loginAdministrative"),
             OwnerTypePredicate.is("org.apache.sling.jcr.api.SlingRepository"),
@@ -72,7 +77,7 @@ public class AdministrativeAccessUsageCheck extends IssuableSubscriptionVisitor 
 
     @Override
     public List<Tree.Kind> nodesToVisit() {
-        return List.of(Tree.Kind.METHOD_INVOCATION);
+        return Arrays.asList(Tree.Kind.METHOD_INVOCATION);
     }
 
     @Override
