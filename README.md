@@ -19,20 +19,20 @@ Each release has its own prerequisites section, for more information please chec
 
 **Custom Dockerfile**
 
-Following Dockerfile uses official Sonarqube 7.9 image and download AEM Rules 1.0-RC2 to plugin directory.
+Following Dockerfile uses official Sonarqube 8.5.1 image and download AEM Rules 1.3 to plugin directory.
 
 ```
-FROM sonarqube:7.9-community AS aemrulesqube79
-RUN curl -Lk -o $SONARQUBE_HOME/extensions/plugins/aemrules-1.0-RC2.jar https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases/download/v1.0-RC2/aemrules-1.0-RC2.jar
+FROM sonarqube:8.5.1-community AS aemrulesqube851
+RUN curl -Lk -o $SONARQUBE_HOME/extensions/plugins/sonar-aemrules-plugin-1.3.jar https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases/download/v1.3/sonar-aemrules-plugin-1.3.jar
 ```
 
 **Community image**
 
-This is already prepared solution thanks to @ahmed-musallam.
+This is already prepared solution thanks to @nomorehugs.
 
-`docker run --rm -p 9000:9000 ahmedmusallam/sonarqube-aem:latest`
+`docker run --rm -p 9000:9000 vanchomarinov/sonarqube-aem:latest`
 
-This solution is for those who would like to start testing theirs code within aem rules and sonarqube. It contains SonarQube v 7.7, aem rules v 0.11 and predefined quality gates.
+This solution is for those who would like to start testing theirs code within aem rules and sonarqube. It contains SonarQube v 8.5.1 and aem rules v 1.3.
 If you would like to participate in our Aem Rules development, please refer to [wiki page](https://github.com/Cognifide/AEM-Rules-for-SonarQube/wiki) to get into. 
 
 
