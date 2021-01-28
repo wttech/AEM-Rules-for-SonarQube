@@ -16,7 +16,7 @@
 
   <inceptionYear>2015</inceptionYear>
   <organization>
-    <name>Cognifide Limited</name>
+    <name>Wunderman Thompson Technology</name>
     <url>http://www.cognifide.com</url>
   </organization>
 
@@ -76,16 +76,16 @@
   </contributors>
 
   <scm>
-    <connection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</connection>
-    <url>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git</url>
-    <developerConnection>scm:git:git@github.com:Cognifide/AEM-Rules-for-SonarQube.git
+    <connection>scm:git:git@github.com:wttech/AEM-Rules-for-SonarQube.git</connection>
+    <url>scm:git:git@github.com:wttech/AEM-Rules-for-SonarQube.git</url>
+    <developerConnection>scm:git:git@github.com:wttech/AEM-Rules-for-SonarQube.git
     </developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>jira</system>
-    <url>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues</url>
+    <url>https://github.com/wttech/AEM-Rules-for-SonarQube/issues</url>
   </issueManagement>
 
   <distributionManagement>
@@ -340,11 +340,11 @@
           <pluginClass>com.cognifide.aemrules.AemRulesSonarPlugin</pluginClass>
           <pluginName>${project.name}</pluginName>
           <pluginDescription>${project.description}</pluginDescription>
-          <pluginIssueTrackerUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/issues
+          <pluginIssueTrackerUrl>https://github.com/wttech/AEM-Rules-for-SonarQube/issues
           </pluginIssueTrackerUrl>
-          <pluginSourcesUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube/tree/${tagName}
+          <pluginSourcesUrl>https://github.com/wttech/AEM-Rules-for-SonarQube/tree/${tagName}
           </pluginSourcesUrl>
-          <pluginUrl>https://github.com/Cognifide/AEM-Rules-for-SonarQube</pluginUrl>
+          <pluginUrl>https://github.com/wttech/AEM-Rules-for-SonarQube</pluginUrl>
           <skipDependenciesPackaging>false</skipDependenciesPackaging>
           <requirePlugins>java:4.10</requirePlugins>
           <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
