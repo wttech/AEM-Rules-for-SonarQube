@@ -1,11 +1,11 @@
-[![Cognifide logo](https://assets.cognifide.com/github/cognifide-logo.png)](http://www.cognifide.com/)
+[![Wunderman Thompson Technology logo](assets/wtt-logo.png)](http://www.cognifide.com/)
 
 [![Build Status](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube.svg?branch=master)](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube)
 [![Coverage Status](https://coveralls.io/repos/github/Cognifide/AEM-Rules-for-SonarQube/badge.svg?branch=master)](https://coveralls.io/github/Cognifide/AEM-Rules-for-SonarQube?branch=master)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=AEM-Rules-for-SonarQube&metric=alert_status)](https://sonarcloud.io/dashboard?id=AEM-Rules-for-SonarQube)
 # About AEM Rules for SonarQube
 
-![AEM Rules for SonarQube](https://raw.githubusercontent.com/Cognifide/AEM-Rules-for-SonarQube/master/assets/logo.png)
+![AEM Rules for SonarQube](https://raw.githubusercontent.com/wttech/AEM-Rules-for-SonarQube/master/assets/logo.png)
 
 ## Purpose
 
@@ -13,7 +13,7 @@ As we all know, SonarQube is a great tool that helps us increase quality of our 
 
 ## Prerequisites
 
-Each release has its own prerequisites section, for more information please check [releases page](https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases).
+Each release has its own prerequisites section, for more information please check [releases page](https://github.com/wttech/AEM-Rules-for-SonarQube/releases).
 
 ## Installation
 
@@ -23,7 +23,7 @@ Following Dockerfile uses official Sonarqube 7.9 image and download AEM Rules 1.
 
 ```
 FROM sonarqube:7.9-community AS aemrulesqube79
-RUN curl -Lk -o $SONARQUBE_HOME/extensions/plugins/aemrules-1.0-RC2.jar https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases/download/v1.0-RC2/aemrules-1.0-RC2.jar
+RUN curl -Lk -o $SONARQUBE_HOME/extensions/plugins/aemrules-1.0-RC2.jar https://github.com/wttech/AEM-Rules-for-SonarQube/releases/download/v1.0-RC2/aemrules-1.0-RC2.jar
 ```
 
 **Community image**
@@ -33,7 +33,7 @@ This is already prepared solution thanks to @ahmed-musallam.
 `docker run --rm -p 9000:9000 ahmedmusallam/sonarqube-aem:latest`
 
 This solution is for those who would like to start testing theirs code within aem rules and sonarqube. It contains SonarQube v 7.7, aem rules v 0.11 and predefined quality gates.
-If you would like to participate in our Aem Rules development, please refer to [wiki page](https://github.com/Cognifide/AEM-Rules-for-SonarQube/wiki) to get into. 
+If you would like to participate in our Aem Rules development, please refer to [wiki page](https://github.com/wttech/AEM-Rules-for-SonarQube/wiki) to get into. 
 
 
 ### Update Center
@@ -42,7 +42,7 @@ Go to your SonarQube instance administration console and open Update Center. Fin
 
 ### Manual
 
-1. [Download](https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases) `aemrules-x.y.jar` or build **AEM Rules for SonarQube** plugin.
+1. [Download](https://github.com/wttech/AEM-Rules-for-SonarQube/releases) `aemrules-x.y.jar` or build **AEM Rules for SonarQube** plugin.
 2. Paste it into `sonarqube/extensions/plugins` directory.
 3. Restart SonarQube.
 4. Go to rules section and activate AEM rules in your profile.
@@ -65,7 +65,7 @@ Runing with Maven
 mvn sonar:sonar -DsonarRunner.aemVersion=6.4
 ```
 
-Runing with Gradle (See [Gradle AEM Plugin](https://github.com/Cognifide/gradle-aem-plugin))
+Runing with Gradle (See [Gradle AEM Plugin](https://github.com/wttech/gradle-aem-plugin))
 ```
 gradlew sonarQube -DsonarRunner.aemVersion=6.4
 ```
@@ -176,11 +176,11 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 # Release notes
 
-Release notes for each version can be found in [releases section](https://github.com/Cognifide/AEM-Rules-for-SonarQube/releases).
+Release notes for each version can be found in [releases section](https://github.com/wttech/AEM-Rules-for-SonarQube/releases).
 
 # License
 
-Copyright 2015-2016 Cognifide Ltd.
+Copyright 2015-2016 Wunderman Thompson Technology
 
 Licensed under the Apache License, Version 2.0
 
