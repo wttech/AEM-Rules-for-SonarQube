@@ -34,7 +34,7 @@ import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.internal.TestInputFileBuilder;
-import org.sonar.api.internal.google.common.io.Files;
+import com.google.common.io.Files;
 import org.sonar.plugins.html.api.HtmlConstants;
 import org.sonar.plugins.html.node.CommentNode;
 import org.sonar.plugins.html.node.Node;

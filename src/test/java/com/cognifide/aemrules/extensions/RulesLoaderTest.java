@@ -34,7 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinition.NewRepository;
-import org.sonar.api.server.rule.RulesDefinition.RepositoryImpl;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
@@ -76,7 +75,7 @@ public class RulesLoaderTest {
     public void shouldLoadRuleWithAllSettings() {
         givenRulesLoaded(Arrays.asList(RuleWithAllSettings.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule.markdownDescription(), is(RULE_MARKDOWN_TEST_DESCRIPTION));
@@ -90,7 +89,7 @@ public class RulesLoaderTest {
     public void shouldNotSetTechnicalDebtWhenAnnotationNotPresent() {
         givenRulesLoaded(Arrays.asList(RuleWithoutMetadataAnnotation.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule.markdownDescription(), is(RULE_MARKDOWN_TEST_DESCRIPTION));
@@ -104,7 +103,7 @@ public class RulesLoaderTest {
     public void shouldNotSetTechnicalDebtWhenTechnicalDebtNotSetInMetadata() {
         givenRulesLoaded(Arrays.asList(RuleWithEmptyTechnicalDebt.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule.markdownDescription(), is(RULE_MARKDOWN_TEST_DESCRIPTION));
@@ -118,7 +117,7 @@ public class RulesLoaderTest {
     public void shouldNotLoadRuleWhenRuleAnnotationIsNotPresent() {
         givenRulesLoaded(Arrays.asList(RuleWithoutRuleAnnotation.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
 
         Assert.assertThat(rule, is(nullValue()));
@@ -129,7 +128,7 @@ public class RulesLoaderTest {
     public void shouldSetDefaultValuesWhenRuleAttributeWithNameOnly() {
         givenRulesLoaded(Arrays.asList(RuleWithOnlyNameAttribute.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule("com.cognifide.aemrules.extensions.RulesLoaderTest.RuleWithOnlyNameAttribute");
 
         Assert.assertThat(rule.markdownDescription(), is("No description yet."));
@@ -148,7 +147,7 @@ public class RulesLoaderTest {
     public void shouldLoadRuleWithProperty() {
         givenRulesLoaded(Arrays.asList(RuleWithRuleProperty.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
         RulesDefinition.Param param = rule.param(RULE_PROPERTY_KEY);
 
@@ -161,7 +160,7 @@ public class RulesLoaderTest {
     public void shouldLoadRuleWithPropertyWithoutAttributes() {
         givenRulesLoaded(Arrays.asList(RuleWithRulePropertyWithoutAttributes.class));
 
-        RepositoryImpl repository = (RepositoryImpl) context.repository(JavaCheckClasses.REPOSITORY_KEY);
+        RulesDefinition.Repository repository = context.repository(JavaCheckClasses.REPOSITORY_KEY);
         RulesDefinition.Rule rule = repository.rule(RULE_KEY);
         RulesDefinition.Param param = rule.param("testProperty");
 

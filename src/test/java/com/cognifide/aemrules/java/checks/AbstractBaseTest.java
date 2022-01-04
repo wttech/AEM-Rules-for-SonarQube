@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.sonar.java.checks.verifier.JavaCheckVerifier;
+import org.sonar.java.checks.verifier.CheckVerifier;
 import org.sonar.plugins.java.api.JavaFileScanner;
 
 public abstract class AbstractBaseTest {
@@ -66,13 +66,23 @@ public abstract class AbstractBaseTest {
 
     protected void verify(boolean withJarClassPath) {
         if (withJarClassPath) {
-            JavaCheckVerifier.verify(filename, check, CLASSPATH_JAR);
+            CheckVerifier.newVerifier()
+                    .onFile(filename)
+                    .withCheck(check)
+                    .withClassPath(CLASSPATH_JAR)
+                    .verifyIssues();
         } else {
-            JavaCheckVerifier.verify(filename, check);
+            CheckVerifier.newVerifier()
+                    .onFile(filename)
+                    .withCheck(check)
+                    .verifyIssues();
         }
     }
 
     protected void verifyNoIssues() {
-        JavaCheckVerifier.verifyNoIssue(filename, check);
+        CheckVerifier.newVerifier()
+                .onFile(filename)
+                .withCheck(check)
+                .verifyNoIssues();
     }
 }
