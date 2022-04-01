@@ -22,4 +22,9 @@ jobs:
         # See https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-for-maven/#configuration
         env:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_KEY }}
-        run: mvn clean package jacoco:report coveralls:report sonar:sonar
+        run: mvn clean package \
+             jacoco:report \
+             coveralls:report \
+             sonar:sonar -Dsonar.host.url=https://sonarcloud.io \
+               -Dsonar.organization=wttech \
+               -Dsonar.projectKey=wttech_AEM-Rules-for-SonarQube
