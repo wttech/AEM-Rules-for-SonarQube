@@ -23,7 +23,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_KEY }}
         run: mvn clean package \
-             jacoco:report \
+             org.jacoco:jacoco-maven-plugin:report \
              coveralls:report \
              sonar:sonar -Dsonar.host.url=https://sonarcloud.io \
                -Dsonar.organization=wttech \
