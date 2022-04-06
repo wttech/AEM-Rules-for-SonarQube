@@ -26,7 +26,7 @@ inputs:
     required: true
     default: sonarqube-8.9-community
   aem-rules-binary:
-    description: 'Name of the JAR file to copy from Maven's 'target' directory into the plugins directory'
+    description: "Name of the JAR file to copy from Maven's 'target' directory into the plugins directory"
     required: true
     default: 'sonar-aemrules-plugin-1.4-SNAPSHOT.jar'
 runs:
