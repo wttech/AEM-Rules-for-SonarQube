@@ -1,0 +1,46 @@
+#
+# #%L
+# AEM Rules for SonarQube
+# %%
+# Copyright (C) 2015-2019 Wunderman Thompson Technology
+# %%
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# #L%
+#
+
+name: Test if SonarQube Server starts up with AEM Rules installed
+
+on: [push]
+
+jobs:
+  install_aem_rules_with_docker:
+    runs-on: ubuntu-latest
+    name: Install AEM Rules on SonarQube LTS with Docker
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'adopt'
+          cache: maven
+      - run: mvn clean package
+      - name: Install AEM Rules on SonarQube Server with Docker
+        uses: ./.github/actions/test-plugin-installation
+        with: #FIXME: Make this dynamic
+          sonarqube-base-image: sonarqube:8.9-community
+          aem-rules-binary: sonar-aemrules-plugin-1.4-SNAPSHOT.jar
+          docker-hub-login: ${{ secrets.DOCKER_HUB_USERNAME }}
+          docker-hub-token: ${{ secrets.DOCKER_HUB_TOKEN }}
