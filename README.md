@@ -1,6 +1,6 @@
 [![Wunderman Thompson Technology logo](assets/wtt-logo.png)](http://www.cognifide.com/)
 
-[![Build Status](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube.svg?branch=master)](https://travis-ci.org/Cognifide/AEM-Rules-for-SonarQube)
+![Builds Status](https://github.com/wttech/AEM-Rules-for-SonarQube/actions/workflows/build.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/Cognifide/AEM-Rules-for-SonarQube/badge.svg?branch=master)](https://coveralls.io/github/Cognifide/AEM-Rules-for-SonarQube?branch=master)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=AEM-Rules-for-SonarQube&metric=alert_status)](https://sonarcloud.io/dashboard?id=AEM-Rules-for-SonarQube)
 # About AEM Rules for SonarQube
