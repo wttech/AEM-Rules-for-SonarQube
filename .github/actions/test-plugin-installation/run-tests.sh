@@ -60,11 +60,10 @@ require() {
 }
 
 wait_for_sonarqube() {
-    # The Docker image name is passed via commandline as the first argument
-    local image=$1 i web_up=no sonarqube_up=no
+    local image=$1 i web_up=no sonarqube_up=no aemrules_up=no
 
-    for ((i = 0; i < 10; i++)); do
-        info "$image: waiting for web server to start ..."
+    for ((i = 1; i < 11; i++)); do
+        info "$image: waiting for web server to start ... $i/10"
         if curl -sI localhost:$port | grep '^HTTP/.* 200'; then
             web_up=yes
             break
@@ -74,8 +73,8 @@ wait_for_sonarqube() {
 
     [[ $web_up = yes ]] || return 1
 
-    for ((i = 0; i < 20; i++)); do
-        info "$image: waiting for sonarqube to be ready ..."
+    for ((i = 1; i < 21; i++)); do
+        info "$image: waiting for sonarqube to be ready ... $i/20"
         if curl -s localhost:$port/api/system/status | grep '"status":"UP"'; then
             sonarqube_up=yes
             break
@@ -83,33 +82,19 @@ wait_for_sonarqube() {
         sleep 10
     done
 
-    [[ "$sonarqube_up" = yes ]]
-}
+    [[ "$sonarqube_up" = yes ]] || return 1
 
-wait_for_sonarqube_dce() {
-    local image=$1 i web_up=no sonarqube_up=no
-
-    for ((i = 0; i < 80; i++)); do
-        info "$image: waiting for web server to start ..."
-        if curl -sI localhost:$port | grep '^HTTP/.* 200'; then
-            web_up=yes
+    for ((i = 1; i < 11; i++)); do
+        info "$image: waiting for AEM Rules to be ready ... $i/10"
+        curl -s localhost:$port/api/plugins/installed | tee curloutput.log
+        if curl -u admin:admin -s localhost:$port/api/plugins/installed | grep -o '"AEM Rules for SonarQube"'; then
+            aemrules_up=yes
             break
         fi
         sleep 5
     done
 
-    [[ $web_up = yes ]] || return 1
-
-    for ((i = 0; i < 80; i++)); do
-        info "$image: waiting for sonarqube to be ready ..."
-        if curl -s localhost:$port/api/system/status | grep '"status":"UP"'; then
-            sonarqube_up=yes
-            break
-        fi
-        sleep 10
-    done
-
-    [[ "$sonarqube_up" = yes ]]
+    [[ "$aemrules_up" = yes ]]
 }
 
 sanity_check_image() {
