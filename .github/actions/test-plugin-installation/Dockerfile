@@ -20,7 +20,10 @@
 
 # The env variables below are implicitly created for the invoking GitHub action's input parameters
 # See https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-FROM ${INPUTS_SONARQUBE_BASE_IMAGE}
+ARG INPUTS_SONARQUBE_BASE_IMAGE
+ARG INPUTS_AEM_RULES_BINARY
 
-COPY ${INPUTS_AEM_RULES_BINARY} $SONARQUBE_HOME/extensions/plugins/${INPUTS_AEM_RULES_BINARY}
+FROM $INPUTS_SONARQUBE_BASE_IMAGE
+
+COPY $INPUTS_AEM_RULES_BINARY $SONARQUBE_HOME/extensions/plugins/$INPUTS_AEM_RULES_BINARY
 # COPY sonar-findbugs-plugin-3.11.0.jar $SONARQUBE_HOME/extensions/plugins/sonar-findbugs-plugin-3.11.0.jar
