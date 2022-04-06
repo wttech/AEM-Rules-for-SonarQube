@@ -20,20 +20,26 @@
 
 name: 'Test plugin installation'
 description: 'Installs AEM Rules on a SonarQube server to check if there are any runtime issues caused by dependencies'
-on: [push]
-
-jobs:
-  build-and-test-docker-image:
-    runs-on: ubuntu-latest
-    env:
-        SONARQUBE_VERSION: sonarqubr-8.9-community #Rename to SONARQUBE_BASE_IMAGE and match name?
-        AEM_RULES_VERSION: 1.4-SNAPSHOT #TODO: Extract this dynamically?
-    steps:
-    - uses: actions/checkout@v2
+inputs:
+  sonarqube-base-image:
+    description: 'Which base Docker image to use to set up SonarQube'
+    required: true
+    default: sonarqube-8.9-community
+  aem-rules-binary:
+    description: 'Name of the JAR file to copy from Maven's 'target' directory into the plugins directory'
+    required: true
+    default: 'sonar-aemrules-plugin-1.4-SNAPSHOT.jar'
+runs:
+  steps:
+    # - uses: actions/checkout@v2
     - name: Copy AEM Rules JAR
       run: |
-        cp target/sonar-aemrules-plugin-1.4-SNAPSHOT.jar .github/actions/test-plugin-installation/sonar-aemrules-plugin-1.4-SNAPSHOT.jar
+        cp target/${{ inputs.aem-rules-binary }} .github/actions/test-plugin-installation/${{ inputs.aem-rules-binary }}
+      # The following uses implicit env variables created for inputs
+      # see https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
+      # and https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html to lowercase the file name
+      # so that it's valid to use in a Docker container name
     - name: Build image
-      run: docker build . -t ${SONARQUBE_VERSION,,}-${AEM_RULES_VERSION,,}
+      run: docker build . -t ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,}
     - name: Test image
-      run: ./run-tests.sh ${SONARQUBE_VERSION,,}-${AEM_RULES_VERSION,,}
+      run: ./run-tests.sh ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,}
