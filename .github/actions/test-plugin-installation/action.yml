@@ -53,17 +53,19 @@ runs:
       # these don't, however, appear to work in composite actions https://github.com/actions/runner/issues/665
     - name: Build image
       shell: bash
+      working-directory: .github/actions/test-plugin-installation
       env:
         INPUTS_SONARQUBE_BASE_IMAGE: ${{ inputs.sonarqube-base-image }}
         INPUTS_AEM_RULES_BINARY: ${{ inputs.aem-rules-binary }}
       # Use https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html to lowercase the file name
       # so that it's valid to use in a Docker container name
       run: |
-        docker build .github/actions/test-plugin-installation -t ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,} \
+        docker build . -t ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,} \
           --build-arg inputs_sonarqube_base_image=${INPUTS_SONARQUBE_BASE_IMAGE,,} \
           --build-arg inputs_aem_rules_binary=${INPUTS_AEM_RULES_BINARY,,}
     - name: Test image
       shell: bash
+      working-directory: .github/actions/test-plugin-installation
       env:
         INPUTS_SONARQUBE_BASE_IMAGE: ${{ inputs.sonarqube-base-image }}
         INPUTS_AEM_RULES_BINARY: ${{ inputs.aem-rules-binary }}
