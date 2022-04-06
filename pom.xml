@@ -362,8 +362,8 @@
           </pluginSourcesUrl>
           <pluginUrl>https://github.com/wttech/AEM-Rules-for-SonarQube</pluginUrl>
           <skipDependenciesPackaging>false</skipDependenciesPackaging>
-          <requirePlugins>java:4.10</requirePlugins>
-          <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+          <requirePlugins>java:7.6</requirePlugins>
+          <sonarQubeMinVersion>8.9</sonarQubeMinVersion>
           <sonarLintSupported>true</sonarLintSupported>
         </configuration>
       </plugin>
