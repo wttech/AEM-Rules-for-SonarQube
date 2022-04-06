@@ -30,6 +30,7 @@ inputs:
     required: true
     default: 'sonar-aemrules-plugin-1.4-SNAPSHOT.jar'
 runs:
+  using: "composite"
   steps:
     # - uses: actions/checkout@v2
     - name: Copy AEM Rules JAR
