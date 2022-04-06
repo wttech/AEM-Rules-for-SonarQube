@@ -4,7 +4,6 @@
 *.iws
 target/
 atlassian-ide-plugin.xml
-*.sh
 .classpath
 .project
 .settings/
