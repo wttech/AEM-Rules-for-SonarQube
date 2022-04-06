@@ -33,6 +33,7 @@ runs:
   steps:
     # - uses: actions/checkout@v2
     - name: Copy AEM Rules JAR
+      shell: bash
       run: |
         cp target/${{ inputs.aem-rules-binary }} .github/actions/test-plugin-installation/${{ inputs.aem-rules-binary }}
       # The following uses implicit env variables created for inputs
@@ -40,6 +41,8 @@ runs:
       # and https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html to lowercase the file name
       # so that it's valid to use in a Docker container name
     - name: Build image
+      shell: bash
       run: docker build . -t ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,}
     - name: Test image
+      shell: bash
       run: ./run-tests.sh ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,}
