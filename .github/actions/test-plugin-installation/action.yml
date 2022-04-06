@@ -47,7 +47,7 @@ runs:
         INPUTS_AEM_RULES_BINARY: ${{ inputs.aem-rules-binary }}
       # Use https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html to lowercase the file name
       # so that it's valid to use in a Docker container name
-      run: docker build . -t ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,}
+      run: docker build .github/actions/test-plugin-installation -t ${INPUTS_SONARQUBE_BASE_IMAGE,,}-${INPUTS_AEM_RULES_BINARY,,}
     - name: Test image
       shell: bash
       env:
