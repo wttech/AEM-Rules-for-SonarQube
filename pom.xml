@@ -4,7 +4,7 @@
 
   <groupId>com.cognifide.aemrules</groupId>
   <artifactId>sonar-aemrules-plugin</artifactId>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.5-SNAPSHOT</version>
 
   <name>AEM Rules for SonarQube</name>
   <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific
@@ -104,9 +104,10 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <htl.version>1.1.2-1.4.0</htl.version>
-    <sonar.version>7.9.2</sonar.version>
+    <sonar.version>8.9.6.50800</sonar.version>
     <sonar.html.version>3.0.1.1444</sonar.html.version>
-    <sonar.java.plugin>6.2.0.21135</sonar.java.plugin>
+    <sonar.java.plugin>7.6.0.28201</sonar.java.plugin>
+    <sonar-java-checks-testkit-version>7.6.0.28201</sonar-java-checks-testkit-version>
     <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
     <tagName>v${project.version}</tagName>
   </properties>
@@ -133,12 +134,21 @@
       <artifactId>org.apache.sling.scripting.sightly.compiler</artifactId>
       <version>${htl.version}</version>
     </dependency>
+
+    <!-- sonarsource version -->
     <dependency>
       <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <version>${sonar.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.sonarsource.sonarqube</groupId>
+      <artifactId>sonar-plugin-api-impl</artifactId>
+      <version>${sonar.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.sonarsource.java</groupId>
       <artifactId>sonar-java-plugin</artifactId>
@@ -212,7 +222,7 @@
     <dependency>
       <groupId>org.sonarsource.java</groupId>
       <artifactId>java-checks-testkit</artifactId>
-      <version>${sonar.java.plugin}</version>
+      <version>${sonar-java-checks-testkit-version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -299,6 +309,12 @@
       <version>1.3.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>26.0-jre</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -346,8 +362,8 @@
           </pluginSourcesUrl>
           <pluginUrl>https://github.com/wttech/AEM-Rules-for-SonarQube</pluginUrl>
           <skipDependenciesPackaging>false</skipDependenciesPackaging>
-          <requirePlugins>java:4.10</requirePlugins>
-          <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+          <requirePlugins>java:7.6</requirePlugins>
+          <sonarQubeMinVersion>8.9</sonarQubeMinVersion>
           <sonarLintSupported>true</sonarLintSupported>
         </configuration>
       </plugin>

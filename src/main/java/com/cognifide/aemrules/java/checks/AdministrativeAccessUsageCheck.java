@@ -82,9 +82,7 @@ public class AdministrativeAccessUsageCheck extends IssuableSubscriptionVisitor 
 
     @Override
     public void visitNode(Tree tree) {
-        if (this.hasSemantic()) {
-            matchers.forEach(invocationMatcher -> this.checkInvocation(tree, invocationMatcher));
-        }
+        matchers.forEach(invocationMatcher -> this.checkInvocation(tree, invocationMatcher));
     }
 
     private void checkInvocation(Tree tree, MethodMatcher invocationMatcher) {
