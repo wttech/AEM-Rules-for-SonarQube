@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # #L%
+#
+
 name: Test if SonarQube Server starts up with AEM Rules installed
 
 on: [push]
@@ -29,6 +31,12 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'adopt'
+          cache: maven
+      - run: mvn clean package
       - name: Install AEM Rules on SonarQube Server with Docker
         uses: ./.github/actions/test-plugin-installation
         with: #FIXME: Make this dynamic
