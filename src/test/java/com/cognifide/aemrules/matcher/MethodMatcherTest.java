@@ -22,6 +22,7 @@ package com.cognifide.aemrules.matcher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.sonar.java.model.JParser;
+import org.sonar.java.model.JParserConfig;
 import org.sonar.plugins.java.api.tree.ClassTree;
 import org.sonar.plugins.java.api.tree.CompilationUnitTree;
 import org.sonar.plugins.java.api.tree.ExpressionStatementTree;
@@ -161,7 +162,7 @@ public class MethodMatcherTest {
 
     private CompilationUnitTree parse(String source) {
         List<File> classpath = Arrays.asList(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
-        return JParser.parse(JAVA_VERSION, UNIT_NAME, source, classpath);
+        return JParser.parse(JParserConfig.Mode.FILE_BY_FILE.create(JAVA_VERSION, classpath).astParser(), JAVA_VERSION, UNIT_NAME, source);
     }
 
 }
