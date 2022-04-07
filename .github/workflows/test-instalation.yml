@@ -26,6 +26,12 @@ jobs:
   install_aem_rules_with_docker:
     runs-on: ubuntu-latest
     name: Install AEM Rules on SonarQube LTS with Docker
+    strategy:
+      matrix:
+        sonarqube-image:
+          - 'sonarqube:8.9-community'
+          - 'sonarqube:8.4-community'
+          - 'sonarqube:9.4-community'
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -47,7 +53,7 @@ jobs:
       - name: Install AEM Rules on SonarQube Server with Docker
         uses: ./.github/actions/test-plugin-installation
         with:
-          sonarqube-base-image: sonarqube:8.9-community
+          sonarqube-base-image: ${{ matrix.sonarqube-image }}
           aem-rules-binary: ${{ steps.get-executable-name.outputs.aem_rules_jar_name }}
           docker-hub-login: ${{ secrets.DOCKER_HUB_USERNAME }}
           docker-hub-token: ${{ secrets.DOCKER_HUB_TOKEN }}
