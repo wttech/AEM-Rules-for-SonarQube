@@ -37,10 +37,17 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - run: mvn clean package
+      - name: Get Exectuable name
+        id: get-executable-name
+        run: |
+          AEM_RULES_JAR_NAME=$(mvn -q -Dexec.executable=echo \
+            -Dexec.args='${project.artifactId}-${project.version}.jar' \
+            --non-recursive exec:exec)
+          echo "::set-output name=aem_rules_jar_name::$AEM_RULES_JAR_NAME"
       - name: Install AEM Rules on SonarQube Server with Docker
         uses: ./.github/actions/test-plugin-installation
-        with: #FIXME: Make this dynamic
+        with:
           sonarqube-base-image: sonarqube:8.9-community
-          aem-rules-binary: sonar-aemrules-plugin-1.6-SNAPSHOT.jar
+          aem-rules-binary: ${{ steps.get-executable-name.outputs.aem_rules_jar_name }}
           docker-hub-login: ${{ secrets.DOCKER_HUB_USERNAME }}
           docker-hub-token: ${{ secrets.DOCKER_HUB_TOKEN }}
