@@ -30,12 +30,12 @@ jobs:
       matrix:
         sonarqube-image:
           - 'sonarqube:7.9-community'
-          - 'sonarqube:8.0-community'
           - 'sonarqube:8.4-community'
-          - 'sonarqube:8.6-community'
           - 'sonarqube:8.9-community'
-          - 'sonarqube:9.1-community'
           - 'sonarqube:9.4-community'
+          - 'sonarqube:lts-community'
+          - 'sonarqube:latest'
+      fail-fast: false
     steps:
       # To use this repository's private action,
       # you must check out the repository
