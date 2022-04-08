@@ -29,8 +29,6 @@ jobs:
     strategy:
       matrix:
         sonarqube-image:
-          - 'sonarqube:7.9-community'
-          - 'sonarqube:8.4-community'
           - 'sonarqube:8.9-community'
           - 'sonarqube:9.4-community'
           - 'sonarqube:lts-community'
