@@ -29,7 +29,12 @@ jobs:
     strategy:
       matrix:
         sonarqube-image:
+          - 'sonarqube:7.9-community'
+          - 'sonarqube:8.0-community'
+          - 'sonarqube:8.4-community'
+          - 'sonarqube:8.6-community'
           - 'sonarqube:8.9-community'
+          - 'sonarqube:9.1-community'
           - 'sonarqube:9.4-community'
     steps:
       # To use this repository's private action,
