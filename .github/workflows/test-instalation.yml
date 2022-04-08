@@ -31,6 +31,9 @@ jobs:
         sonarqube-image:
           - 'sonarqube:8.9-community'
           - 'sonarqube:9.4-community'
+          - 'sonarqube:lts-community'
+          - 'sonarqube:latest'
+      fail-fast: false
     steps:
       # To use this repository's private action,
       # you must check out the repository
