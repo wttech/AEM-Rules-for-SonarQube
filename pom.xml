@@ -349,7 +349,7 @@
       <plugin>
         <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
         <artifactId>sonar-packaging-maven-plugin</artifactId>
-        <version>1.18.0.372</version>
+        <version>1.22.0.705</version>
         <extensions>true</extensions>
         <configuration>
           <pluginKey>aemrules</pluginKey>
@@ -361,6 +361,7 @@
           <pluginSourcesUrl>https://github.com/wttech/AEM-Rules-for-SonarQube/tree/${tagName}
           </pluginSourcesUrl>
           <pluginUrl>https://github.com/wttech/AEM-Rules-for-SonarQube</pluginUrl>
+          <requiredForLanguages>java,html</requiredForLanguages>
           <skipDependenciesPackaging>false</skipDependenciesPackaging>
           <sonarQubeMinVersion>8.9</sonarQubeMinVersion>
           <sonarLintSupported>true</sonarLintSupported>
