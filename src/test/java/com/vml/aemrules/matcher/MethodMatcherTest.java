@@ -154,7 +154,7 @@ public class MethodMatcherTest {
 
     private CompilationUnitTree parse(String source) {
         List<File> classpath = Arrays.asList(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
-        return JParser.parse(JParserConfig.Mode.FILE_BY_FILE.create(new JavaVersionImpl(11), classpath).astParser(), JAVA_VERSION, UNIT_NAME, source);
+        return JParser.parse(JParserConfig.Mode.FILE_BY_FILE.create(new JavaVersionImpl(17), classpath).astParser(), JAVA_VERSION, UNIT_NAME, source);
     }
 
 }
