@@ -104,14 +104,14 @@
 
     <properties>
         <htl.version>1.1.2-1.4.0</htl.version>
-        <sonar.html.version>3.15.0.5107</sonar.html.version>
-        <sonar.java.plugin>7.30.1.34514</sonar.java.plugin>
+        <sonar.html.version>3.16.0.5274</sonar.html.version>
+        <sonar.java.plugin>8.5.0.37199</sonar.java.plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.pluginApiVersion>10.11.0.2468</sonar.pluginApiVersion>
-        <sonar.pluginApiImplVersion>10.3.0.82913</sonar.pluginApiImplVersion>
+        <sonar.pluginApiImplVersion>10.7.0.96327</sonar.pluginApiImplVersion>
         <sonar.testingHarnessVersion>10.7.0.96327</sonar.testingHarnessVersion>
-        <sonar.javaCheksTestkitVersion>7.30.1.34514</sonar.javaCheksTestkitVersion>
-        <jdk.min.version>11</jdk.min.version>
+        <sonar.javaCheksTestkitVersion>8.5.0.37199</sonar.javaCheksTestkitVersion>
+        <jdk.min.version>17</jdk.min.version>
         <sonar.sources>src/main/java</sonar.sources>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
         <tagName>v${project.version}</tagName>
@@ -341,7 +341,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <release>11</release>
+                    <release>17</release>
                 </configuration>
             </plugin>
             <plugin>
