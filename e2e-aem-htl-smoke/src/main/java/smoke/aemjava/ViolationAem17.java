@@ -17,20 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package com.vml.aemrules.java;
+package smoke.aemjava;
 
-public final class Constants {
+// Pattern from wttech/.../src/test/files/java/ModifiableValueMapUsageCheck.java — getPropertyFromResource (ModifiableValueMapUsageCheckTest).
 
-    /** SonarQube Java analyzer language key ({@code "java"}). */
-    public static final String LANGUAGE_KEY = "java";
+import org.apache.sling.api.resource.ModifiableValueMap;
+import org.apache.sling.api.resource.Resource;
 
-    public static final String REPOSITORY_KEY = "AEM-JAVA";
-    public static final String REPOSITORY_NAME = "AEM Java";
+public class ViolationAem17 {
 
-    public static final String SLING_RESOURCE_QUALIFIED_NAME = "org.apache.sling.api.resource.Resource";
-
-    private Constants() {
-        // private constructor to hide public one
-    }
-
+  public Object getPropertyFromResource(Resource resource) {
+    ModifiableValueMap createdResourceProperties = resource.adaptTo(ModifiableValueMap.class);
+    return createdResourceProperties.get("propName");
+  }
 }

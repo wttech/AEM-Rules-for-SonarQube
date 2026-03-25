@@ -26,6 +26,7 @@ import org.sonarsource.api.sonarlint.SonarLintSide;
 
 import java.util.ArrayList;
 
+import static com.vml.aemrules.java.Constants.LANGUAGE_KEY;
 import static com.vml.aemrules.java.Constants.REPOSITORY_KEY;
 import static com.vml.aemrules.java.Constants.REPOSITORY_NAME;
 
@@ -42,7 +43,7 @@ public class JavaRulesDefinition implements RulesDefinition {
 
     @Override
     public void define(Context context) {
-        NewRepository repository = context.createRepository(REPOSITORY_KEY, "java").setName(REPOSITORY_NAME);
+        NewRepository repository = context.createRepository(REPOSITORY_KEY, LANGUAGE_KEY).setName(REPOSITORY_NAME);
         RuleMetadataLoader ruleMetadataLoader = new RuleMetadataLoader(RESOURCE_BASE_PATH, runtime);
         ruleMetadataLoader.addRulesByAnnotatedClass(repository, new ArrayList<>(JavaRulesList.getChecks()));
         repository.done();

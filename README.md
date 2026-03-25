@@ -27,8 +27,61 @@ Check the plugin locally with the prepared ```docker-compose.yml```. Just run th
 ```
 mvn clean package
 cd local-docker-image
-docker-compose up -d
+docker compose up -d
 ```
+
+The stack exposes SonarQube at [http://localhost:9000](http://localhost:9000) (web UI on port **9000**, debug port **8000** is also mapped). On a new database the default credentials are **admin** / **admin**; SonarQube will ask you to change the password on first login.
+
+#### Scanner token
+
+`sonar-maven-plugin` authenticates with a **user token**, not your UI password. Create one from **My Account → Security → Generate Tokens**, or with the REST API (replace the password if you already changed it from the default):
+
+```
+curl -s -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate?name=local-scanner"
+```
+
+The response JSON includes a `token` value (shown only once). Export it and run an analysis against your local server:
+
+```
+export SONAR_TOKEN='<paste-token-here>'
+
+cd e2e-aem-htl-smoke
+mvn compile sonar:sonar \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.projectKey=aem-htl-smoke-local
+```
+
+Alternatively pass `-Dsonar.token=<token>` instead of `SONAR_TOKEN`. The `e2e-aem-htl-smoke` project is a small sample with intentional violations so AEM HTL and AEM Java rules can report issues; its `pom.xml` selects the built-in **HTL** and **AEM Java** quality profiles from this plugin.
+
+After the analysis finishes, fetch open issues for that project with the same token (HTTP Basic: token as username, empty password). The JSON lists each finding’s `rule` (for example `AEM-HTL:HTL-0`, `AEM-JAVA:AEM-1`); you can compare distinct rules to the fixtures under `e2e-aem-htl-smoke/src/main/htl/rules/` and `e2e-aem-htl-smoke/src/main/java/smoke/aemjava/`.
+
+```
+curl -s -u "${SONAR_TOKEN}:" \
+  "http://localhost:9000/api/issues/search?componentKeys=aem-htl-smoke-local&resolved=false&ps=500"
+```
+
+To print only unique rule keys (requires [jq](https://jqlang.github.io/jq/)):
+
+```
+curl -s -u "${SONAR_TOKEN}:" \
+  "http://localhost:9000/api/issues/search?componentKeys=aem-htl-smoke-local&resolved=false&ps=500" \
+  | jq -r '.issues[].rule' | sort -u
+```
+
+The `total` field in the response is the open-issue count; raise `ps` or page with `p=2`, `p=3`, … if you ever exceed 500 issues.
+
+#### Automated smoke gate
+
+From the repo root, after SonarQube is up and you have a user token (`SONAR_TOKEN` or `SMOKE_ISSUES_TOKEN`):
+
+```
+export SONAR_TOKEN='<your-token>'
+# optional: export SMOKE_ISSUES_HOST=http://localhost:9000
+# optional: export SMOKE_ISSUES_PROJECT_KEY=aem-htl-smoke-local
+./scripts/smoke-aem-htl-plugin.sh
+```
+
+The script registers the project (if needed), binds the **AEM Java** and **HTL** quality profiles via the Web API (so custom rules run on the first scan), runs `mvn compile sonar:sonar` on `e2e-aem-htl-smoke`, waits for CE using `target/sonar/report-task.txt`, then runs `scripts/verify-aem-htl-smoke-issues.py` to require at least one open issue per expected `AEM-HTL:HTL-0`…`HTL-16` and per `AEM-JAVA` key listed in that script (keep in sync with `JavaRulesList.getJavaChecks()`).
 
 ### Update Center
 
@@ -54,13 +107,15 @@ It was tried to add `HTL` rules to `web` language, but [sonar-html-plugin](https
 
 ### Running analysis
 
-When running analysis, pass `sonarRunner.aemVersion` property with your AEM version. The format is as follows:
+When running analysis, pass `sonarRunner.aemVersion` with your AEM **minor** line if it differs from the default assumed by the plugin (**6.6** when the property is omitted—current LTS). Older lines (e.g. 6.4, 6.5) remain supported by setting the property explicitly. Format:
 
 `sonarRunner.aemVersion=<MAJOR_VERSION>.<MINOR_VERSION>`
 
 To avoid quality profiles collisions, the additional execution param has been added.
 
 `-Dsonar.html.file.suffixes=.notexistingsuffix`
+
+Example below uses `-DsonarRunner.aemVersion=6.4` for an older AEM line; **omit that flag** when the plugin default (**6.6**) matches your deployment.
 
 Running with Maven
 ```
@@ -69,7 +124,7 @@ mvn clean verify sonar:sonar \
     -Dsonar.projectName='{sonar_project_name}' \
     -Dsonar.host.url=http://localhost:9000 \
     -Dsonar.token={sonar_project_token} \
-    -DsonarRunner.aemVersion=6.5 \
+    -DsonarRunner.aemVersion=6.6 \
     -Dsonar.html.file.suffixes=.notexistingsuffix
 ```
 
@@ -90,6 +145,7 @@ Below you will find descriptions of all rules available in **AEM Rules for Sonar
 
 - **AEM-8** Prefer cleaner `@SlingServlet` annotation.
   - Prefer cleaner `@SlingServlet` annotation over `@Properties` approach. Do not mix up both approaches.
+  - Registered for **AEM 6.0+** (incl. 6.6 / LTS). Older lines: set `sonarRunner.aemVersion` so version-scoped rules match your cloud.
 
 - **AEM-15** Usage of ``synchronized`` keyword should be avoided if possible.
   - Usage of ``synchronized`` keyword should be avoided if possible. Check if using ``synchronized`` can be replaced with more sophisticated solution.

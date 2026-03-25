@@ -8,6 +8,10 @@ sonar-example-plugin.iml
 local-docker-image/extensions/plugins/*
 *.iml
 
+# Python (smoke verifier)
+**/__pycache__/
+*.py[cod]
+
 # Eclipse
 .classpath
 .project

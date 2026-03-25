@@ -29,7 +29,8 @@ public class VersionSupportChecker {
 
     public static final String VERSION_PROPERTY = "sonarRunner.aemVersion";
 
-    public static final String DEFAULT_AEM_VERSION = "6.5";
+    /** When {@code sonarRunner.aemVersion} is unset; aligns with current AEM LTS (6.6+). Older clouds: set the property explicitly. */
+    public static final String DEFAULT_AEM_VERSION = "6.6";
 
     private boolean all = false;
 

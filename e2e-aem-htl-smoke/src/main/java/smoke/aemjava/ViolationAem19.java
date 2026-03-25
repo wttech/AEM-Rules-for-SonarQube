@@ -17,20 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package com.vml.aemrules.java;
+package smoke.aemjava;
 
-public final class Constants {
+// Pattern from wttech/.../src/test/files/java/SlingQueryImplicitStrategyCheck.java — strategyNotDefined (SlingQueryImplicitStrategyCheckTest).
 
-    /** SonarQube Java analyzer language key ({@code "java"}). */
-    public static final String LANGUAGE_KEY = "java";
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.query.SlingQuery;
 
-    public static final String REPOSITORY_KEY = "AEM-JAVA";
-    public static final String REPOSITORY_NAME = "AEM Java";
+import static org.apache.sling.query.SlingQuery.$;
 
-    public static final String SLING_RESOURCE_QUALIFIED_NAME = "org.apache.sling.api.resource.Resource";
+public class ViolationAem19 {
 
-    private Constants() {
-        // private constructor to hide public one
-    }
-
+  void strategyNotDefined(Resource resource) {
+    SlingQuery sq = $(resource);
+    sq.find();
+  }
 }

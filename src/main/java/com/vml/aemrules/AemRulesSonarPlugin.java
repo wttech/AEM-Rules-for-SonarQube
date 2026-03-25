@@ -24,6 +24,7 @@ import com.vml.aemrules.htl.Htl;
 import com.vml.aemrules.htl.HtlProfile;
 import com.vml.aemrules.htl.HtlSensor;
 import com.vml.aemrules.htl.rules.HtlRulesDefinition;
+import com.vml.aemrules.java.profiles.AemJavaProfile;
 import com.vml.aemrules.java.rules.JavaCheckRegistrar;
 import com.vml.aemrules.java.rules.JavaRulesDefinition;
 import org.sonar.api.Plugin;
@@ -60,7 +61,8 @@ public class AemRulesSonarPlugin implements Plugin {
     public void define(Context context) {
         context.addExtensions(
                 JavaRulesDefinition.class,
-                JavaCheckRegistrar.class
+                JavaCheckRegistrar.class,
+                AemJavaProfile.class
         );
 
         context.addExtensions(

@@ -29,7 +29,7 @@ import static com.vml.aemrules.htl.Constants.REPOSITORY_KEY;
 
 public class HtlProfile implements BuiltInQualityProfilesDefinition {
 
-    private static final String QUALITY_PROFILE_NAME = "HTL";
+    public static final String QUALITY_PROFILE_NAME = "HTL";
 
     @Override
     public void define(Context context) {

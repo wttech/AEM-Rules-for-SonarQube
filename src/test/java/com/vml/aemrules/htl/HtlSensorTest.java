@@ -24,8 +24,6 @@ import com.vml.aemrules.htl.rules.HtlRulesDefinition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.sonar.api.SonarEdition;
-import org.sonar.api.SonarQubeSide;
 import org.sonar.api.SonarRuntime;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
@@ -37,7 +35,6 @@ import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 import org.sonar.api.batch.sensor.internal.SensorContextTester;
 import org.sonar.api.batch.sensor.issue.Issue;
 import org.sonar.api.config.Configuration;
-import org.sonar.api.internal.SonarRuntimeImpl;
 import org.sonar.api.measures.FileLinesContext;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.rule.RuleKey;
@@ -69,7 +66,8 @@ class HtlSensorTest {
 
     @BeforeEach
     void setUp() {
-        SonarRuntime sonarRuntime = SonarRuntimeImpl.forSonarQube(Version.create(8, 9), SonarQubeSide.SERVER, SonarEdition.COMMUNITY);
+        SonarRuntime sonarRuntime = mock(SonarRuntime.class);
+        when(sonarRuntime.getApiVersion()).thenReturn(Version.parse("13.5.0.4319"));
         RulesDefinition rulesDefinition = new HtlRulesDefinition(sonarRuntime);
         RulesDefinition.Context context = new RulesDefinition.Context();
         rulesDefinition.define(context);
@@ -139,19 +137,21 @@ class HtlSensorTest {
     }
 
     @Test
-    void checkFileWithError_analysisErrorFound() throws Exception {
+    void checkFileWithError_parsingErrorRaisesHtl0Issue() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "error.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
-        assertThat(tester.allAnalysisErrors()).isNotEmpty();
+        assertThat(tester.allIssues()).anyMatch(i -> RuleKey.of(REPOSITORY_KEY, "HTL-0").equals(i.ruleKey()));
+        assertThat(tester.allAnalysisErrors()).isEmpty();
     }
 
     @Test
-    void checkExpressionWithinHtmlComment_noErrorsFound() throws Exception {
+    void checkExpressionWithinHtmlComment_parsingErrorRaisesHtl0Issue() throws Exception {
         DefaultInputFile inputFile = createInputFile(TEST_DIR, "comment.html");
         tester.fileSystem().add(inputFile);
         sensor.execute(tester);
-        assertThat(tester.allAnalysisErrors()).isNotEmpty();
+        assertThat(tester.allIssues()).anyMatch(i -> RuleKey.of(REPOSITORY_KEY, "HTL-0").equals(i.ruleKey()));
+        assertThat(tester.allAnalysisErrors()).isEmpty();
     }
 
     @Test
