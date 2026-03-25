@@ -17,20 +17,24 @@
  * limitations under the License.
  * #L%
  */
-package com.vml.aemrules.java;
+package smoke.aemjava;
 
-public final class Constants {
+// Pattern from wttech/.../src/test/files/java/SynchronizedKeywordUsageCheck.java (first two cases).
 
-    /** SonarQube Java analyzer language key ({@code "java"}). */
-    public static final String LANGUAGE_KEY = "java";
+import java.util.ArrayList;
+import java.util.List;
 
-    public static final String REPOSITORY_KEY = "AEM-JAVA";
-    public static final String REPOSITORY_NAME = "AEM Java";
+public class ViolationAem15 {
 
-    public static final String SLING_RESOURCE_QUALIFIED_NAME = "org.apache.sling.api.resource.Resource";
+  private final List<String> list = new ArrayList<>();
 
-    private Constants() {
-        // private constructor to hide public one
+  public synchronized void addElement(String s) {
+    list.add(s);
+  }
+
+  public void removeElement(String s) {
+    synchronized (list) {
+      list.remove(s);
     }
-
+  }
 }

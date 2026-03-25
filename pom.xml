@@ -6,7 +6,7 @@
     <groupId>com.vml.aemrules</groupId>
     <artifactId>sonar-aemrules-plugin</artifactId>
     <packaging>sonar-plugin</packaging>
-    <version>1.7</version>
+    <version>2.0</version>
 
     <name>AEM Rules for SonarQube</name>
     <description>SonarQube plugin with set of rules detecting possible bugs and bad smells specific for AEM development.</description>
@@ -66,6 +66,11 @@
             <name>Tomasz Strzelecki</name>
             <email>tomasz.strzelecki@vml.com</email>
         </developer>
+        <developer>
+            <id>Collingr</id>
+            <name>Matt Collingridge</name>
+            <email>matt@adobe.com</email>
+        </developer>
     </developers>
 
     <contributors>
@@ -103,15 +108,20 @@
     </distributionManagement>
 
     <properties>
-        <htl.version>1.1.2-1.4.0</htl.version>
-        <sonar.html.version>3.15.0.5107</sonar.html.version>
-        <sonar.java.plugin>7.30.1.34514</sonar.java.plugin>
+        <htl.version>1.2.14-1.4.0</htl.version>
+        <!-- Bundled in sonarqube:26.3.0.120487-community as sonar-html-plugin (plugin key "web"). -->
+        <sonar.html.version>3.24.0.7341</sonar.html.version>
+        <!-- SonarQube 26.3.0.120487-community (Java 21): pin API/harness to that build; bundled Java analyzer for scanned projects. -->
+        <sonar.java.plugin>8.24.0.42567</sonar.java.plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.pluginApiVersion>10.11.0.2468</sonar.pluginApiVersion>
-        <sonar.pluginApiImplVersion>10.3.0.82913</sonar.pluginApiImplVersion>
-        <sonar.testingHarnessVersion>10.7.0.96327</sonar.testingHarnessVersion>
-        <sonar.javaCheksTestkitVersion>7.30.1.34514</sonar.javaCheksTestkitVersion>
-        <jdk.min.version>11</jdk.min.version>
+        <sonar.pluginApiVersion>13.5.0.4319</sonar.pluginApiVersion>
+        <!-- Match repo-root tested SonarQube build (see self-service-sonarqube-cqrules pom sonar.tested.server.build / Dockerfile). -->
+        <sonar.pluginApiImplVersion>26.3.0.120487</sonar.pluginApiImplVersion>
+        <sonar.testingHarnessVersion>26.3.0.120487</sonar.testingHarnessVersion>
+        <sonar.javaCheksTestkitVersion>8.24.0.42567</sonar.javaCheksTestkitVersion>
+        <jdk.min.version>21</jdk.min.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <mockito.version>5.14.2</mockito.version>
         <sonar.sources>src/main/java</sonar.sources>
         <coveralls.repo.token>4rVf3NGV0jyQ3EGrc8L86oEDoHWm6MgDD</coveralls.repo.token>
         <tagName>v${project.version}</tagName>
@@ -144,7 +154,7 @@
         <dependency>
             <artifactId>sonar-analyzer-commons</artifactId>
             <groupId>org.sonarsource.analyzer-commons</groupId>
-            <version>2.14.0.3087</version>
+            <version>2.18.0.3393</version>
         </dependency>
         <dependency>
             <artifactId>sonar-java-plugin</artifactId>
@@ -196,7 +206,7 @@
             <artifactId>mockito-core</artifactId>
             <groupId>org.mockito</groupId>
             <scope>test</scope>
-            <version>5.14.2</version>
+            <version>${mockito.version}</version>
         </dependency>
         <dependency>
             <artifactId>assertj-core</artifactId>
@@ -300,6 +310,26 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[${jdk.min.version},)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
                 <version>1.23.0.740</version>
@@ -309,13 +339,16 @@
                     <pluginDescription>${project.description}</pluginDescription>
                     <pluginKey>aemrules</pluginKey>
                     <pluginClass>com.vml.aemrules.AemRulesSonarPlugin</pluginClass>
-                    <pluginApiMinVersion>9.9</pluginApiMinVersion>
+                    <pluginApiMinVersion>${sonar.pluginApiVersion}</pluginApiMinVersion>
+                    <jreMinVersion>${jdk.min.version}</jreMinVersion>
                     <pluginIssueTrackerUrl>https://github.com/wttech/AEM-Rules-for-SonarQube/issues</pluginIssueTrackerUrl>
                     <pluginSourcesUrl>https://github.com/wttech/AEM-Rules-for-SonarQube/tree/${tagName}</pluginSourcesUrl>
                     <pluginUrl>https://github.com/wttech/AEM-Rules-for-SonarQube</pluginUrl>
                     <sonarLintSupported>true</sonarLintSupported>
                     <skipDependenciesPackaging>true</skipDependenciesPackaging>
+                    <!-- java: Java rules; web: HTML/HTL templates use Sonar "web" language so scanner loads aemrules for HTL-only projects. -->
                     <requiredForLanguages>java</requiredForLanguages>
+                    <!-- Pin bundled analyzers (same stack as sonarqube:26.3.0.120487-community); cq-java-style parity. -->
                 </configuration>
             </plugin>
             <plugin>
@@ -341,13 +374,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <release>11</release>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
+                <version>0.8.12</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -356,6 +389,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <!-- Mockito inline mock maker: explicit agent avoids self-attach (fails in some JDK/sandbox/CI setups). -->
+                    <argLine>@{argLine} -XX:+EnableDynamicAgentLoading -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</argLine>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.github.hazendaz.maven</groupId>
@@ -376,12 +418,14 @@
                         <header>${basedir}/assets/license-header-definition.xml</header>
                     </headerDefinitions>
                     <excludes>
+                        <exclude>.mvn/**</exclude>
                         <exclude>**/README</exclude>
                         <exclude>src/main/resources/**</exclude>
                         <exclude>**/LICENSE.txt</exclude>
                         <exclude>**.xml</exclude>
                         <exclude>assets/**</exclude>
                         <exclude>src/test/files/htl/HtlCommentsCheck.html</exclude>
+                        <exclude>src/test/files/matcher/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -422,6 +466,29 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>remove-old-aemrules-from-docker-plugins</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Avoid SonarQube startup failure: two aemrules JARs in extensions/plugins -->
+                                <delete quiet="true">
+                                    <fileset dir="${basedir}/local-docker-image/extensions/plugins"
+                                             includes="sonar-aemrules-plugin-*.jar"/>
+                                </delete>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.1</version>
                 <executions>
@@ -436,7 +503,7 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/target</directory>
-                                    <include>sonar-aemrules-plugin-${version}.jar</include>
+                                    <include>sonar-aemrules-plugin-${project.version}.jar</include>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>

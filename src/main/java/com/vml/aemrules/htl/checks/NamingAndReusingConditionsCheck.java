@@ -19,7 +19,6 @@
  */
 package com.vml.aemrules.htl.checks;
 
-import com.vml.aemrules.htl.api.ParsingErrorRule;
 import com.vml.aemrules.version.AemVersion;
 import org.apache.sling.scripting.sightly.compiler.expression.Expression;
 import org.sonar.check.Rule;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
 
 @Rule(key = NamingAndReusingConditionsCheck.RULE_KEY)
 @AemVersion(all = true)
-@ParsingErrorRule
 public class NamingAndReusingConditionsCheck extends AbstractHtlCheck {
 
     static final String RULE_KEY = "HTL-4";

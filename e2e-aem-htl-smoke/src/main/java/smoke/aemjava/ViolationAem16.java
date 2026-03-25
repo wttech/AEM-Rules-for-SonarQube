@@ -17,20 +17,25 @@
  * limitations under the License.
  * #L%
  */
-package com.vml.aemrules.java;
+package smoke.aemjava;
 
-public final class Constants {
+// Pattern from wttech/.../src/test/files/java/DefaultInjectionStrategyAnnotationCheck.java (DefaultInjectionStrategyAnnotationCheckTest).
 
-    /** SonarQube Java analyzer language key ({@code "java"}). */
-    public static final String LANGUAGE_KEY = "java";
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.Optional;
 
-    public static final String REPOSITORY_KEY = "AEM-JAVA";
-    public static final String REPOSITORY_NAME = "AEM Java";
+import javax.inject.Inject;
 
-    public static final String SLING_RESOURCE_QUALIFIED_NAME = "org.apache.sling.api.resource.Resource";
+@Model(adaptables = Resource.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+public class ViolationAem16 {
 
-    private Constants() {
-        // private constructor to hide public one
-    }
+  @Inject
+  @Optional
+  private String str1;
 
+  public String getStr1() {
+    return str1;
+  }
 }

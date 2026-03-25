@@ -19,7 +19,7 @@
  */
 package com.vml.aemrules.htl;
 
-import com.vml.aemrules.htl.api.ParsingErrorRule;
+import com.vml.aemrules.htl.checks.ParsingErrorCheck;
 import com.vml.aemrules.htl.rules.HtlRulesList;
 import com.vml.aemrules.utils.Throwables;
 import org.apache.sling.scripting.sightly.compiler.SightlyCompilerException;
@@ -54,7 +54,7 @@ public abstract class HtlFilesAnalyzer {
 
     private static RuleKey setupParsingErrorRuleKey(HtlChecks checks) {
         return checks.getAll().stream()
-                .filter(check -> check.getClass().isAnnotationPresent(ParsingErrorRule.class))
+                .filter(check -> check.getClass() == ParsingErrorCheck.class)
                 .findFirst()
                 .map(checks::ruleKeyFor)
                 .orElse(null);
@@ -109,8 +109,8 @@ public abstract class HtlFilesAnalyzer {
             scanFile(sensorContext, inputFile);
         } catch (SightlyCompilerException e) {
             checkInterrupted(e);
-            LOGGER.error("Unable to parse file: {}", inputFile.uri());
-            LOGGER.error(e.getMessage());
+            // Expected for HTL-0 (ParsingErrorCheck) fixtures; avoid ERROR-level noise in scanner logs.
+            LOGGER.warn("HTL parse error in {}: {}", inputFile.uri(), e.getMessage());
             processRecognitionException(e, sensorContext, inputFile);
         } catch (Exception e) {
             checkInterrupted(e);
@@ -123,6 +123,7 @@ public abstract class HtlFilesAnalyzer {
     private void processRecognitionException(SightlyCompilerException e, SensorContext sensorContext, InputFile inputFile) {
         if (parsingErrorRuleKey != null) {
             processRecognitionExceptionForCustomRule(e, sensorContext, inputFile);
+            return;
         }
 
         int lineOffset = 0;

@@ -22,7 +22,8 @@ name: sonar-local
 
 services:
   sonar-local:
-    image: sonarqube:10.7-community
+    # Same tested image as repo-root Dockerfile ARG SONARQUBE_IMAGE_TAG / pom sonar.tested.docker.image.tag.
+    image: sonarqube:26.3.0.120487-community
     build:
       context: .
     ports:

@@ -21,20 +21,19 @@ package com.vml.aemrules;
 
 import org.junit.jupiter.api.Test;
 import org.sonar.api.Plugin;
-import org.sonar.api.SonarEdition;
-import org.sonar.api.SonarQubeSide;
-import org.sonar.api.internal.SonarRuntimeImpl;
-import org.sonar.api.utils.Version;
+import org.sonar.api.SonarRuntime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 class AemRulesSonarPluginTest {
 
     @Test
     void webPluginTester() {
-        Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SERVER, SonarEdition.COMMUNITY));
+        SonarRuntime runtime = mock(SonarRuntime.class);
+        Plugin.Context context = new Plugin.Context(runtime);
 
         new AemRulesSonarPlugin().define(context);
-        assertThat(context.getExtensions()).hasSize(8);
+        assertThat(context.getExtensions()).hasSize(9);
     }
 }

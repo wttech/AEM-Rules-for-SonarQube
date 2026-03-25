@@ -19,19 +19,16 @@
  */
 package com.vml.aemrules.matcher;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
-import org.sonar.java.model.JParser;
-import org.sonar.java.model.JParserConfig;
-import org.sonar.java.model.JavaVersionImpl;
-import org.sonar.plugins.java.api.tree.ClassTree;
-import org.sonar.plugins.java.api.tree.CompilationUnitTree;
-import org.sonar.plugins.java.api.tree.ExpressionStatementTree;
+import org.sonar.java.checks.verifier.CheckVerifier;
+import org.sonar.plugins.java.api.JavaFileScanner;
+import org.sonar.plugins.java.api.JavaFileScannerContext;
+import org.sonar.plugins.java.api.tree.BaseTreeVisitor;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
-import org.sonar.plugins.java.api.tree.MethodTree;
-import org.sonar.plugins.java.api.tree.StatementTree;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -39,122 +36,115 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MethodMatcherTest {
 
-    public static final String CLASSES_FILEPATH = "target/classes";
-    public static final String TEST_CLASSES_FILEPATH = "target/test-classes";
-    public static final String JAVA_VERSION = "1.8";
     public static final String UNIT_NAME = "test";
-    private static final String CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER = "package com.vml.test; "
-            + "class MyClass1 {}"
-            + "class MyClass2 {}"
-            + "class TestClass { "
-            + "void test(MyClass1 m1, MyClass2 m2){}"
-            + "void bar(){MyClass1 m1 = new MyClass1(); MyClass2 m2 = new MyClass2(); test(m1, m2);} "
-            + "}";
-    private static final String CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT = "package com.vml.test; "
-            + "class MyClass1 {}"
-            + "class MyClass2 {}"
-            + "class TestClass { "
-            + "void test(MyClass1 m1, MyClass2 m2){}"
-            + "void bar(){MyClass1 m1 = new MyClass1(); MyClass2 m2 = new MyClass2(); this.test(m1, m2);} "
-            + "}";
-    private static final int CLASS_INDEX = 2;
-    private static final int CLASS_METHOD_INDEX = 1;
-    private static final int METHOD_INVOCATION_INDEX = 2;
-    private MethodInvocationTree methodInvocationTree;
+    private static final String TYPE_TEST_CLASS = "com.vml.test.TestClass";
+    private static final String TYPE_MY_CLASS_1 = "com.vml.test.MyClass1";
+    private static final String TYPE_MY_CLASS_2 = "com.vml.test.MyClass2";
+    private static final String SAMPLE_IDENTIFIER = "src/test/files/matcher/MethodMatcherSampleIdentifier.java";
+    private static final String SAMPLE_MEMBER_SELECT = "src/test/files/matcher/MethodMatcherSampleMemberSelect.java";
+
+    private static final List<File> CLASSPATH_JAR;
+
+    static {
+        CLASSPATH_JAR = new ArrayList<>();
+        String classPath = StringUtils.defaultIfBlank(System.getProperty("surefire.test.class.path"), System.getProperty("java.class.path"));
+        if (StringUtils.isNotBlank(classPath)) {
+            for (String jar : classPath.split(File.pathSeparator)) {
+                if (jar.endsWith(".jar")) {
+                    CLASSPATH_JAR.add(new File(jar));
+                }
+            }
+        }
+    }
 
     @Test
     void shouldMatchMethodWhenMethodNameAndOwnerClassAndMethodParametersMatch() {
-        givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
-
         MethodMatcher methodMatcher = MethodMatcher.create(
                 MethodNamePredicate.is(UNIT_NAME),
-                OwnerTypePredicate.is("com.vml.test.TestClass"),
-                ParameterTypePredicate.is("com.vml.test.MyClass1"),
-                ParameterTypePredicate.is("com.vml.test.MyClass2")
+                OwnerTypePredicate.is(TYPE_TEST_CLASS),
+                ParameterTypePredicate.is(TYPE_MY_CLASS_1),
+                ParameterTypePredicate.is(TYPE_MY_CLASS_2)
         );
 
-        assertThat(methodMatcher.matches(methodInvocationTree), is(true));
+        assertMatcherOnSample(SAMPLE_IDENTIFIER, methodMatcher, true);
     }
 
     @Test
     void shouldMatchMethodWhenMethodNameAndOwnerClassAndOnlySecondParameterMatch() {
-        givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
-
         MethodMatcher methodMatcher = MethodMatcher.create(
                 MethodNamePredicate.is(UNIT_NAME),
-                OwnerTypePredicate.is("com.vml.test.TestClass"),
+                OwnerTypePredicate.is(TYPE_TEST_CLASS),
                 ParameterTypePredicate.anyParameterType(),
-                ParameterTypePredicate.is("com.vml.test.MyClass2")
+                ParameterTypePredicate.is(TYPE_MY_CLASS_2)
         );
 
-        assertThat(methodMatcher.matches(methodInvocationTree), is(true));
+        assertMatcherOnSample(SAMPLE_MEMBER_SELECT, methodMatcher, true);
     }
 
     @Test
     void shouldNotMatchMethodWhenMethodNameDoesNotMatch() {
-        givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
-
         MethodMatcher methodMatcher = MethodMatcher.create(
                 MethodNamePredicate.is("different"),
-                OwnerTypePredicate.is("com.vml.test.TestClass"),
-                ParameterTypePredicate.is("com.vml.test.MyClass1"),
-                ParameterTypePredicate.is("com.vml.test.MyClass2")
+                OwnerTypePredicate.is(TYPE_TEST_CLASS),
+                ParameterTypePredicate.is(TYPE_MY_CLASS_1),
+                ParameterTypePredicate.is(TYPE_MY_CLASS_2)
         );
 
-        assertThat(methodMatcher.matches(methodInvocationTree), is(false));
+        assertMatcherOnSample(SAMPLE_IDENTIFIER, methodMatcher, false);
     }
 
     @Test
     void shouldNotMatchMethodWhenNumberOfMethodParametersDoesNotMatch() {
-        givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
-
         MethodMatcher methodMatcher = MethodMatcher.create(
                 MethodNamePredicate.is(UNIT_NAME),
-                OwnerTypePredicate.is("com.vml.test.TestClass"),
-                ParameterTypePredicate.is("com.vml.test.MyClass1")
+                OwnerTypePredicate.is(TYPE_TEST_CLASS),
+                ParameterTypePredicate.is(TYPE_MY_CLASS_1)
         );
 
-        assertThat(methodMatcher.matches(methodInvocationTree), is(false));
+        assertMatcherOnSample(SAMPLE_IDENTIFIER, methodMatcher, false);
     }
 
     @Test
     void shouldNotMatchMethodWhenMethodOwnerClassDoesNotMatch() {
-        givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_IDENTIFIER);
-
         MethodMatcher methodMatcher = MethodMatcher.create(
                 MethodNamePredicate.is(UNIT_NAME),
                 OwnerTypePredicate.is("com.vml.test.Different"),
-                ParameterTypePredicate.is("com.vml.test.MyClass1"),
-                ParameterTypePredicate.is("com.vml.test.MyClass2")
+                ParameterTypePredicate.is(TYPE_MY_CLASS_1),
+                ParameterTypePredicate.is(TYPE_MY_CLASS_2)
         );
 
-        assertThat(methodMatcher.matches(methodInvocationTree), is(false));
+        assertMatcherOnSample(SAMPLE_IDENTIFIER, methodMatcher, false);
     }
 
     @Test
     void shouldNotMatchMethodWhenMethodParameterTypesDoNotMatch() {
-        givenMethodInvocationTree(CODE_TO_PARSE_METHOD_SELECT_KIND_MEMBER_SELECT);
-
         MethodMatcher methodMatcher = MethodMatcher.create(
                 MethodNamePredicate.is(UNIT_NAME),
-                OwnerTypePredicate.is("com.vml.test.TestClass"),
+                OwnerTypePredicate.is(TYPE_TEST_CLASS),
                 ParameterTypePredicate.is("com.vml.test.Different1"),
-                ParameterTypePredicate.is("com.vml.test.MyClass2")
+                ParameterTypePredicate.is(TYPE_MY_CLASS_2)
         );
 
-        assertThat(methodMatcher.matches(methodInvocationTree), is(false));
+        assertMatcherOnSample(SAMPLE_MEMBER_SELECT, methodMatcher, false);
     }
 
-    private void givenMethodInvocationTree(String codeToParse) {
-        CompilationUnitTree compilationUnitTree = parse(codeToParse);
-        ClassTree classTree = (ClassTree) compilationUnitTree.types().get(CLASS_INDEX);
-        StatementTree statementTree = ((MethodTree) classTree.members().get(CLASS_METHOD_INDEX)).block().body().get(METHOD_INVOCATION_INDEX);
-        this.methodInvocationTree = (MethodInvocationTree) ((ExpressionStatementTree) statementTree).expression();
-    }
+    private static void assertMatcherOnSample(String relativePath, final MethodMatcher matcher, final boolean expected) {
+        class MatcherProbe extends BaseTreeVisitor implements JavaFileScanner {
+            @Override
+            public void scanFile(JavaFileScannerContext context) {
+                scan(context.getTree());
+            }
 
-    private CompilationUnitTree parse(String source) {
-        List<File> classpath = Arrays.asList(new File(TEST_CLASSES_FILEPATH), new File(CLASSES_FILEPATH));
-        return JParser.parse(JParserConfig.Mode.FILE_BY_FILE.create(new JavaVersionImpl(11), classpath).astParser(), JAVA_VERSION, UNIT_NAME, source);
-    }
+            @Override
+            public void visitMethodInvocation(MethodInvocationTree tree) {
+                assertThat(matcher.matches(tree), is(expected));
+            }
+        }
 
+        CheckVerifier.newVerifier()
+                .onFile(relativePath)
+                .withClassPath(CLASSPATH_JAR)
+                .withCheck(new MatcherProbe())
+                .verifyNoIssues();
+    }
 }
